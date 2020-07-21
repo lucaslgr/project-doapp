@@ -18,10 +18,16 @@
     color: var(--white-light);
 }
 
+html {
+    height: 100%;
+}
+
 body{
     margin: 0px;
     padding: 0px;
     overflow-x: hidden;
+    position: relative;
+    min-height: 100%;
 }
 
 .container {
@@ -32,6 +38,16 @@ body{
 .icon-default {
     font-size: 30px;
     cursor: pointer;
+}
+
+h1,h2,h3,h4,h5,h6,p,li{
+    margin: 0px;
+    padding: 0px;
+}
+
+ul{
+    margin: 0px;
+    padding: 0px;
 }
 
 h1{
@@ -167,7 +183,8 @@ ul.menu-mobile {
     left: 0;
     top: 70px;
     width: 100vw;
-    height: calc(100vh - (70px + 40px));
+    /* height: calc(100vh - (70px + 40px)); */
+    height: 100vh;
     padding: 0px;
     margin: 0px;
     display: flex;
@@ -201,13 +218,65 @@ ul.menu-mobile h1 {
 main {
     width: 100vw;
     height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
 }
 
 /* ! SECTION#POSTS */
 section#posts{
-    width: inherit;
-    height: inherit;
-    margin-top: 70px;
+    width: 100vw;
+    height: 100%;
+}
+
+section#posts .section-area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: auto;
+    margin-top: 20px;
+}
+
+section#posts .section-area .each-post {
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--gray-medium);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+section#posts .section-area .each-post + .each-post {
+    margin-top: 20px;
+}
+
+section#posts .section-area .each-post img,
+section#posts .section-area .each-post h1,
+section#posts .section-area .each-post h3,
+section#posts .section-area .each-post h4{
+    width: 100%;
+}
+
+section#posts .section-area .each-post h1,
+section#posts .section-area .each-post h3,
+section#posts .section-area .each-post h4,
+section#posts .section-area .each-post .location,
+section#posts .section-area .each-post .date,
+section#posts .section-area .each-post .price{
+    color: var(--gray-dark) !important;
+    display: inline-block;
+}
+
+section#posts .section-area .each-post .location,
+section#posts .section-area .each-post .date,
+section#posts .section-area .each-post .price{
+    font-weight: 700;
+}
+
+section#posts .section-area .each-post img{
+    width: 200px;
 }
 
 
@@ -220,7 +289,7 @@ i.icon-plus.add-post {
     
     font-size: 40px;
 
-    bottom: 85px;
+    bottom: 55px;
     right: 30px;
     width: 50px;
     height: 50px;
@@ -246,7 +315,9 @@ i.icon-plus.add-post {
     z-index: 2;
     background-color: var(--white-light);
     width: 100vw;
-    height: calc(100vh - (70px + 40px));
+    /* height: calc(100vh - (70px + 40px)); */
+    height: 100vh;
+    top: 70px;
 
     display: flex;
     flex-direction: column;
@@ -261,8 +332,7 @@ i.icon-plus.add-post {
 }
 
 .modal-add-post.show-modal-add-post{
-    transform: translateY(70px);
-
+    transform: translateY(0);
 }
 
 .modal.modal-add-post .btn-group{
