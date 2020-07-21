@@ -40,13 +40,14 @@
       <i class="icon-plus icon-default add-post" onclick="showModalAddPost();"></i>
       <div class="section-area container">
 
-        <div class="each-post">
+        <!-- <div class="each-post">
           <img src="./src/images/product-default.png" alt="">
-          <h1>Title</h1>
-          <h4>Localização: <div class="location">Cataguases-MG</div></h4>
-          <h4>Data: <div class="date">20/03/2020 às 12:20</div></h4>
-          <h4>Price:R$<div class="price">10,00</div class="price"></h4>
-        </div>     
+          <h1 class="title">Título</h1>
+          <h4>Localização: <div class="location"> Cataguases-MG</div></h4>
+          <h4>Data: <div class="date-created"> 20/03/2020 às 12:20</div></h4>
+          <h4>Price: <div class="price">R$ 10,00</div></h4>
+          <h4>Contato: <div class="whatsapp-contact">(32)9 88094352</div></h4>
+        </div>      -->
       
       </div>
     </section>
@@ -56,8 +57,10 @@
   <!-- <div class="bg-background-modal"></div> -->
   <div class="modal modal-add-post">
     <h1>Adicione um anúncio!</h1>
-    <input type="text" placeholder="Título">
-    <input type="text" placeholder="Localização">
+    <input type="text" name="title" placeholder="Título">
+    <input type="text" name="location" placeholder="Localização">
+    <input type="text" name="price" placeholder="Preço">
+    <input type="text" name="whatsapp-contact" placeholder="Número Whatsapp">
     <div class="btn-group">
       <button id="btn-send" onclick="sendModalPost();">Enviar</button>
       <button id="btn-close" onclick="closeModalAddPost();">Fechar</button>

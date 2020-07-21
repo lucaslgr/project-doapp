@@ -8,6 +8,8 @@
     header("Access-Control-Allow-Origin: *"); 
     //Liberando todos os verbos HTTP
     header("Access-Control-Allow-Methods: *");
+    //Liberando o header Content-Type
+    header("Access-Controll-Allow-Headers: Content-Type");
 
     //Importando os arquivos de setup
     require '../config.php';

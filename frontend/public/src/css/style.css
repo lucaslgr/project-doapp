@@ -257,22 +257,37 @@ section#posts .section-area .each-post h1,
 section#posts .section-area .each-post h3,
 section#posts .section-area .each-post h4{
     width: 100%;
+    display: flex;
+}
+
+section#posts .section-area .each-post h1 {
+    justify-content: center;
+    margin-top: 5px;
+}
+
+section#posts .section-area .each-post h1 + h3{
+    margin-top: 5px;
 }
 
 section#posts .section-area .each-post h1,
 section#posts .section-area .each-post h3,
 section#posts .section-area .each-post h4,
 section#posts .section-area .each-post .location,
-section#posts .section-area .each-post .date,
-section#posts .section-area .each-post .price{
+section#posts .section-area .each-post .date-created,
+section#posts .section-area .each-post .price,
+section#posts .section-area .each-post .whatsapp-contact{
     color: var(--gray-dark) !important;
-    display: inline-block;
 }
 
 section#posts .section-area .each-post .location,
-section#posts .section-area .each-post .date,
-section#posts .section-area .each-post .price{
+section#posts .section-area .each-post .date-created,
+section#posts .section-area .each-post .price,
+section#posts .section-area .each-post .whatsapp-contact{
     font-weight: 700;
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    text-align: right;
 }
 
 section#posts .section-area .each-post img{
@@ -325,6 +340,7 @@ i.icon-plus.add-post {
 
     transition: transform 0.6s ease;
     padding: 20px;
+    box-shadow: 2px 0px 10px var(--gray-dark);
 }
 
 .modal.modal-add-post h1{
