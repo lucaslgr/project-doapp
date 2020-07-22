@@ -35,4 +35,18 @@ class ErrorsManager {
             'msg' => 'Metodo HTTP nao pertimitido'
         ];
     }
+
+    static public function setBadRequestError(&$response){
+        $response['errors'] = [
+            'status_code' => 400,
+            'msg' => 'Requisicao nao compreendida ou sintaxe invalida'
+        ];
+    }
+
+    static public function setUnprocessableEntityError(&$response){
+        $response['errors'] = [
+            'status_code' => 422,
+            'msg' => 'A requisicao esta bem formada mas inabilitada para ser seguida devido a erros semanticos'
+        ];
+    }
 }

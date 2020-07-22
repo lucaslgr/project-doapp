@@ -10,6 +10,12 @@ class Posts extends Model {
         parent::__construct();
     }
 
+    /**
+     * SUCESSO: Retorna todos os posts do banco de dados em ordem decrescente, do mais atual para o mais antigo
+     * FALHA: Retorna os errors no array com [errors] => [];
+     * 
+     * @return array
+     */
     public function getAllPosts()
     {
         $result = [];
@@ -26,6 +32,41 @@ class Posts extends Model {
         if($sql->rowCount() > 0){
             return $sql->fetchAll(\PDO::FETCH_ASSOC);
         }
+
+        return $result;
+    }
+
+    /**
+     * SUCESSO: Retorna o id do post inserido
+     * FALHA: Retorna os errors no array com [errors] => [];
+     * 
+     * @return int
+     */
+    public function createNewPost($title, $location, $image, $price, $whatsapp_contact)
+    {
+        $result = [];
+
+        $sql = $this->pdo->prepare(
+            "INSERT INTO posts(title, location, image, price, whatsapp_contact, status, date_created)
+            VALUES(?, ?, ?, ?, ?, 0, NOW())"
+        );
+
+        $status_query = $sql->execute([
+            $title,
+            $location,
+            $image,
+            $price,
+            $whatsapp_contact
+        ]);
+
+        //Se houve algum erro
+        if(!$status_query){
+            ErrorsManager::setDatabaseError($result);
+            return $result;
+        }
+
+
+        $result = $this->pdo->lastInsertId();
 
         return $result;
     }

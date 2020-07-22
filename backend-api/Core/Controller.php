@@ -79,8 +79,8 @@ class Controller {
         //Definindo o cabeçalho da resposta
         if($status_code != NULL)
             http_response_code(intval($status_code));
-        else if(isset($array['status_code']))
-            http_response_code(intval($array['status_code']));
+        else if(isset($array['errors']['status_code']))
+            http_response_code(intval($array['errors']['status_code']));
         //!OR
         // header("HTTP/1.1 $status_code $status_msg");
         header("Content-Type: application/json");

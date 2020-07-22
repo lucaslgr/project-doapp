@@ -9,6 +9,7 @@
     $routes = array();
 
     //Cofiguração das rotas
-    $routes['/posts'] = '/posts/getall';
+    $routes['/posts/new'] = '/posts/addpost'; //POST
+    $routes['/posts'] = '/posts/getall'; //GET
     $routes['/'] = '/home/index';
 ?>
