@@ -385,7 +385,12 @@ footer h4{
 section#help{
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin-top: 70px;
+}
+
+section#help img{
+    margin-bottom: 10px;
 }
 
 section#help .card{
