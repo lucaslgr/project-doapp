@@ -77,7 +77,7 @@ function createPost(dataPost){
         dataPost.image = 'product-default.png';
 
     let postImg = document.createElement('img'); 
-    postImg.setAttribute('src', `./src/images/${dataPost.image}`); //!VALOR da url da imagem
+    postImg.setAttribute('src', `./src/images/products/${dataPost.image}`); //!VALOR da url da imagem
     postImg.setAttribute('alt', 'imagem do produto');
 
     let postTitle = document.createElement('h1');
