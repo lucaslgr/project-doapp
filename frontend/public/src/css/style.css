@@ -394,13 +394,17 @@ section#help .card{
     align-items: center;
 }
 
+section#help .card + .card {
+    margin-top: 30px;
+}
+
 section#help .card h1,
 section#help .card p{
     color: var(--gray-dark);
 }
 
 section#help .card p {
-    max-width: 80%;
+    max-width: 90%;
     text-align: center;
 }
 

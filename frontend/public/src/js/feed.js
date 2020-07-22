@@ -7,6 +7,14 @@ function closeModalAddPost(){
     $('.modal.modal-add-post').classList.remove('show-modal-add-post');
 }
 
+function clearModalAddPostInputs(){
+    $('input[name=title]').value = '';
+    $('input[name=location]').value = '';
+    $('input[name=price]').value = '';
+    $('input[name=whatsapp-contact]').value = '';
+    return;
+}
+
 function sendModalPost(){
     const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
 
@@ -42,6 +50,7 @@ function sendModalPost(){
         alert('Anúncio inserido com sucesso!');
         console.log('Inserido um novo post, seu id eh: '+ responseJSON.id_post);
         fillPosts();
+        clearModalAddPostInputs();
         closeModalAddPost();
     })
     .catch( (errors) => {
@@ -133,8 +142,6 @@ function clearAllCards(){
 
 //Puxando a API todos posts do banco e inserindo na tela
 function fillPosts(){
-    // clearAllCards();
-
     const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts';
 
     fetch(endpoint,{
@@ -150,7 +157,7 @@ function fillPosts(){
         if(responseJSON.errors) {
             throw responseJSON.errors;
         }
-
+        clearAllCards();
         responseJSON.data.map( (eachPost) => {
             createPost(eachPost);
         })
