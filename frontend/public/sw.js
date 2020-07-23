@@ -1,6 +1,9 @@
 // const BASE_URL = `/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v3';
-const CACHE_DYNAMIC_NAME = 'dynamic-v3';
+/**
+ * !OBS: Um service worker sempre é reinstalado quando o código presente nele é alterado, porém no outros arquivos que foram armazenados no cache pela primeira vez através do SW não serão armazenados novamente pelo service worker. Para resolver essa questão, basta alterar o número das versões dos SW STATIC e DYNAMIC abaixo. 
+ */
+const CACHE_STATIC_NAME = 'static-v1';
+const CACHE_DYNAMIC_NAME = 'dynamic-v1';
 const STATIC_FILES = [
   './',
   './index.html',
@@ -67,7 +70,7 @@ self.addEventListener('activate', (event) => {
   console.log('[Service Worker] Activating Service Worker ....', event);
 
   event.waitUntil(
-    //Verificando se algum dos caches pertence a alguma versão que não está dentre as atuais definida pelo nome da key do cache
+    //!Verificando se algum dos caches pertence a alguma versão que não está dentre as atuais definida pelo nome da key do cache em CACHE_STATIC_NAME e CACHE_DYNAMIC_NAME
     caches.keys()
       .then((keyList) => {
         return Promise.all(keyList.map((key) => {
@@ -127,7 +130,6 @@ self.addEventListener('fetch', (event) => {
 
   // console.log(`Encontrou o ${event.request.url} no cache estático? ${isInArray(event.request.url, STATIC_FILES)}`);
 
-  // ! AQUI
   event.respondWith(
     caches.match(event.request)
       .then( (response) => {
@@ -144,9 +146,18 @@ self.addEventListener('fetch', (event) => {
                   return res;
                 })
             })
+            .catch( (error) => {
+              //Se o arquivo solicitado pelo fetch for um .html, retorna a fallback page
+              if(event.request.url.indexOf('.html') > -1){
+                return caches.open(CACHE_STATIC_NAME)
+                .then( (cache) => {
+                  return cache.match('./offline.html');
+                })
+              }
+            });
         }
       })
-  )
+  );
 
 
 

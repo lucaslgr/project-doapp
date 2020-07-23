@@ -406,11 +406,11 @@ section#help .card + .card {
 section#help .card h1,
 section#help .card p{
     color: var(--gray-dark);
+    text-align: center;
 }
 
 section#help .card p {
     max-width: 90%;
-    text-align: center;
 }
 
 @media only screen and (max-width: 700px){
