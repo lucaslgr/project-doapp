@@ -156,7 +156,7 @@ self.addEventListener('fetch', (event) => {
                 return caches.open(CACHE_STATIC_NAME)
                   .then( cache => {
                     //Verificando se a requisição é a uma página .html
-                    if(event.request.url.indexOf('.html') > -1)
+                    if(event.request.headers.get('accept').includes('text/html'))
                       return cache.match('./offline.html');
                   });
               })
