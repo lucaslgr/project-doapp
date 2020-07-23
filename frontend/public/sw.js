@@ -24,6 +24,23 @@ const STATIC_FILES = [
   BASE_URL+'/src/images/logos/logo.png'
 ];
 
+/**
+ * Verifica se o número de caches passou de um limite estabelecido em maxItems, se tiver passado remove os mais antigos recursivamente
+ * @param {string} cacheName 
+ * @param {int} maxItems 
+ */
+function trimCache(cacheName, maxItems){
+  caches.open(cacheName)
+    .then( (cache) => {
+      return cache.keys()
+      .then( (keys) =>{
+        if(keys.length > maxItems){
+          cache.delete(keys[0])
+            .then(trimCache(cacheName, maxItems));
+        }
+      })
+    })
+}
 
 /**
  * Verifica se a string procurada existe no array de strings
