@@ -36,10 +36,8 @@ function isInArray(string, array) {
     console.log('matched ', BASE_URL, string);
     // cachePath = string.substring(BASE_URL.length); // Tirando a parte do domínio na url e deixando apenas o que vem depois do domínio (e.g. after localhost:8080)
     cachePath = string; // Mantendo a url com o domínio
-    console.log('isInArray IF: ,string, cachePath,  array.indexOf(cachePath) > -1',string, cachePath,  array.indexOf(cachePath) > -1);
   } else {
     cachePath = string; // store the full request (for CDNs)
-    console.log('isInArray ELSE: ,string, cachePath,  array.indexOf(cachePath) > -1',string, cachePath,  array.indexOf(cachePath) > -1);
   }
   
   return array.indexOf(cachePath) > -1;
@@ -123,7 +121,6 @@ self.addEventListener('fetch', (event) => {
   //! 2.2ª - Se sim, retorna o seu respectivo cache diretamente
   //! 2.3ª - Se não, não faz nada e deixa passar para a condição ELSE
   else if(isInArray(event.request.url, STATIC_FILES)) {
-    console.log('Veio do cache estático ELSE IF', event.request.url);
     event.respondWith(
       caches.match(event.request)
     );
@@ -139,7 +136,6 @@ self.addEventListener('fetch', (event) => {
         .then( response => {
           //Checando se o cache para essa requisicao não está vazia
           if(response) {
-            console.log('Veio do cache estático ou dinâmico ELSE', event.request.url);
             return response;
           } else {
             //Tentando fazer a requisição na rede
