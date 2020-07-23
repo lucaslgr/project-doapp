@@ -171,7 +171,7 @@ function fillPosts() {
   })
   .catch((errors) => {
       console.log('ERRO', errors);
-      alert(`ERRO ${errors.status_code} : ${errors.msg}`);
+      // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
   })
 
   //Verifica se o navegador/janela tem o recurso de cache

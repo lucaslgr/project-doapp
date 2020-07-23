@@ -1,27 +1,27 @@
-// const BASE_URL = `/project-barganhapp/frontend/public`;
 /**
  * !OBS: Um service worker sempre é reinstalado quando o código presente nele é alterado, porém no outros arquivos que foram armazenados no cache pela primeira vez através do SW não serão armazenados novamente pelo service worker. Para resolver essa questão, basta alterar o número das versões dos SW STATIC e DYNAMIC abaixo. 
  */
+const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
 const CACHE_STATIC_NAME = 'static-v1';
 const CACHE_DYNAMIC_NAME = 'dynamic-v1';
 const STATIC_FILES = [
-  './',
-  './index.html',
-  './offline.html',
-  './src/js/app.js',
-  './src/js/feed.js',
-  './src/js/promise.js',
-  './src/js/fetch.js',
-  './src/css/normalize.css',
-  './src/css/style.css',
-  './src/css/fontello.css',
-  './src/font/fontello.eot',
-  './src/font/fontello.svg',
-  './src/font/fontello.ttf',
-  './src/font/fontello.woff',
-  './src/font/fontello.woff2',
+  BASE_URL+'/',
+  BASE_URL+'/index.html',
+  BASE_URL+'/offline.html',
+  BASE_URL+'/src/js/app.js',
+  BASE_URL+'/src/js/feed.js',
+  BASE_URL+'/src/js/promise.js',
+  BASE_URL+'/src/js/fetch.js',
+  BASE_URL+'/src/css/normalize.css',
+  BASE_URL+'/src/css/style.css',
+  BASE_URL+'/src/css/fontello.css',
+  BASE_URL+'/src/font/fontello.eot',
+  BASE_URL+'/src/font/fontello.svg',
+  BASE_URL+'/src/font/fontello.ttf',
+  BASE_URL+'/src/font/fontello.woff',
+  BASE_URL+'/src/font/fontello.woff2',
   'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap',
-  './src/images/logos/logo.png'
+  BASE_URL+'/src/images/logos/logo.png'
 ];
 
 
@@ -31,14 +31,17 @@ const STATIC_FILES = [
  * @param {array de strings} array 
  */
 function isInArray(string, array) {
-  var cachePath;
-  if (string.indexOf(self.origin) === 0) { // request targets domain where we serve the page from (i.e. NOT a CDN)
-    console.log('matched ', self.origin, string);
-    cachePath = string.substring(self.origin.length); // take the part of the URL AFTER the domain (e.g. after localhost:8080)
-    console.log('cachePath', cachePath);
+  let cachePath;
+  if (string.indexOf(BASE_URL) === 0) { // Requisições no próprio domínio, ou seja, quando não não requisições a um CDN ou outro domínio
+    console.log('matched ', BASE_URL, string);
+    // cachePath = string.substring(BASE_URL.length); // Tirando a parte do domínio na url e deixando apenas o que vem depois do domínio (e.g. after localhost:8080)
+    cachePath = string; // Mantendo a url com o domínio
+    console.log('isInArray IF: ,string, cachePath,  array.indexOf(cachePath) > -1',string, cachePath,  array.indexOf(cachePath) > -1);
   } else {
     cachePath = string; // store the full request (for CDNs)
+    console.log('isInArray ELSE: ,string, cachePath,  array.indexOf(cachePath) > -1',string, cachePath,  array.indexOf(cachePath) > -1);
   }
+  
   return array.indexOf(cachePath) > -1;
 }
 
@@ -48,7 +51,6 @@ function isInArray(string, array) {
  * * Na instalação acontece o cacheamento de todos arquivos ESTÁTICOS no CACHE_STATIC_NAME
  */
 self.addEventListener('install', (event) => {
-
   console.log('[Service Worker] Installing Service Worker ...', event);
   event.waitUntil(
     caches.open(CACHE_STATIC_NAME)
@@ -95,105 +97,72 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   console.log('[Service Worker] Fetching something', event.request.url);
 
-  // const url = [
-  //   'http://localhost/project-barganhapp/backend-api/public/posts'
-  // ];
-
-  /**
-   * Para requisição que os dados sempre são atualizado, elas passam por esse filtro, logo, sempre é realizado 
-   * uma nova requisição, salva no cache dinâmico, e retorna a resposta
-  */
-  // if(url.includes(event.request.url)){
-  //   event.respondWith(
-  //     caches.open(CACHE_DYNAMIC_NAME)
-  //       .then( (cache) => {
-  //         return fetch(event.request)
-  //           .then( (response) => {
-  //             //Inserindo no cache um clone da resposta
-  //             cache.put(event.request.url, response.clone());
-  //             return response;
-  //           })
-  //       })
-  //   )
-  // }
-
-  /**
-   * Requisições a arquivos do CACHE_STATIC_NAME, cacheados na hora da instalação do SW, são requisitados
-   * diretamente no cache, pois praticamente nunca se alteram, logo não há necessidade de ficar consultando-os
-   * na rede e atualizado seus caches.
-   */
-  // else if(isInArray(event.request.url, STATIC_FILES)){
-  //   event.respondWith(
-  //     caches.match(event.request)
-  //   );
-  // }
-
-  // console.log(`Encontrou o ${event.request.url} no cache estático? ${isInArray(event.request.url, STATIC_FILES)}`);
-
-  event.respondWith(
-    caches.match(event.request)
-      .then( (response) => {
-        if (response) {
-          return response;
-        } else {
+  //! 1ª ESTRATÉGIA: [CACHE THEN NETWORK]
+  //! 1.1ª - Verifica se a URL requisitada é uma das que as respostas trazem conteúdos que mutáveis constantemente
+  //! 1.2ª - Faz a requisição na rede
+  //! 1.3ª - Clona o resultado e coloca no cache dinâmico sobrescrevendo um cache antigo se houver
+  //! 1.4ª - Retorna para a requisição o resultado original vindo da rede
+  const url = 'http://localhost/project-barganhapp/backend-api/public/posts';
+  //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
+  if(event.request.url.indexOf(url) > -1){
+    
+    event.respondWith(
+      caches.open(CACHE_DYNAMIC_NAME)
+        .then( cache => {
           return fetch(event.request)
-            .then( (res) => {
-              return caches.open(CACHE_DYNAMIC_NAME)
-                .then( (cache) => {
-                  //Armazenando a resposta da requisição no cache
-                  //!OBS: Diferente do caches.add o put não faz a request e salva a resposta, ele já acessa o cache específico pela key informada no primeiro parâmetro e no segundo passa a informação que deve ser inserida no cache
-                  cache.put(event.request.url, res.clone());
-                  return res;
-                })
+            .then( response => {
+              //!OBS: Diferente do caches.add o put não faz a request e salva a resposta, ele já acessa o cache específico pela key informada no primeiro parâmetro e no segundo passa a informação que deve ser inserida no cache
+              cache.put(event.request.url, response.clone())
+              return response; //Retornando a reposta original
             })
-            .catch( (error) => {
-              //Se o arquivo solicitado pelo fetch for um .html, retorna a fallback page
-              if(event.request.url.indexOf('.html') > -1){
+        })
+    );
+  }
+  //! 2ª ESTRATÉGIA: [TRY CACHE ONLY]
+  //! 2.1ª - Verifica se a URL requisitada é uma das que pertence ao cache de arquivos ESTÁTICOS através do método isInArray(), realizado na instalação do SW
+  //! 2.2ª - Se sim, retorna o seu respectivo cache diretamente
+  //! 2.3ª - Se não, não faz nada e deixa passar para a condição ELSE
+  else if(isInArray(event.request.url, STATIC_FILES)) {
+    console.log('Veio do cache estático ELSE IF', event.request.url);
+    event.respondWith(
+      caches.match(event.request)
+    );
+  }
+  //! 3ª ESTRATÉGIA: [TRY CACHE, TRY NETWORK, TRY FALLBACK]
+  //! 3.1ª - Verifica se já tem um cache para essa requisição, se houver e se não tiver vazio, restorna a reposta vinda do cache
+  //! 3.2ª - Se a resposta do cache para essa requisição estiver vazia, tenta fazer a requisição na rede
+  //! 3.3ª - Se a requisição na rede for bem sucedida, salva um clone da resposta no cache dinâmico e retorna  resposta original
+  //! 3.4ª - Se a requisição na rede não conseguiu conexão e falhou, cai no catch() e lá verificamos se era uma requisição a uma página HTML, se sim, retornamos a página de fallback que representa o 404 e está cacheada no cache estático
+  else {
+    event.respondWith(
+      caches.match(event.request)
+        .then( response => {
+          //Checando se o cache para essa requisicao não está vazia
+          if(response) {
+            console.log('Veio do cache estático ou dinâmico ELSE', event.request.url);
+            return response;
+          } else {
+            //Tentando fazer a requisição na rede
+            return fetch(event.request)
+              .then( res => {
+                return caches.open(CACHE_DYNAMIC_NAME)
+                  .then( cache => {
+                    cache.put(event.request.url, res.clone());
+                    return res;
+                  });
+              })
+              //Se não conseguiu fazer a requisição na rede por falta de conexão cai aqui e retorna a página de [fallback 404] caso seja uma requisição a uma página .html
+              .catch( error => {
                 return caches.open(CACHE_STATIC_NAME)
-                .then( (cache) => {
-                  return cache.match('./offline.html');
-                })
-              }
-            });
-        }
-      })
-  );
+                  .then( cache => {
+                    //Verificando se a requisição é a uma página .html
+                    if(event.request.url.indexOf('.html') > -1)
+                      return cache.match('./offline.html');
+                  });
+              })
+          }
+        })
+    );
+  }
 
-
-
-  // else {
-  //   event.respondWith(
-  //     caches.match(event.request)
-  //       .then( (response) => {
-  //         //Checando se o cache para essa requisicao não está vazia
-  //         if(response) {
-  //           return response;
-  //         } else {
-  //           return fetch(event.request)
-  //             .then( (res) => {
-  //               return caches.open(CACHE_DYNAMIC_NAME)
-  //                 .then( (cache) => {
-  //                   //Inserindo no cache um clone da resposta
-  //                   cache.put(event.request.url, res.clone());
-  //                   return res;
-  //                 })
-  //             })
-  //             .catch( (error) => {
-  //               return caches.open(CACHE_STATIC_NAME)
-  //                 .then( (cache) => {
-  //                   /**
-  //                    * Retorna a página de fallback somente nos casos que algum arquivo não conseguir ser requisitado nem no 
-  //                    * cache e nem na rede, pois assim evita que caso um arquivo .css não seja requisitado com sucesso no cache
-  //                    * e nem na rede, a nossa estratégia retorna a página de fallback do nosso cache para a requisição do 
-  //                    * arquivo 
-  //                    */
-  //                   if(event.request.headers.get('accept').includes('text/html')){
-  //                     return cache.match('/offline.html');
-  //                   }
-  //                 })
-  //             })
-  //         }
-  //       })
-  //   )
-  // }
 })
