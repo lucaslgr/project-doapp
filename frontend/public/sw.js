@@ -1,9 +1,15 @@
 /**
  * !OBS: Um service worker sempre é reinstalado quando o código presente nele é alterado, porém no outros arquivos que foram armazenados no cache pela primeira vez através do SW não serão armazenados novamente pelo service worker. Para resolver essa questão, basta alterar o número das versões dos SW STATIC e DYNAMIC abaixo. 
  */
+
+//* Importando a lib idb.js no [SW] para podermos usar o IndexedDB com Promises também no ServiceWorker
+importScripts('./src/js/idb.js');
+//* Importando o ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB
+importScripts('./src/js/indexedDB.js');
+
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v1';
-const CACHE_DYNAMIC_NAME = 'dynamic-v1';
+const CACHE_STATIC_NAME = 'static-v0';
+const CACHE_DYNAMIC_NAME = 'dynamic-v0';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -12,6 +18,7 @@ const STATIC_FILES = [
   BASE_URL+'/src/js/feed.js',
   BASE_URL+'/src/js/promise.js',
   BASE_URL+'/src/js/fetch.js',
+  BASE_URL+'/src/js/idb.js',
   BASE_URL+'/src/css/normalize.css',
   BASE_URL+'/src/css/style.css',
   BASE_URL+'/src/css/fontello.css',
@@ -23,6 +30,8 @@ const STATIC_FILES = [
   'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap',
   BASE_URL+'/src/images/logos/logo.png'
 ];
+
+
 
 /**
  * Verifica se o número de caches passou de um limite estabelecido em maxItems, se tiver passado remove os mais antigos recursivamente
@@ -112,24 +121,38 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   console.log('[Service Worker] Fetching something', event.request.url);
 
-  //! 1ª ESTRATÉGIA: [CACHE THEN NETWORK]
+  //! 1ª ESTRATÉGIA: [INDEXED-DB THEN NETWORK]
   //! 1.1ª - Verifica se a URL requisitada é uma das que as respostas trazem conteúdos que mutáveis constantemente
   //! 1.2ª - Faz a requisição na rede
-  //! 1.3ª - Clona o resultado e coloca no cache dinâmico sobrescrevendo um cache antigo se houver
+  //! 1.3ª - Clona o resultado e coloca no IndexedDB no respectivo ObjectStore(Tabela) sobrescrevendo os dados antigos se houver
   //! 1.4ª - Retorna para a requisição o resultado original vindo da rede
   const url = 'http://localhost/project-barganhapp/backend-api/public/posts';
   //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
   if(event.request.url.indexOf(url) > -1){
     
     event.respondWith(
-      caches.open(CACHE_DYNAMIC_NAME)
-        .then( cache => {
-          return fetch(event.request)
-            .then( response => {
-              //!OBS: Diferente do caches.add o put não faz a request e salva a resposta, ele já acessa o cache específico pela key informada no primeiro parâmetro e no segundo passa a informação que deve ser inserida no cache
-              cache.put(event.request.url, response.clone())
-              return response; //Retornando a reposta original
+      fetch(event.request)
+        .then(response => {
+
+          //Fazendo um clone da resposta da requisição
+          let clonedResponse = response.clone();
+
+          //Limpando todas informações no respectivo ObjectStore(Tabela) 'posts' dentro IndexedDB antes de inserir as novas informações vindas da requisição na rede
+          clearAllData('posts')
+            .then(() => {
+              //Transformando o clone da resposta em um objeto JSON
+              return clonedResponse.json();
             })
+            .then(clonedResponseJSON => {
+              let postsData = clonedResponseJSON.data;
+
+              //Percorrendo cada JSON de CADA anúncio/post no retorno da requisição
+              for (let key in postsData) {
+                //Escrevendo as informações no ObjectStore posts do IndexedDB instanciado no arquivo indexedDB.js                
+                writeData('posts', postsData[key]);
+              }
+            });
+          return response; //Retornando a reposta original
         })
     );
   }

@@ -94,9 +94,17 @@
   <footer>
     <a href="https://lucaslgr.github.io/"><h4>Lucas Guimarães &copy; 2020</h4></a>
   </footer>
-  <script type="text/javascript" src="./src/js/promise.js"></script>
+  <!-- Para caso o navegador não tenha suporte a Promises, importamos uma Promise manualmente e incorporamos no navegador -->
+  <script type="text/javascript" src="./src/js/promise.js"></script> 
+  <!-- Para caso o navegador não tenha suporte a Fetch, importamos uma Fetch manualmente e incorporamos no navegador -->
   <script type="text/javascript" src="./src/js/fetch.js"></script>
+  <!-- Lib para trabalhar com IndexedDB do navegador utilizando Promises -->
+  <script type="text/javascript" src="./src/js/idb.js"></script>
+  <!-- Ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB -->
+  <script type="text/javascript" src="./src/js/indexedDB.js"></script>
+  <!-- Core da aplicação frontend -->
   <script type="text/javascript" src="./src/js/app.js"></script>
+  <!-- Responsável por tudo com relação ao feed de anúncios -->
   <script type="text/javascript" src="./src/js/feed.js"></script>
 </body>
 

@@ -80,6 +80,7 @@ function createPost(dataPost) {
 
   //Montando os elementos HTML que constituem o DOM
   let postWrapper = document.createElement('div');
+  postWrapper.setAttribute('data-id', dataPost.id);
   postWrapper.className = 'each-post';
 
   if (dataPost.image === '')
@@ -156,7 +157,7 @@ function fillPosts() {
     return response.json();
   })
   .then((responseJSON) => {
-    console.log(`Cards from web`, responseJSON);
+    console.log(`Data Cards from web`, responseJSON);
 
     //Setando a flag que indica que a requisição executada pela network recebeu a resposta
     networkDataReceived = true;
@@ -164,7 +165,7 @@ function fillPosts() {
     if (responseJSON.errors) {
       throw responseJSON.errors;
     }
-    clearAllCards();
+    clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
     responseJSON.data.map((eachPost) => {
       createPost(eachPost);
     })
@@ -174,23 +175,20 @@ function fillPosts() {
       // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
   })
 
-  //Verifica se o navegador/janela tem o recurso de cache
-  if ('caches' in window) {
-    caches.match(endpoint)
-      .then( (response) => {
-        return response.json();
-      })
-      .then( (responseJSON) => {
-        console.log(`Cards from cache`, responseJSON);
-
+  //Verifica se o navegador/janela tem o recurso de IndexedDB
+  if ('indexedDB' in window) {
+    readAllData('posts')
+      .then( responseJSON => {
         if (responseJSON.errors) {
           throw responseJSON.errors;
         }
 
         //Checa se não recebeu a informação da requisição feita pela network primeiro
         if(!networkDataReceived){
-          clearAllCards();
-          responseJSON.data.map((eachPost) => {
+          console.log('Data Cards from indexedDB', responseJSON);
+          clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
+
+          responseJSON.map( eachPost => {
             createPost(eachPost);
           })
         }
@@ -198,6 +196,29 @@ function fillPosts() {
       .catch((errors) => {
         console.log('ERRO', errors);
       })
+    
+    // caches.match(endpoint)
+    //   .then( (response) => {
+    //     return response.json();
+    //   })
+    //   .then( (responseJSON) => {
+    //     console.log('From cache', responseJSON);
+
+    //     if (responseJSON.errors) {
+    //       throw responseJSON.errors;
+    //     }
+
+    //     //Checa se não recebeu a informação da requisição feita pela network primeiro
+    //     if(!networkDataReceived){
+    //       clearAllCards();
+    //       responseJSON.data.map((eachPost) => {
+    //         createPost(eachPost);
+    //       })
+    //     }
+    //   })
+    //   .catch((errors) => {
+    //     console.log('ERRO', errors);
+    //   })
   }
 
 }
