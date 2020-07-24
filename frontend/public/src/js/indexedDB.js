@@ -5,6 +5,7 @@
  * 3º Parâmetro: Callback que é executado após a criação do DB
  */
 let dbPromise = idb.open('posts-store', 1, (db) => {
+  //? Todos os posts/anuncios do BD
   //* Checando se NÃO existe um objectStore com o nome que desejamos criar para não termos uma duplicidade
   if (!db.objectStoreNames.contains('posts')) {
     /**
@@ -13,6 +14,17 @@ let dbPromise = idb.open('posts-store', 1, (db) => {
      * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
      */
     db.createObjectStore('posts', { keyPath: 'id' })
+  }
+
+  //? Todos os posts inseridos pelo usuário quando o app está sem conexão são armazenados temporariamente para serem sincronizados assim que a conexão voltar
+  //* Checando se NÃO existe um objectStore com o nome que desejamos criar para não termos uma duplicidade
+  if (!db.objectStoreNames.contains('sync-posts')) {
+    /**
+     * *Instanciando um ObjectStore no DB posts-store, um Object-Store é similar a uma Tabela no BD convencional
+     * 1º Parâmetro: Nome do Object Store
+     * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
+     */
+    db.createObjectStore('sync-posts', { keyPath: 'id' })
   }
 });
 

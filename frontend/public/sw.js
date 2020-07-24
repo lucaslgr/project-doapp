@@ -8,8 +8,8 @@ importScripts('./src/js/idb.js');
 importScripts('./src/js/indexedDB.js');
 
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v0';
-const CACHE_DYNAMIC_NAME = 'dynamic-v0';
+const CACHE_STATIC_NAME = 'static-v1';
+const CACHE_DYNAMIC_NAME = 'dynamic-v1';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -84,7 +84,7 @@ self.addEventListener('install', (event) => {
         cache.addAll(STATIC_FILES);
       })
   )
-})
+});
 
 /**
  * Evento de ativação do Service Worker, é disparado assim que o SW é instalado no navegador
@@ -110,7 +110,7 @@ self.addEventListener('activate', (event) => {
 
   //Aplica as atividades executadas pelo SW no primeiro carregamento da página
   return self.clients.claim();
-})
+});
 
 /**
  * Evento fetch do Service Worker, é disparado interceptando sempre que o navegador atender algum fetch logo manipulamos a
@@ -201,4 +201,69 @@ self.addEventListener('fetch', (event) => {
     );
   }
 
-})
+});
+
+/**
+ * Evento sync do SW é ativado sempre que temos uma conexão reestabelecida ou sempre que já temos uma conexão e é registrado uma
+ * nova tarefa 
+ */
+self.addEventListener('sync', (event) => {
+  const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+
+  console.log('[Service Worker] Background Syncing', event);
+
+  //Verificando se a task registrada é uma 'sync-new-post'
+  if( event.tag === 'sync-new-post'){
+    console.log('[Service Worker] Syncing new Posts');
+
+    event.waitUntil(
+      //Lendo todas informações gravadas no ObjectStore(Tabela) sync-posts no IndexedDB
+      readAllData('sync-posts')
+        .then( postsToSync  => {
+          //Percorrendo todos os posts retornados do ObjectStore a serem sincronizados com a API
+          for (let post of postsToSync) {
+
+            //Faz a requisição ao endpoint para sincronizar os posts do ObjectStore sync-posts com a API
+            fetch(endpoint, {
+              "method": "POST",
+              "headers": {
+                'Content-Type': 'application/json'
+              },
+              "body": JSON.stringify(post)
+            })
+            .then((response) => {
+              //Checando a requisição foie executada com sucesso
+              if(response.ok){
+                //Deletando o post do ObjectStore sync-posts no IndexedDB que acabou de ser enviado para requisição
+                deleteItemFromData('sync-posts', post.id); //TODO - Consertar 
+              }
+              return response.json();
+            })
+            .then( async (responseJSON) => {
+              if (responseJSON.errors) {
+                throw responseJSON.errors;
+              }
+              console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
+              
+              
+              //? Enviando uma mensagem para a main thread do navegador no lado do client para atualizar os posts/anuncios usando a funcao fillPosts()
+              // Pegando todos os clients
+              // TODO if (!event.clientId) return;
+              const allClients = await clients.matchAll({ includeUncontrolled: true});
+              
+              // Sai se não conseguirmos pegar o client da main thread... Eg, if it closed.
+              if (!(allClients.length > 0) || !(allClients[0])) return;
+
+              // Envia uma mensagem para o client da main thread informando no JSON, action(funcao) que deverá ser executada na thread principal 
+              allClients[0].postMessage({
+                action: 'fillPosts'
+              });
+            })
+            .catch((errors) => {
+              console.log('ERRO', errors);
+            })
+          }
+        })
+    );
+  }
+});

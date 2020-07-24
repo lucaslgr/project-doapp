@@ -24,7 +24,7 @@ function sendModalPost() {
   let price = $('input[name=price]').value;
   let whatsapp_contact = $('input[name=whatsapp-contact]').value;
 
-  let request_data = {
+  let requestData = {
     title: title,
     location: location,
     image: image,
@@ -32,25 +32,42 @@ function sendModalPost() {
     whatsapp_contact: whatsapp_contact
   };
 
-  //*Verificando se no navegador existe os recursos de serviceWorker e SyncManager(BackgroundSyncronization)
+  //*Verificando se no navegador existe os recursos de [serviceWorker] e [SyncManager](BackgroundSyncronization)
   if('serviceWorker' in navigator && 'SyncManager' in window){
     //*Quando o [SW] estiver registrado, instalado e ativado ele retorna uma promise no .ready
     navigator.serviceWorker.ready
       .then( sw => {
-        // TODO - Salvar as informações da requisição no IndexedDB para serem sincronizadas no [SW]
+        //Setando um ID temporário para os posts a serem armazenados no IndexedDB
+        requestData.id = new Date().toISOString();
 
-        //*Acessando o Sync Manager do [SW] e registrando uma async task com o nome passado no parâmetro
-        sw.sync.register('sync-new-post');
+        //Salvando as informações da requisição no IndexedDB para serem sincronizadas no [SW]
+        writeData('sync-posts', requestData)
+          .then( () => {
+            //*Acessando o Sync Manager do [SW] e registrando uma async task com o nome passado no parâmetro
+            sw.sync.register('sync-new-post');
+          })
+          .then( () => {
+            alert('Anúncio inserido com sucesso!');
+            // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
+            clearModalAddPostInputs();
+            closeModalAddPost();
+          })
+          .catch((errors) => {
+            console.log('ERRO', errors);
+            alert(`ERRO na sincronização de anúncios : ${errors.msg}`);
+            closeModalAddPost();
+          })
       });
   }
-
-  fetch(endpoint, {
-    "method": "POST",
-    "headers": {
-      'Content-Type': 'application/json'
-    },
-    "body": JSON.stringify(request_data)
-  })
+  //* Se o navegador não tiver recursos de [SW] e [SyncManager]
+  else {
+    fetch(endpoint, {
+      "method": "POST",
+      "headers": {
+        'Content-Type': 'application/json'
+      },
+      "body": JSON.stringify(requestData)
+    })
     .then((response) => {
       return response.json();
     })
@@ -58,9 +75,8 @@ function sendModalPost() {
       if (responseJSON.errors) {
         throw responseJSON.errors;
       }
-
       alert('Anúncio inserido com sucesso!');
-      console.log('Inserido um novo post, seu id eh: ' + responseJSON.id_post);
+      console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
       fillPosts();
       clearModalAddPostInputs();
       closeModalAddPost();
@@ -70,6 +86,7 @@ function sendModalPost() {
       alert(`ERRO ${errors.status_code} : ${errors.msg}`);
       closeModalAddPost();
     })
+  }
 }
 
 function createPost(dataPost) {
@@ -148,12 +165,12 @@ function createPost(dataPost) {
   sectionPostsArea.appendChild(postWrapper);
 }
 
-//Remove todos os anuncios
+//Limpa todos os cards de posts/anuncios
 function clearAllCards() {
   $$('section#posts .section-area .each-post').forEach(each => each.remove());
 }
 
-//Puxando a API todos posts do banco e inserindo na tela
+//Puxando da API todos posts do banco e inserindo na tela
 function fillPosts() {
   // ! ESTRATÉGIA : CACHE THEN NETWORK
   let networkDataReceived = false;
@@ -209,6 +226,7 @@ function fillPosts() {
         console.log('ERRO', errors);
       })
     
+    //!CACHE
     // caches.match(endpoint)
     //   .then( (response) => {
     //     return response.json();
@@ -235,8 +253,26 @@ function fillPosts() {
 
 }
 
+//Registra um escutador de mensagens vindas do [SW] para main thread no client encaminha para as respectivas actions de acordo com a mensagem
+function registerServiceWorkerMessagesListener(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('message', event => {
+      // console.log(event.data.msg, event.data.url);
+      console.log('Mensagem recebida do [SW] para main thread', event.data.action);
+
+      if(event.data.action){
+        //Executando a action(funcao) dinamicamente
+        window[event.data.action]();
+      }
+    });
+  }
+}
+
 //Preenchendo a area de posts com todos os posts
 fillPosts();
+
+//Chamando a funcao que implanta um escutador das mensagens vindas do [SW] para o client na main thread
+registerServiceWorkerMessagesListener();
 
 //Quando toda a página carregar, executa esse bloco
 (function () {
