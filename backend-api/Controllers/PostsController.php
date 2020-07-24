@@ -88,9 +88,11 @@ class PostsController extends Controller{
             return;
         }
 
-        $response['data'] = [
-            'id_post' => $result
-        ];
+        //Verifica se foi enviado id que representa o anuncio/post no indexedDB no frontend da aplicacao
+        if(isset($data['id']) && !empty($data['id']))
+            $response['data']['id_indexedDB'] = $result;
+
+        $response['data']['id_post'] = $result;
         $this->returnJson($response, 200);
     }
 }

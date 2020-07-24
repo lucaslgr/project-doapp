@@ -232,23 +232,21 @@ self.addEventListener('sync', (event) => {
               "body": JSON.stringify(post)
             })
             .then((response) => {
-              //Checando a requisição foie executada com sucesso
-              if(response.ok){
-                //Deletando o post do ObjectStore sync-posts no IndexedDB que acabou de ser enviado para requisição
-                deleteItemFromData('sync-posts', post.id); //TODO - Consertar 
-              }
               return response.json();
             })
             .then( async (responseJSON) => {
               if (responseJSON.errors) {
                 throw responseJSON.errors;
               }
+
+              //Deletando o post/anuncio do ObjectStore sync-posts no IndexedDB que acabou de ser sincronizado pela requisição
+              deleteItemFromData('sync-posts', responseJSON.data.id_indexedDB);
+
               console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
               
               
               //? Enviando uma mensagem para a main thread do navegador no lado do client para atualizar os posts/anuncios usando a funcao fillPosts()
               // Pegando todos os clients
-              // TODO if (!event.clientId) return;
               const allClients = await clients.matchAll({ includeUncontrolled: true});
               
               // Sai se não conseguirmos pegar o client da main thread... Eg, if it closed.
