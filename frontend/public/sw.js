@@ -8,8 +8,8 @@ importScripts('./src/js/idb.js');
 importScripts('./src/js/indexedDB.js');
 
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v1';
-const CACHE_DYNAMIC_NAME = 'dynamic-v1';
+const CACHE_STATIC_NAME = 'static-v2';
+const CACHE_DYNAMIC_NAME = 'dynamic-v2';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -222,7 +222,7 @@ self.addEventListener('sync', (event) => {
         .then( postsToSync  => {
           //Percorrendo todos os posts retornados do ObjectStore a serem sincronizados com a API
           for (let post of postsToSync) {
-
+            
             //Faz a requisição ao endpoint para sincronizar os posts do ObjectStore sync-posts com a API
             fetch(endpoint, {
               "method": "POST",

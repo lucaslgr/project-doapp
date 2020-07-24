@@ -130,6 +130,6 @@ function deleteItemFromData(objectStoreName, id) {
       return transaction.complete;
     })
     .then( () => {
-      console.log('Item deleted from IndexedId!');
+      console.log('Item deleted from IndexedDB! id:', id);
     })
 }
