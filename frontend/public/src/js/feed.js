@@ -32,6 +32,18 @@ function sendModalPost() {
     whatsapp_contact: whatsapp_contact
   };
 
+  //*Verificando se no navegador existe os recursos de serviceWorker e SyncManager(BackgroundSyncronization)
+  if('serviceWorker' in navigator && 'SyncManager' in window){
+    //*Quando o [SW] estiver registrado, instalado e ativado ele retorna uma promise no .ready
+    navigator.serviceWorker.ready
+      .then( sw => {
+        // TODO - Salvar as informações da requisição no IndexedDB para serem sincronizadas no [SW]
+
+        //*Acessando o Sync Manager do [SW] e registrando uma async task com o nome passado no parâmetro
+        sw.sync.register('sync-new-post');
+      });
+  }
+
   fetch(endpoint, {
     "method": "POST",
     "headers": {
