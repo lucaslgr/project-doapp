@@ -260,6 +260,7 @@ function registerServiceWorkerMessagesListener(){
       // console.log(event.data.msg, event.data.url);
       console.log('Mensagem recebida do [SW] para main thread', event.data.action);
 
+      //Verifica se foi setada uma action
       if(event.data.action){
         //Executando a action(funcao) dinamicamente
         window[event.data.action]();

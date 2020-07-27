@@ -169,6 +169,16 @@ header .colum-right{
 header .colum-right ul.menu {
     display: flex;
     list-style: none;
+    align-items: center;
+}
+
+/* São mostradas pelo javascript somente se for indentificado que o navegador suporta notificações */
+header .enable-notifications{
+    display: none;
+}
+
+header .colum-right ul .enable-notifications{
+    margin-right: 20px;
 }
 
 header .colum-right ul.menu li:first-child{

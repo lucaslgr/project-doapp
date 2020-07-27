@@ -244,9 +244,8 @@ self.addEventListener('sync', (event) => {
 
               console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
               
-              
               //? Enviando uma mensagem para a main thread do navegador no lado do client para atualizar os posts/anuncios usando a funcao fillPosts()
-              // Pegando todos os clients
+              // Pegando todos os clients controlados pelo SW, EX: index.html, help.html, offline.html
               const allClients = await clients.matchAll({ includeUncontrolled: true});
               
               // Sai se não conseguirmos pegar o client da main thread... Eg, if it closed.
@@ -264,4 +263,30 @@ self.addEventListener('sync', (event) => {
         })
     );
   }
+});
+
+/**
+ * Evento notificationclick fica escutando se alguma action(botão) de alguma notification foi acionado no dispositivo do usuário
+ */
+self.addEventListener('notificationclick', (event) => {
+  let notification = event.notification; //Pegando a notificação que contém a action disparada 
+  let action = event.action; //Pegando propriedade action que representa o ID que identifica qual action(botão) foi clicada
+
+  console.log(notification);
+
+  if(action === 'confirm'){
+    console.log('Confirm was chosen');
+    notification.close();
+  } else {
+    console.log(action);
+    notification.close();
+  }
+});
+
+/**
+ * Evento notificationclose fica escutando se a notificação foi fechada de qualquer forma no dispositivo, 
+ * Ex: Limpada da tela, Ignorada arrastando para o lado, etc
+ */
+self.addEventListener('notificationclose', (event) => {
+  console.log('Notification was closed', event);
 });
