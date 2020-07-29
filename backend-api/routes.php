@@ -9,7 +9,9 @@
     $routes = array();
 
     //Cofiguração das rotas
-    $routes['/posts/new'] = '/posts/addpost'; //POST
-    $routes['/posts'] = '/posts/getall'; //GET
-    $routes['/'] = '/home/index';
+    $routes['/posts/new']               = '/posts/addPost'; //POST
+    $routes['/posts']                   = '/posts/getAll'; //GET
+    $routes['/savesubscription']        = '/home/savesubscription'; //POST
+    // $routes['/generatekeys']         = '/posts/generateVapidKeys'; //GET
+    $routes['/']                        = '/home/index';
 ?>

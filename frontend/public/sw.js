@@ -8,8 +8,8 @@ importScripts('./src/js/idb.js');
 importScripts('./src/js/indexedDB.js');
 
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v2';
-const CACHE_DYNAMIC_NAME = 'dynamic-v2';
+const CACHE_STATIC_NAME = 'static-v1';
+const CACHE_DYNAMIC_NAME = 'dynamic-v1';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -19,6 +19,8 @@ const STATIC_FILES = [
   BASE_URL+'/src/js/promise.js',
   BASE_URL+'/src/js/fetch.js',
   BASE_URL+'/src/js/idb.js',
+  BASE_URL+'/src/js/indexedDB.js',
+  BASE_URL+'/src/js/helperFunctions.js',
   BASE_URL+'/src/css/normalize.css',
   BASE_URL+'/src/css/style.css',
   BASE_URL+'/src/css/fontello.css',

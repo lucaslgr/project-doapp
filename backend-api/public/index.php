@@ -9,7 +9,7 @@
     //Liberando todos os verbos HTTP
     header("Access-Control-Allow-Methods: *");
     //Liberando o header Content-Type
-    header("Access-Controll-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With");
 
     //Importando os arquivos de setup
     require '../config.php';

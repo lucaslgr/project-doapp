@@ -1,9 +1,14 @@
 <?php
 
+//!ATENTION - VAPID keys para autenticação das Web Push Notifications
+//!'publicKey' => string 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4' (length=87)
+//!'privateKey' => string 'AMUaVRayDDg9O2Iw8UqUenzVMa8d1DIe0qOvyLGshq8' (length=43)
+
 namespace Controllers;
 use \Core\Controller;
 use \Models\Posts;
 use \Util\ErrorsManager;
+use \Minishlink\WebPush\VAPID;
 
 class PostsController extends Controller{
     
@@ -39,6 +44,12 @@ class PostsController extends Controller{
         $response['data'] = $result;
         $this->returnJson($response, 200);
     }
+
+    // public function generateVapidKeys()
+    // {
+    //     var_dump(VAPID::createVapidKeys()); // store the keys afterwards
+    //     exit;
+    // }
 
     public function addPost()
     {

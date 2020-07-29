@@ -1,6 +1,10 @@
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
+const API_BASE_URL = `http://127.0.0.1/project-barganhapp/backend-api/public`;
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
+
+//!Public Key para Autenticação VAPID para acessar os serviços de Web Push Notification dos servidores dos navegadores
+const PUBLIC_KEY_VAPID = 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4';
 
 
 /**
@@ -34,6 +38,7 @@ function registerServiceWorker() {
 function displayConfirmNotification(){
   //! Mostrando a notificação lado do Service Worker
   if('serviceWorker' in navigator){
+    //Retorna uma promise cujo resolve é o registro do SW
     navigator.serviceWorker.ready
       .then( sw => {
         let options = {
@@ -91,15 +96,67 @@ function displayConfirmNotification(){
 }
 
 /**
- * ?Função que configura a aplicação para disponibilizar ao usuário as Notifications e as Push Notifications
+ * Faz o registro da subscription entre a aplicação e o navegador do dispositivo para que a aplicação possa realizar Push Notifications 
+ */
+function configureWebPushSubscription(){
+  
+  //Se SW não for um recurso disponível no navegador, cancelamos a funcao
+  if(!('serviceWorker' in navigator)){
+    return;
+  }
+
+  //Variavel para armazenar o registro do SW para ser usado posteriormente
+  let swReg;
+
+  //Retorna uma promise cujo resolve é o registro do SW
+  navigator.serviceWorker.ready
+    .then( sw => {
+      swReg = sw;
+
+      //Pegando todas subscriptions existentes dessa aplicação com o navegador/dispositivo do usuário
+      return sw.pushManager.getSubscription();
+    })
+    .then( subscription => {
+      //Checando se a subcription ainda não existe, criamos ela
+      if(subscription === null){
+        console.log('New Subscription was created!');
+
+        //Criando uma subscribe
+        //!OBS: Uma subscribe está vinculada à ESSA aplicação no dispositivo do usuário, ao SW e ao navegador com os serviços do Google para notificações
+        return swReg.pushManager.subscribe({
+          userVisibleOnly: true, //Esse parametro indica basicamente, uma admissão de que você vai mostrar uma notificação cada vez que um push for enviado
+          applicationServerKey: urlBase64ToUint8Array(PUBLIC_KEY_VAPID), //TODO - É necessário gerar as keys(PRIVADA e PUBLICA) para autenticação asincrona
+        });
+      } else {
+        //Se entrar aqui, é porquê já foi criada a subscription
+      }
+    })
+    .then( newSubscription => {
+      //Gravando a subscribe gerada no BD para podermos enviar WebPushNotifications direto do backend para o usuário através da subscription
+      return fetch(`${API_BASE_URL}/home/savesubscription`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept':'application/json',
+        },
+        body: JSON.stringify(newSubscription)
+      })
+    })
+    .then( response => {
+      console.log('ID da subscription gravada', response.json());
+    });
+}
+
+/**
+ *  Função que configura a aplicação para disponibilizar ao usuário as Notifications e as Push Notifications
  * 1º : Verifica se tem o recurso de Notifications no navegador do usuário
  * 2º : Se 1º for true, associa o evento que dispara um pedido para o usuário que pede permissão para usar o recurso de notifications no seu navegador
  * 3º : Se o pedido foi aceito pelo usuário, esconde o botão de de ativar notificações e já mostra uma notificação de sucesso
  */
 function settingsEventButton2EnableNotifications(){
   
-  //Checando se a API de notificações existe no navegador do usuário
-  if('Notification' in window){
+  //Checando se a API de notificações e de SW existem no navegador do usuário
+  if('Notification' in window && 'serviceWorker' in navigator){
     //Pegando os dois botões que habilitam notificações, um para mobile e um para desktop/telas maiores
     let btnsEnableNotification = $$('.enable-notifications');
     
@@ -110,22 +167,28 @@ function settingsEventButton2EnableNotifications(){
 
       //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
       eachBtn.addEventListener( 'click' , event => {
+        //Desativando o botão para não permitir dois cliques seguidos
+        event.target.style.disabled = true;
+
         // Mostra uma mensagem padrão pedindo o usuário para dar permissões de notificação para a aplicação
         //!OBS: A permissão de notificação requisitada ao usuário também da permissão ao recurso de Push Notifications, que são as notificações que vem do servidor para o navegador e do navegador para a aplicação
         Notification.requestPermission( result => {
           console.log('User Choice', result);
 
           //Checando a escolha do usuário
-          if(result !== 'granted'){
+          if(result !== 'granted'){ //Se o usuario não aceitou (result==='denied')
             console.log('No notification permission granted!');
-          } else {
+          } else {//Se o usuário aceitou (result==='granted')
             console.log('The permission to notifications was accept!');
 
             //Escondendo o botão após o usuário dar as permissões para notifications
-            event.target.style.display = 'none';
+            // event.target.style.display = 'none';
 
-            //Disparando a notificação de sucesso
-            displayConfirmNotification();
+            //Disparando a notificação de sucesso DIRETO DA APLICAÇÃO
+            // displayConfirmNotification();
+
+            //Disparando o registro de uma subscription no dispositivo com o navegador para realizar Push Notifications
+            configureWebPushSubscription();
           }
         });
       }); 
