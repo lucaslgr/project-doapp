@@ -34,7 +34,6 @@ const STATIC_FILES = [
 ];
 
 
-
 /**
  * Verifica se o número de caches passou de um limite estabelecido em maxItems, se tiver passado remove os mais antigos recursivamente
  * @param {string} cacheName 
@@ -292,3 +291,34 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('notificationclose', (event) => {
   console.log('Notification was closed', event);
 });
+
+/**
+ * Evento push fica escutando se o servidor de WPN(Web Push Notifications) do browser enviou alguma WPN para a subscription vinculada a este SW na aplicação do usuário
+ */
+self.addEventListener('push', (event) => {
+  console.log('Push Notification received', event);
+
+  //Setando uma configuração padrão para notificações caso não seja recebido o CONTEÚDO da WPN
+  let data = {title: 'New!', content: 'Something new Happened'};
+
+  //Checando se foi recebido o conteúdo da WPN
+  if(event.data){
+    //Transformando a string no formato JSON para um objeto
+    data = JSON.parse(event.data.text());
+  }
+
+  //Setando um JSON com as Options da WPN a ser lançada
+  let options = {
+    body: data.content,
+    icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,
+    image: `${BASE_URL}/src/images/products/product-default.png`, //Imagem a ser enviada no conteúdo
+    badge: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,//Badge é o ícone que aparece na barra do topo em dispositvos android quando você recebe uma notificação
+  };
+
+  event.waitUntil(
+    //Acessando o registro desse SW no navegador para lançar as WPN
+    self.registration.showNotification(
+      data.title,
+      options)
+  );
+}); 

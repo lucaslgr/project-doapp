@@ -130,6 +130,7 @@ class PostsController extends Controller{
         foreach ($allSubscriptions as $key => $eachSubs) {
 
             //Montando a Notificacao a ser enviada para cada Subscription
+            //!OBS: O payload é limitado pelos servidores de WPN dos navegadores a ter um tamanho de 4Kbytes, logo, para se enviar imagens enviamos apenas as URLs
             $notification = [
                 'subscription' => Subscription::create([
                     'endpoint' => $eachSubs['navigator_endpoint'],
