@@ -275,12 +275,32 @@ self.addEventListener('notificationclick', (event) => {
 
   console.log(notification);
 
-  if(action === 'confirm'){
+  if(action === 'confirm'){ //Se o click foi na button(acion)==confirm
     console.log('Confirm was chosen');
     notification.close();
-  } else {
+  } else { //Se o click foi em qualquer lugar da Notification menos na button(action)==confirm
     console.log(action);
-    notification.close();
+
+    //Abrindo a aplicação ou redirecionando para uma página específica caso a aplicação já esteja aberta
+    event.waitUntil(
+      //Pegando todos as janelas(os clients) abertas que estão sobre controle deste [SW]
+      clients.matchAll()
+        .then( allClients => {
+          //Buscando por uma janela(client) sob controle do SW que esteja aberta
+          let clientOpened = allClients.find( c => {
+            return c.visibilityState === 'visible';
+          });
+
+          if(clientOpened !== undefined){ //Verificando se encontrou algum client aberto
+            clientOpened.navigate(`${BASE_URL}${notification.data.url}`); //Redirecionando o client aberto para uma url da aplicação que foi setada pela API
+            clientOpened.focus();
+          } else { //Se não encontrou nenhum client aberto
+            clients.openWindow(`${BASE_URL}${notification.data.url}`); //Abrindo um client para uma url da aplicação que foi setada pela API
+          }
+
+          notification.close();
+        })
+    );
   }
 });
 
@@ -299,7 +319,7 @@ self.addEventListener('push', (event) => {
   console.log('Push Notification received', event);
 
   //Setando uma configuração padrão para notificações caso não seja recebido o CONTEÚDO da WPN
-  let data = {title: 'New!', content: 'Something new Happened'};
+  let data = {title: 'New!', content: 'Something new Happened', openUrl: '/help.html'};
 
   //Checando se foi recebido o conteúdo da WPN
   if(event.data){
@@ -313,6 +333,10 @@ self.addEventListener('push', (event) => {
     icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,
     image: `${BASE_URL}/src/images/products/product-default.png`, //Imagem a ser enviada no conteúdo
     badge: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,//Badge é o ícone que aparece na barra do topo em dispositvos android quando você recebe uma notificação
+    //A propriedade Data é uma meta data, ou seja, dentro dela podemos passar o que quisermos para a Notification
+    data: {
+      url: data.openUrl //Passando a url que deve ser chamada quando o usuario clicar na notificacao
+    }
   };
 
   event.waitUntil(

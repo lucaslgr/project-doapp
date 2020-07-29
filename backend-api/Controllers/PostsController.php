@@ -139,7 +139,11 @@ class PostsController extends Controller{
                         'auth' => $eachSubs['key_auth'],
                     ]
                 ]),
-                'payload' => '{"title":"Novo anúncio", "content": "Um novo anúncio foi postado!!!"}'
+                'payload' => '{
+                    "title":"Novo anúncio",
+                    "content": "Um novo anúncio foi postado!!!",
+                    "openUrl" : "/index.html"
+                }'
             ];
 
             //Enviando a notificação para cada Subscription
