@@ -131,6 +131,10 @@ input + input {
     display: flex!important;
 }
 
+.display-none{
+    display: none;
+}
+
 /* ! MENU */
 header {
     position: fixed;
@@ -335,14 +339,20 @@ i.icon-plus.add-post {
 } */
 
 .modal.modal-add-post{
-    transform: translateY(-100vh);
-    position: fixed;
+    transform: translateY(-400vh);
+    /* position: fixed; */
+    position: absolute;
     z-index: 2;
     background-color: var(--white-light);
     width: 100vw;
     /* height: calc(100vh - (70px + 40px)); */
-    height: 100vh;
+    min-height: calc(100vh - 70px);
+    /* height: auto; */
+    height: 100%;
+    min-height: auto;
     top: 70px;
+
+    overflow-y: scroll;
 
     display: flex;
     flex-direction: column;
@@ -353,12 +363,46 @@ i.icon-plus.add-post {
     box-shadow: 2px 0px 10px var(--gray-dark);
 }
 
+.modal-add-post.show-modal-add-post{
+    transform: translateY(0);
+}
+
 .modal.modal-add-post h1{
     color: var(--gray-dark);
 }
 
-.modal-add-post.show-modal-add-post{
-    transform: translateY(0);
+.modal.modal-add-post .image-picker-box {
+    margin: 20px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.modal-add-post .image-picker-box h4{
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.modal.modal-add-post .image-picker-box label{
+    color: #000;
+    padding: 10px 15px;
+    border: 1px solid var(--blue-dark);
+    border-radius: 10px;
+}
+
+.modal.modal-add-post video,
+.modal.modal-add-post canvas {
+    border: 1px solid #CCC;
+    margin-top: 20px;
+}
+
+.modal.modal-add-post button#btn-capture{
+    margin-top: 20px;
+}
+
+.modal.modal-add-post input[type=file]{
+    display: none;
 }
 
 .modal.modal-add-post .btn-group{

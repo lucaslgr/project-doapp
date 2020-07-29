@@ -1,10 +1,12 @@
 
 function showModalAddPost() {
   $('.modal.modal-add-post').classList.toggle('show-modal-add-post');
+  $('section#posts').classList.toggle('display-none');
 }
 
 function closeModalAddPost() {
   $('.modal.modal-add-post').classList.remove('show-modal-add-post');
+  $('section#posts').classList.remove('display-none');
 }
 
 function clearModalAddPostInputs() {
