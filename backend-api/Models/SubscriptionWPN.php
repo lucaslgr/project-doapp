@@ -40,4 +40,27 @@ class SubscriptionWPN extends Model{
 
         return $result;
     }
+
+    public function getAllSubscriptions()
+    {
+        $result = [];
+
+        $sql = $this->pdo->prepare(
+            "SELECT * FROM subscriptions_wpn"
+        );
+
+        $status_query = $sql->execute();
+
+        //Se houve algum erro
+        if(!$status_query){
+            ErrorsManager::setDatabaseError($result);
+            return $result;
+        }
+
+        if($sql->rowCount() > 0){
+            $result = $sql->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $result;
+    }
 }

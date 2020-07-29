@@ -143,7 +143,12 @@ function configureWebPushSubscription(){
       })
     })
     .then( response => {
-      console.log('ID da subscription gravada', response.json());
+      if(response.OK)
+        console.log('The subscriptions was sent to DATABASE through the API', response.json());
+        displayConfirmNotification();
+    })
+    .catch( error => {
+      console.log('The subscription not sent to DATABASE', error);
     });
 }
 
