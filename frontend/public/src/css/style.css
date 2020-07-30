@@ -373,10 +373,11 @@ i.icon-plus.add-post {
 
 .modal.modal-add-post .image-picker-box {
     margin: 20px 0px;
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    display: none;
 }
 
 .modal.modal-add-post .image-picker-box h4{
@@ -391,13 +392,18 @@ i.icon-plus.add-post {
     border-radius: 10px;
 }
 
+.modal.modal-add-post video {
+    width: 100vw;
+}
+
 .modal.modal-add-post video,
 .modal.modal-add-post canvas {
     border: 1px solid #CCC;
     margin-top: 20px;
+    display: none;
 }
 
-.modal.modal-add-post button#btn-capture{
+.modal.modal-add-post button#btn-img-capture{
     margin-top: 20px;
 }
 

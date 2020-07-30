@@ -8,8 +8,8 @@ importScripts('./src/js/idb.js');
 importScripts('./src/js/indexedDB.js');
 
 const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-const CACHE_STATIC_NAME = 'static-v1';
-const CACHE_DYNAMIC_NAME = 'dynamic-v1';
+const CACHE_STATIC_NAME = 'static-v5';
+const CACHE_DYNAMIC_NAME = 'dynamic-v5';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -223,14 +223,20 @@ self.addEventListener('sync', (event) => {
         .then( postsToSync  => {
           //Percorrendo todos os posts retornados do ObjectStore a serem sincronizados com a API
           for (let post of postsToSync) {
-            
+            //Pegando os dados dos Posts pegos do Indexed para serem sincronizados e transformando no formato FormData para podermos enviar a imagem
+            let postFormData = new FormData();
+            postFormData.append('id', post.id);
+            postFormData.append('title', post.title);
+            postFormData.append('location', post.location);
+            postFormData.append('price', post.price);
+            postFormData.append('whatsapp_contact', post.whatsapp_contact);
+            //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
+            postFormData.append('image', post.image, `${post.id}.png`); 
+
             //Faz a requisição ao endpoint para sincronizar os posts do ObjectStore sync-posts com a API
             fetch(endpoint, {
               "method": "POST",
-              "headers": {
-                'Content-Type': 'application/json'
-              },
-              "body": JSON.stringify(post)
+              "body": postFormData
             })
             .then((response) => {
               return response.json();

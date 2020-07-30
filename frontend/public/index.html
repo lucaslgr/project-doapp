@@ -85,9 +85,9 @@
     <h1>Adicione um anúncio!</h1>
     
     <!-- Campo para capturar a foto -->
-    <video id="player" autoplay></video>
-    <canvas id="canvas" width="320px" height="240px"></canvas>
-    <button class="btn-image-capture" id="btn-capture">Capturar</button>
+    <video id="video-player" autoplay></video>
+    <canvas id="canvas-img-capture" width="320px" height="240px"></canvas>
+    <button id="btn-img-capture" onclick="captureImageFromStrem2Canvas(this);">Capturar</button>
 
     <!-- Para dispositivos cujo navegador não fornece recurso de acessar a câmera nós apresentamos um input para enviar a foto -->
     <div class="image-picker-box">
