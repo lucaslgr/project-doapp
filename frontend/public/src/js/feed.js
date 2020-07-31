@@ -1,6 +1,9 @@
 //Picture capturada pelo Canvas
 let pictureCaptured;
 
+//GeoLocation capturada
+let locationCaptured;
+
 //Pegando a referência para os elementos a serem manipulados
 let videoPlayer = $('.modal.modal-add-post #video-player');
 let canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
@@ -8,6 +11,8 @@ let btnImgCapture = $('.modal.modal-add-post #btn-img-capture');
 let imgPickerBox = $('.modal.modal-add-post .image-picker-box');
 let imgPickerInput = $('.modal.modal-add-post #image-picker');
 let imgPickerInputLabel = $('.modal.modal-add-post label[for=image-picker]');
+let btnGeoLocation = $('.modal.modal-add-post #btn-location');
+let locationLoader = $('.modal.modal-add-post .spinner.spinner-location');
 
 //Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de camera 
 function initializeMedia() {
@@ -93,10 +98,92 @@ function captureImageFromInputFile(inputFile){
   imgPickerInputLabel.innerText = 'Uma imagem foi enviada!';
 }
 
+//Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de geo localização
+function initializeGeoLocation(){
+  //Checando se NÃO tem o recurso de geolocalização no navegador
+  if(!('geolocation' in navigator)){
+    btnGeoLocation.style.display = 'none';
+  }
+}
+
+//Captura a geoLocalizacao quando clica no botão de captura
+function captureGeoLocation(){
+  //Verificando se existe o recurso
+  if(!('geolocation' in navigator)){
+    return;
+  }
+
+  //Bloqueando o click do botão após clicar uma vez
+  btnGeoLocation.setAttribute('disabled', true);
+  btnGeoLocation.style.cursor = 'not-allowed';
+
+  //Monstrando o Loading 
+  locationLoader.style.display = 'inline-block';
+
+  //Pegando a posição atual
+  //!OBS: Antes de tentar pegar a posição do usuário o método getCurrentPosition pede permissão ao usuário para tentar acessar a API de geolocalização do navegador
+  navigator.geolocation.getCurrentPosition(
+    //1º Parametro: Callback com a localizacao
+    (position) => {
+      //Se conseguir pegar a localização, tiramos o loading e bloqueamos o botão
+      //Bloqueando o click do botão após clicar uma vez
+      btnGeoLocation.setAttribute('disabled', true);
+      btnGeoLocation.style.cursor = 'not-allowed';
+      setTimeout( () => {
+        locationLoader.style.display = 'none';
+      },500);
+
+      //Pegando a localizacao
+      locationCaptured = {
+        latitude : position.coords.latitude,
+        longitude : position.coords.longitude
+      }
+      console.log('Condinates got by GeoLocation API', position.coords);
+
+      $('input[name=location]').value = 'Cataguases York';
+      $('input[name=location]').focus();
+
+      //!TODO Conectar com API do google maps para conseguir o endereço da localização
+      const GOOGLE_API_KEY = 'AIzaSyB9nLWJO0iRO5va2CzqCscJ8by-Ap1PrY0';
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${locationCaptured.latitude},${locationCaptured.longitude}&key=${GOOGLE_API_KEY}`,
+        { method : 'GET' }
+      )
+      .then( response => {
+        if(response.ok)
+          return response.json();
+      })
+      .then( responseJSON => {
+        console.log('Response from Google Maps API', responseJSON);
+      })
+      .catch( error => {
+        console.log('Request to Google Maps API failed', error);
+      }); 
+    },
+    //2º Parâmetro: Callback com o erro
+    (error) => {
+      //Se houver uma falha, o usuário pode tentar pegar a localização novamente
+      //Tirando o bloqueio de click botão
+      btnGeoLocation.removeAttribute('disabled');
+      btnGeoLocation.style.cursor = 'pointer';
+      locationLoader.style.display = 'none';
+      alert('Por favor tente novamente, não foi possível pegar a sua localização...');
+
+      locationCaptured = null; //Setando a localização como null
+    },
+    //3º Parâmetro: JSON com options que setam caracteristicas na utilizacao da API
+    {
+      timeout: 7000 //Setando o tempo limite a API conseguir a localizacao na resposta da requisicao
+    }
+  );  
+}
+
 //Mostra o modal que adiciona uma nova postagem
 function showModalAddPost() {
-  //Inicializando a camera
+  //Inicializando a API de câmera
   initializeMedia();
+  //Inicializando a API de geolocalização
+  initializeGeoLocation();
 
   $('.modal.modal-add-post').classList.toggle('show-modal-add-post');
   $('section#posts').classList.toggle('display-none');
@@ -106,6 +193,13 @@ function showModalAddPost() {
 function closeModalAddPost() {
   $('.modal.modal-add-post').classList.remove('show-modal-add-post');
   $('section#posts').classList.remove('display-none');
+
+  //Parando o streaming de video vindo da tag <video> se ela tiver sendo utilizada
+  if(window.getComputedStyle(videoPlayer).getPropertyValue('display') !== 'none' ) {
+    videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
+      eachTrack.stop(); //Parando cada faixa de video
+    });
+  }
 
   //Tirando os elementos que mostram o streaming de video vindo da câmera e a area do image picker quando fecha o modal
   videoPlayer.style.display = 'none';
@@ -126,21 +220,23 @@ function closeModalAddPost() {
   contextCanvas.restore();
   //========================================================================================================================//
 
-  //Parando o streaming de video vindo da tag <video> se ela tiver sendo utilizada
-  if(window.getComputedStyle(videoPlayer).getPropertyValue('display') !== 'none' ) {
-    videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
-      eachTrack.stop(); //Parando cada faixa de video
-    });
-  }
-
   //Reabilitando o botão de captura caso esteja desabilitado
   btnImgCapture.removeAttribute('disabled');
   btnImgCapture.style.cursor = 'pointer';
+
+  //Reabilitando o botão de captura de localização
+  //Reabilitando o botão de captura caso esteja desabilitado
+  btnGeoLocation.removeAttribute('disabled');
+  btnGeoLocation.style.cursor = 'pointer';
 
   //Limpando o input[type=file]
   imgPickerInput.value = '';
   //Alterando o texto do Label
   imgPickerInputLabel.innerText = 'Selecione uma imagem!';
+
+  //Monstrando os controles para pegar a geolocalização
+  btnGeoLocation.style.display = 'block';
+  locationLoader.style.display = 'none';
 }
 
 //Limpa os inputs do modal

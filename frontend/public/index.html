@@ -97,9 +97,15 @@
     </div>
 
     <input type="text" name="title" placeholder="Título">
-    <input type="text" name="location" placeholder="Localização">
     <input type="text" name="price" placeholder="Preço">
     <input type="text" name="whatsapp-contact" placeholder="Número Whatsapp">
+    <input type="text" name="location" placeholder="Localização">
+
+    <div class="geolocation-box">
+      <button onclick="captureGeoLocation();" type="text" id="btn-location">Pegar Localização</button> 
+      <div class="spinner spinner-location"></div>
+    </div>
+
     <div class="btn-group">
       <button id="btn-send" onclick="sendModalPost();">Enviar</button>
       <button id="btn-close" onclick="closeModalAddPost();">Fechar</button>

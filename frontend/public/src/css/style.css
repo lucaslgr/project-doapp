@@ -398,6 +398,7 @@ i.icon-plus.add-post {
 
 .modal.modal-add-post #btn-img-capture{
     display: none;
+    margin-bottom: 20px;
 }
 
 .modal.modal-add-post video,
@@ -414,6 +415,36 @@ i.icon-plus.add-post {
 .modal.modal-add-post input[type=file]{
     display: none;
 }
+
+.modal.modal-add-post .geolocation-box{
+    display: flex;
+    width: 90%;
+    max-width: 300px;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* SPINNER da GEOLOCATION */
+.modal.modal-add-post .spinner{
+    width: 2rem;
+    height: 2rem;
+    /* display: inline-block; */
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--blue-dark);
+    /* margin-bottom: 2rem; */
+    animation: 1s spin infinite ease-in-out;
+    display: none;
+}
+
+/* Animação do Spinner */
+@keyframes spin{
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 .modal.modal-add-post .btn-group{
     width: 100%;
