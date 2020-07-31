@@ -396,6 +396,10 @@ i.icon-plus.add-post {
     width: 100vw;
 }
 
+.modal.modal-add-post #btn-img-capture{
+    display: none;
+}
+
 .modal.modal-add-post video,
 .modal.modal-add-post canvas {
     border: 1px solid #CCC;

@@ -54,6 +54,19 @@ class PostsController extends Controller{
         $method = $this->getMethod();
         $data = $this->getRequestData();
         // $authorization = $this->getAuthorization();
+        $name_img = '';
+
+        //Pegando o arquivo SE foi enviada E SE é do tipo .jpg ou .png
+        if(isset($_FILES['image']) && preg_match("/(png|jpg|jpeg)$/",$_FILES['image']['type']) === 1){
+            //Gerando um nome randomico para a imagem
+            $name_img = \substr(md5(time().rand(0,9999)), 0, 10).'.png';
+            $url_img = $_SERVER['DOCUMENT_ROOT']."/project-barganhapp/backend-api/public/Images/".$name_img;
+
+            \move_uploaded_file(
+                $_FILES['image']['tmp_name'],
+                $url_img
+            );
+        }
 
         //Se o método for diferente do GET retorna erro de método inválido
         if($method != 'POST'){
@@ -78,7 +91,7 @@ class PostsController extends Controller{
         $result = $posts->createNewPost(
             $data['title'],
             $data['location'],
-            $data['image'], 
+            \BASE_URL.'Images/'.$name_img, 
             $data['price'],
             $data['whatsapp_contact']
         );

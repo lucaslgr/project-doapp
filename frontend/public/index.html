@@ -87,13 +87,13 @@
     <!-- Campo para capturar a foto -->
     <video id="video-player" autoplay></video>
     <canvas id="canvas-img-capture" width="320px" height="240px"></canvas>
-    <button id="btn-img-capture" onclick="captureImageFromStrem2Canvas(this);">Capturar</button>
+    <button id="btn-img-capture" onclick="captureImageFromStream2Canvas(this);">Capturar</button>
 
     <!-- Para dispositivos cujo navegador não fornece recurso de acessar a câmera nós apresentamos um input para enviar a foto -->
     <div class="image-picker-box">
       <h4>Envie uma imagem do objeto</h4>
       <label for="image-picker">Selecionar uma imagem</label>
-      <input type="file" accept="image/*" id="image-picker">
+      <input onchange="captureImageFromInputFile(this);" type="file" accept="image/*" id="image-picker">
     </div>
 
     <input type="text" name="title" placeholder="Título">

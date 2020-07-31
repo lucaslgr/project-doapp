@@ -1,6 +1,14 @@
 //Picture capturada pelo Canvas
 let pictureCaptured;
 
+//Pegando a referência para os elementos a serem manipulados
+let videoPlayer = $('.modal.modal-add-post #video-player');
+let canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
+let btnImgCapture = $('.modal.modal-add-post #btn-img-capture');
+let imgPickerBox = $('.modal.modal-add-post .image-picker-box');
+let imgPickerInput = $('.modal.modal-add-post #image-picker');
+let imgPickerInputLabel = $('.modal.modal-add-post label[for=image-picker]');
+
 //Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de camera 
 function initializeMedia() {
   //Checando se no navegador temos o recurso de acesso a media devices do dispositivo [Até o momento, apenas o Chrome tem]
@@ -38,38 +46,36 @@ function initializeMedia() {
     //Se o usuário deu permissão para acessar a câmera
     .then( stream =>{
       //Enviando o fluxo de video para o a tag <video> definida na página
-      let videoPlayer = $('.modal.modal-add-post #video-player');
       videoPlayer.srcObject = stream;
-      videoPlayer.style.display = 'block';
+      videoPlayer.style.display = 'block'; //Monstrando a tag <video>
+      btnImgCapture.style.display = 'block'; //Monstrando o botão de Captura
     })
     //Se o usuário não deu permissão OU se foi lançado a Promise com ERROR para o caso em que o navegador não possui a API mediaDevices e nem foi possível implementar manualmente nas condições acima
     .catch( error => {
       //Se por algum motivo não foi possível utilizar a câmera, mostramos ao usuário a possibilidade de enviar um arquivo de imagem
-      $('.modal.modal-add-post .image-picker-box').style.display = 'flex';
+      imgPickerBox.style.display = 'flex';
     });
 }
 
 //Captura uma imagem da tag video e coloca ela na tag canvas
-function captureImageFromStrem2Canvas(buttonCapture){
-  let canvasElement = $('.modal.modal-add-post #canvas-img-capture');
-  let videoPlayer = $('.modal.modal-add-post #video-player');
+function captureImageFromStream2Canvas(buttonCapture){
 
   //Monstrando o Canvas que vai conter a imagem capturada
-  canvasElement.style.display = 'block';
+  canvasImgCapture.style.display = 'block';
   //Escondendo o Streaming de video (tag <video>)
   videoPlayer.style.display = 'none';
   // buttonCapture.style.display = 'none';
   buttonCapture.setAttribute('disabled', true); //Desabilitando o botão de captura
   buttonCapture.style.cursor = 'not-allowed'; //Mudando o cursor para not-allowed
 
-  let canvasContext = canvasElement.getContext('2d'); //Setando que o conteúdo do canvas terá 2 dimensões
+  let canvasContext = canvasImgCapture.getContext('2d'); //Setando que o conteúdo do canvas terá 2 dimensões
   //Inserindo a imagem do stream de video no conteúdo do Canvas
   canvasContext.drawImage(
     videoPlayer, //Fonte da imagem
     0, //Posição em X que ela ocupara no canvas
     0, //Posição em Y que ela ocupara no canvas
-    canvasElement.width, //Largura do destino 
-    videoPlayer.videoHeight / ( videoPlayer.videoWidth / canvasElement.width) //Altura do destino
+    canvasImgCapture.width, //Largura do destino 
+    videoPlayer.videoHeight / ( videoPlayer.videoWidth / canvasImgCapture.width) //Altura do destino
   );
 
   //Parando o streaming de video vindo da tag <video>
@@ -78,7 +84,13 @@ function captureImageFromStrem2Canvas(buttonCapture){
   });
 
   //Pegando a imagem capturada no canvas, passando a url para dataURItoBlob e pegando um arquivo de imagem no retorno
-  let picture = dataURItoBlob(canvasElement.toDataURL());
+  pictureCaptured = dataURItoBlob(canvasImgCapture.toDataURL());
+}
+
+//Captura a imagem upada na tag input[type=file] que é apresentada como opção quando o usuário não permite o aceso a câmera ou quando o navegador do usuário não fornece esse recurso
+function captureImageFromInputFile(inputFile){
+  pictureCaptured = inputFile.files[0]; //Pegando apenas o primeiro arquivo
+  imgPickerInputLabel.innerText = 'Uma imagem foi enviada!';
 }
 
 //Mostra o modal que adiciona uma nova postagem
@@ -96,13 +108,39 @@ function closeModalAddPost() {
   $('section#posts').classList.remove('display-none');
 
   //Tirando os elementos que mostram o streaming de video vindo da câmera e a area do image picker quando fecha o modal
-  $('.modal.modal-add-post #video-player').style.display = 'none';
-  $('.modal.modal-add-post .image-picker-box').style.display = 'none';
-  $('.modal.modal-add-post #canvas-img-capture').style.display = 'none';
+  videoPlayer.style.display = 'none';
+  imgPickerBox.style.display = 'none';
+  canvasImgCapture.style.display = 'none';
+
+  //==========================================<LIMPANDO O CONTEÚDO DO CANVAS>===============================================//
+  //Limpando o conteúdo capturado no canvas(SE HOUVER) sem resetá-lo
+  let contextCanvas = canvasImgCapture.getContext('2d');
+  // Store the current transformation matrix
+  contextCanvas.save();
+
+  // Use the identity matrix while clearing the canvas
+  contextCanvas.setTransform(1, 0, 0, 1, 0, 0);
+  contextCanvas.clearRect(0, 0, canvasImgCapture.width, canvasImgCapture.height);
+
+  // Restore the transform
+  contextCanvas.restore();
+  //========================================================================================================================//
+
+  //Parando o streaming de video vindo da tag <video> se ela tiver sendo utilizada
+  if(window.getComputedStyle(videoPlayer).getPropertyValue('display') !== 'none' ) {
+    videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
+      eachTrack.stop(); //Parando cada faixa de video
+    });
+  }
 
   //Reabilitando o botão de captura caso esteja desabilitado
-  $('#btn-img-capture').setAttribute('disabled', false);
-  $('#btn-img-capture').style.cursor = 'pointer';
+  btnImgCapture.removeAttribute('disabled');
+  btnImgCapture.style.cursor = 'pointer';
+
+  //Limpando o input[type=file]
+  imgPickerInput.value = '';
+  //Alterando o texto do Label
+  imgPickerInputLabel.innerText = 'Selecione uma imagem!';
 }
 
 //Limpa os inputs do modal
@@ -141,6 +179,7 @@ function sendModalPost() {
       .then( sw => {
         //Montando JSON das info do post a ser gravado no indexedDB para background synchronization
         let requestData = {
+          id: idPost,
           title: title,
           location: location,
           image: pictureCaptured,
@@ -222,10 +261,10 @@ function createPost(dataPost) {
   postWrapper.className = 'each-post';
 
   if (dataPost.image === '')
-    dataPost.image = 'product-default.png';
+    dataPost.image = './src/images/products/product-default.png';
 
   let postImg = document.createElement('img');
-  postImg.setAttribute('src', `./src/images/products/${dataPost.image}`); //!VALOR da url da imagem
+  postImg.setAttribute('src', dataPost.image); //!VALOR da url da imagem
   postImg.setAttribute('alt', 'imagem do produto');
 
   let postTitle = document.createElement('h1');
