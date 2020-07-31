@@ -144,7 +144,7 @@ function captureGeoLocation(){
       $('input[name=location]').focus();
 
       //!TODO Conectar com API do google maps para conseguir o endereço da localização
-      const GOOGLE_API_KEY = 'AIzaSyB9nLWJO0iRO5va2CzqCscJ8by-Ap1PrY0';
+      const GOOGLE_API_KEY = 'YOUR KEY';
       fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${locationCaptured.latitude},${locationCaptured.longitude}&key=${GOOGLE_API_KEY}`,
         { method : 'GET' }
