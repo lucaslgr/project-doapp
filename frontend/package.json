@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "workbox-wizard" : "workbox wizard",
-    "generate-sw" : "workbox generateSW workbox-config.js"
+    "workbox-wizard": "workbox wizard",
+    "generate-sw": "workbox generateSW workbox-config.js"
   },
   "author": "",
   "license": "ISC",
