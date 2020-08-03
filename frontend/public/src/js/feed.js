@@ -2,7 +2,7 @@
 let pictureCaptured;
 
 //GeoLocation capturada
-let locationCaptured;
+let locationCaptured = {latitude: 0, longitude: 0};
 
 //Pegando a referência para os elementos a serem manipulados
 let videoPlayer = $('.modal.modal-add-post #video-player');
@@ -117,6 +117,9 @@ function captureGeoLocation(){
   btnGeoLocation.setAttribute('disabled', true);
   btnGeoLocation.style.cursor = 'not-allowed';
 
+  //Flag levantada quando o alert é mostrado uma vez
+  let flagAlert = true;
+
   //Monstrando o Loading 
   locationLoader.style.display = 'inline-block';
 
@@ -134,26 +137,25 @@ function captureGeoLocation(){
       },500);
 
       //Pegando a localizacao
-      locationCaptured = {
-        latitude : position.coords.latitude,
-        longitude : position.coords.longitude
-      }
+      locationCaptured.latitude = position.coords.latitude;
+      locationCaptured.longitude = position.coords.longitude;
+
       console.log('Condinates got by GeoLocation API', position.coords);
 
-      $('input[name=location]').value = 'Cataguases York';
-      $('input[name=location]').focus();
-
-      //!TODO Conectar com API do google maps para conseguir o endereço da localização
-      const GOOGLE_API_KEY = 'YOUR KEY';
+      //!TODO Conectar com API do MAPBOX para conseguir o endereço da localização
+      const MAPBOX_APIKEY = 'pk.eyJ1IjoibHVjYXNsZ3IiLCJhIjoiY2tkYzJrcmVpMTBwMzJ0cGdjYnNnZHc4MSJ9.rpysMhdt4d9iJsKT2boujw';
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${locationCaptured.latitude},${locationCaptured.longitude}&key=${GOOGLE_API_KEY}`,
-        { method : 'GET' }
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationCaptured.longitude},${locationCaptured.latitude}.json?types=address&access_token=${MAPBOX_APIKEY}`
       )
       .then( response => {
-        if(response.ok)
+        if(response.ok){
           return response.json();
+        }
       })
       .then( responseJSON => {
+        console.log('Fetched adress from MAPBOX API reverse geolocation', responseJSON);
+        $('textarea[name=location]').value = responseJSON.features[0].place_name;
+        $('textarea[name=location]').focus();
         console.log('Response from Google Maps API', responseJSON);
       })
       .catch( error => {
@@ -167,7 +169,11 @@ function captureGeoLocation(){
       btnGeoLocation.removeAttribute('disabled');
       btnGeoLocation.style.cursor = 'pointer';
       locationLoader.style.display = 'none';
-      alert('Por favor tente novamente, não foi possível pegar a sua localização...');
+
+      if(flagAlert){
+        alert('Não foi possível pegar a sua localização...Por favor tente novamente ou digite o seu endereço manualmente.');
+        flagAlert = false;
+      }
 
       locationCaptured = null; //Setando a localização como null
     },
@@ -185,21 +191,28 @@ function showModalAddPost() {
   //Inicializando a API de geolocalização
   initializeGeoLocation();
 
-  $('.modal.modal-add-post').classList.toggle('show-modal-add-post');
-  $('section#posts').classList.toggle('display-none');
+  //Setando um tempo para que a animation ocorra
+  setTimeout(() => {
+    $('.modal.modal-add-post').classList.toggle('show-modal-add-post');
+    $('section#posts').classList.toggle('display-none');
+  }, 10);
 }
 
 //Fecha o modal que adiciona uma nova postagem
 function closeModalAddPost() {
-  $('.modal.modal-add-post').classList.remove('show-modal-add-post');
-  $('section#posts').classList.remove('display-none');
-
-  //Parando o streaming de video vindo da tag <video> se ela tiver sendo utilizada
-  if(window.getComputedStyle(videoPlayer).getPropertyValue('display') !== 'none' ) {
+  //Parando o streaming de video vindo da tag <video> se ela tiver com algum streaming(fluxo de video)
+  if(videoPlayer.srcObject) {
+    console.log('Stopping the Streamimg...');
     videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
       eachTrack.stop(); //Parando cada faixa de video
     });
   }
+
+  //Setando um tempo para que a animation ocorra
+  setTimeout(() => {
+    $('.modal.modal-add-post').classList.remove('show-modal-add-post');
+    $('section#posts').classList.remove('display-none');
+  }, 10);
 
   //Tirando os elementos que mostram o streaming de video vindo da câmera e a area do image picker quando fecha o modal
   videoPlayer.style.display = 'none';
@@ -242,7 +255,7 @@ function closeModalAddPost() {
 //Limpa os inputs do modal
 function clearModalAddPostInputs() {
   $('input[name=title]').value = '';
-  $('input[name=location]').value = '';
+  $('textarea[name=location]').value = '';
   $('input[name=price]').value = '';
   $('input[name=whatsapp-contact]').value = '';
   return;
@@ -254,7 +267,7 @@ function sendModalPost() {
 
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
   let title = $('input[name=title]').value;
-  let location = $('input[name=location]').value;
+  let location = $('textarea[name=location]').value;
   let price = $('input[name=price]').value;
   let whatsapp_contact = $('input[name=whatsapp-contact]').value;
 

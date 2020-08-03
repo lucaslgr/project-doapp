@@ -97,9 +97,11 @@ button:hover{
     filter: grayscale(80%);
 }
 
-input {
+input,
+textarea {
     width: 90%;
     max-width: 300px;
+    min-width: 300px;
     border-radius: 10px;
     border: 1px solid var(--blue-light);
     padding: 10px 10px;
@@ -107,7 +109,8 @@ input {
     color: var(--gray-dark);
 }
 
-input:focus{
+input:focus,
+textarea:focus{
     border: 1px solid var(--blue-dark);
     box-shadow: 0 0 10px var(--blue-light);
 }
@@ -116,9 +119,14 @@ input + input {
     margin-top: 20px;
 }
 
+input + textarea{
+    margin-top: 20px;
+}
+
 .only-small-screen-block{
     display: none !important;
 }
+
 .only-small-screen-flex{
     display: none!important;
 }
@@ -348,8 +356,9 @@ i.icon-plus.add-post {
     /* height: calc(100vh - (70px + 40px)); */
     min-height: calc(100vh - 70px);
     /* height: auto; */
-    height: 100%;
-    min-height: auto;
+    /* height: 100%; */
+    height: auto;
+    min-height: 100%;
     top: 70px;
 
     overflow-y: scroll;
@@ -394,6 +403,7 @@ i.icon-plus.add-post {
 
 .modal.modal-add-post video {
     width: 100vw;
+    max-width: 450px;
 }
 
 .modal.modal-add-post #btn-img-capture{
