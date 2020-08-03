@@ -1,0 +1,16 @@
+{
+  "name": "BarganhApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "workbox-wizard" : "workbox wizard",
+    "generate-sw" : "workbox generateSW workbox-config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "workbox-cli": "^5.1.3"
+  }
+}
