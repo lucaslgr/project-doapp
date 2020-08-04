@@ -21,7 +21,7 @@ function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       //Registrando o SW no navegador
-      .register('./sw-workbox.js') //!SW gerado pela workbox-cli
+      .register('./sw-source.js') //!SW gerado pela workbox-cli
       .then(() => {
         //Exibe a mensagem depois que o sw.js atende o evento de Instalação e retorna a promise do resister() na linha anterior
         console.log('Service Worker registered!');

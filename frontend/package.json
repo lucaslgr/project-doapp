@@ -5,6 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    
+    "setup-wizard--inject-manifest" :  "workbox wizard --injectManifest",
+    "build--inject-manifest" :  "workbox injectManifest workbox-config.js",
+    "reinject--inject-manifest" :  "workbox injectManifest", 
+
+
     "workbox-wizard": "workbox wizard",
     "generate-sw": "workbox generateSW workbox-config.js"
   },
