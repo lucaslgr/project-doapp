@@ -5,18 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    
-    "setup-wizard--inject-manifest" :  "workbox wizard --injectManifest",
-    "build--inject-manifest" :  "workbox injectManifest workbox-config.js",
-    "reinject--inject-manifest" :  "workbox injectManifest", 
-
-
+    "setup-wizard--inject-manifest": "workbox wizard --injectManifest",
+    "build--inject-manifest": "workbox injectManifest workbox-config.js",
+    "reinject--inject-manifest": "workbox injectManifest",
     "workbox-wizard": "workbox wizard",
-    "generate-sw": "workbox generateSW workbox-config.js"
+    "generate-sw": "workbox generateSW workbox-config.js",
+
+
+    "minify": "uglifyjs public/src/js/app.js -o public/src/js/app.min.js --compress --mangle && uglifyjs public/src/js/feed.js -o public/src/js/feed.min.js --compress --mangle && uglifyjs public/src/js/fetch.js -o public/src/js/fetch.min.js --compress --mangle && uglifyjs public/src/js/helperFunctions.js -o public/src/js/helperFunctions.min.js --compress --mangle && uglifyjs public/src/js/idb.js -o public/src/js/idb.min.js --compress --mangle && uglifyjs public/src/js/indexedDB.js -o public/src/js/indexedDB.min.js --compress --mangle && uglifyjs public/src/js/promise.js -o public/src/js/promise.min.js --compress --mangle",
+    "build": "npm run minify && npm run reinject--inject-manifest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "uglify-es": "^3.3.9",
     "workbox-cli": "^5.1.3"
   }
 }
