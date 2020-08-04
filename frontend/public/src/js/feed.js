@@ -252,7 +252,7 @@ function closeModalAddPost() {
 //Limpa os inputs do modal
 function clearModalAddPostInputs() {
   $('input[name=title]').value = '';
-  $('input[name=location]').value = '';
+  $('textarea[name=location]').value = '';
   $('input[name=price]').value = '';
   $('input[name=whatsapp-contact]').value = '';
   return;
@@ -264,7 +264,7 @@ function sendModalPost() {
 
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
   let title = $('input[name=title]').value;
-  let location = $('input[name=location]').value;
+  let location = $('textarea[name=location]').value;
   let price = $('input[name=price]').value;
   let whatsapp_contact = $('input[name=whatsapp-contact]').value;
 
