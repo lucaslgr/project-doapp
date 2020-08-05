@@ -60,7 +60,7 @@ class PostsController extends Controller{
         if(isset($_FILES['image']) && preg_match("/(png|jpg|jpeg)$/",$_FILES['image']['type']) === 1){
             //Gerando um nome randomico para a imagem
             $name_img = \substr(md5(time().rand(0,9999)), 0, 10).'.png';
-            $url_img = $_SERVER['DOCUMENT_ROOT']."/project-barganhapp/backend-api/public/Images/".$name_img;
+            $url_img = URL_IMG.$name_img;
 
             \move_uploaded_file(
                 $_FILES['image']['tmp_name'],

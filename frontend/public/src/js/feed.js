@@ -2,7 +2,7 @@
 let pictureCaptured;
 
 //GeoLocation capturada
-let locationCaptured = {latitude: 0, longitude: 0};
+let locationCaptured = { latitude: 0, longitude: 0 };
 
 //Pegando a referência para os elementos a serem manipulados
 let videoPlayer = $('.modal.modal-add-post #video-player');
@@ -17,13 +17,13 @@ let locationLoader = $('.modal.modal-add-post .spinner.spinner-location');
 //Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de camera 
 function initializeMedia() {
   //Checando se no navegador temos o recurso de acesso a media devices do dispositivo [Até o momento, apenas o Chrome tem]
-  if(!('mediaDevices' in navigator)){ //Se não tiver, criamos nosso própria recurso de mediaDevices no navegador
+  if (!('mediaDevices' in navigator)) { //Se não tiver, criamos nosso própria recurso de mediaDevices no navegador
     navigator.mediaDevices = {};
   }
 
   //Checando se o recurso mediaDevices não possui já definido o método getUserMedia [Só entra nesse IF se entrar no primeiro IF também]
-  if(!('getUserMedia' in navigator.mediaDevices)){
-    
+  if (!('getUserMedia' in navigator.mediaDevices)) {
+
     //Implementando a nossa própria solução, pegando os métodos antigos de acesso a câmera respectivos de cada navegador e implementamos manualmente no mediaDevices.getUserMedia
     navigator.mediaDevices.getUserMedia = (constraints) => {
       /**
@@ -31,14 +31,14 @@ function initializeMedia() {
        * navigator.mozGetUserMedia => Mozila
        */
       let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-      
+
       //Entra aqui se o navegador não for o Mozila ou o Safari e também não tiver a API mediaDevices definidas
-      if(!getUserMedia){
+      if (!getUserMedia) {
         return Promise.reject(new Error('getUserMedia is not implemented!'));
       }
 
       //!OBS: A Sintaxe nativa do método getUserMedia sempre retorna uma Promise, logo, devemos retornar uma Promise para caso de sucesso e de falha também para não quebrar a sintaxe
-      return new Promise( (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         //Setando como o método getUserMedia deverá ser chamado
         getUserMedia.call(navigator, constraints, resolve, reject);
       });
@@ -47,23 +47,23 @@ function initializeMedia() {
 
   //Acionando o método que vai pedir ao usuário permissão para acessar o video(câmera) e se ele permitir vai fazer a conexão
   // navigator.mediaDevices.getUserMedia({video: true, audio: true});
-  navigator.mediaDevices.getUserMedia({video: true})
+  navigator.mediaDevices.getUserMedia({ video: true })
     //Se o usuário deu permissão para acessar a câmera
-    .then( stream =>{
+    .then(stream => {
       //Enviando o fluxo de video para o a tag <video> definida na página
       videoPlayer.srcObject = stream;
       videoPlayer.style.display = 'block'; //Monstrando a tag <video>
       btnImgCapture.style.display = 'block'; //Monstrando o botão de Captura
     })
     //Se o usuário não deu permissão OU se foi lançado a Promise com ERROR para o caso em que o navegador não possui a API mediaDevices e nem foi possível implementar manualmente nas condições acima
-    .catch( error => {
+    .catch(error => {
       //Se por algum motivo não foi possível utilizar a câmera, mostramos ao usuário a possibilidade de enviar um arquivo de imagem
       imgPickerBox.style.display = 'flex';
     });
 }
 
 //Captura uma imagem da tag video e coloca ela na tag canvas
-function captureImageFromStream2Canvas(buttonCapture){
+function captureImageFromStream2Canvas(buttonCapture) {
 
   //Monstrando o Canvas que vai conter a imagem capturada
   canvasImgCapture.style.display = 'block';
@@ -80,11 +80,11 @@ function captureImageFromStream2Canvas(buttonCapture){
     0, //Posição em X que ela ocupara no canvas
     0, //Posição em Y que ela ocupara no canvas
     canvasImgCapture.width, //Largura do destino 
-    videoPlayer.videoHeight / ( videoPlayer.videoWidth / canvasImgCapture.width) //Altura do destino
+    videoPlayer.videoHeight / (videoPlayer.videoWidth / canvasImgCapture.width) //Altura do destino
   );
 
   //Parando o streaming de video vindo da tag <video>
-  videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
+  videoPlayer.srcObject.getVideoTracks().forEach(eachTrack => {
     eachTrack.stop(); //Parando cada faixa de video
   });
 
@@ -93,23 +93,23 @@ function captureImageFromStream2Canvas(buttonCapture){
 }
 
 //Captura a imagem upada na tag input[type=file] que é apresentada como opção quando o usuário não permite o aceso a câmera ou quando o navegador do usuário não fornece esse recurso
-function captureImageFromInputFile(inputFile){
+function captureImageFromInputFile(inputFile) {
   pictureCaptured = inputFile.files[0]; //Pegando apenas o primeiro arquivo
   imgPickerInputLabel.innerText = 'Uma imagem foi enviada!';
 }
 
 //Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de geo localização
-function initializeGeoLocation(){
+function initializeGeoLocation() {
   //Checando se NÃO tem o recurso de geolocalização no navegador
-  if(!('geolocation' in navigator)){
+  if (!('geolocation' in navigator)) {
     btnGeoLocation.style.display = 'none';
   }
 }
 
 //Captura a geoLocalizacao quando clica no botão de captura
-function captureGeoLocation(){
+function captureGeoLocation() {
   //Verificando se existe o recurso
-  if(!('geolocation' in navigator)){
+  if (!('geolocation' in navigator)) {
     return;
   }
 
@@ -132,9 +132,9 @@ function captureGeoLocation(){
       //Bloqueando o click do botão após clicar uma vez
       btnGeoLocation.setAttribute('disabled', true);
       btnGeoLocation.style.cursor = 'not-allowed';
-      setTimeout( () => {
+      setTimeout(() => {
         locationLoader.style.display = 'none';
-      },500);
+      }, 500);
 
       //Pegando a localizacao
       locationCaptured.latitude = position.coords.latitude;
@@ -147,20 +147,20 @@ function captureGeoLocation(){
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationCaptured.longitude},${locationCaptured.latitude}.json?types=address&access_token=${MAPBOX_APIKEY}`
       )
-      .then( response => {
-        if(response.ok){
-          return response.json();
-        }
-      })
-      .then( responseJSON => {
-        console.log('Fetched adress from MAPBOX API reverse geolocation', responseJSON);
-        $('textarea[name=location]').value = responseJSON.features[0].place_name;
-        $('textarea[name=location]').focus();
-        console.log('Response from MAPBOX API', responseJSON);
-      })
-      .catch( error => {
-        console.log('Request to MAPBOX API failed', error);
-      }); 
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then(responseJSON => {
+          console.log('Fetched adress from MAPBOX API reverse geolocation', responseJSON);
+          $('textarea[name=location]').value = responseJSON.features[0].place_name;
+          $('textarea[name=location]').focus();
+          console.log('Response from MAPBOX API', responseJSON);
+        })
+        .catch(error => {
+          console.log('Request to MAPBOX API failed', error);
+        });
     },
     //2º Parâmetro: Callback com o erro
     (error) => {
@@ -170,7 +170,7 @@ function captureGeoLocation(){
       btnGeoLocation.style.cursor = 'pointer';
       locationLoader.style.display = 'none';
 
-      if(flagAlert){
+      if (flagAlert) {
         alert('Não foi possível pegar a sua localização...Por favor tente novamente ou digite o seu endereço manualmente.');
         flagAlert = false;
       }
@@ -181,7 +181,7 @@ function captureGeoLocation(){
     {
       timeout: 7000 //Setando o tempo limite a API conseguir a localizacao na resposta da requisicao
     }
-  );  
+  );
 }
 
 //Mostra o modal que adiciona uma nova postagem
@@ -198,9 +198,9 @@ function showModalAddPost() {
 //Fecha o modal que adiciona uma nova postagem
 function closeModalAddPost() {
   //Parando o streaming de video vindo da tag <video> se ela tiver com algum streaming(fluxo de video)
-  if(videoPlayer.srcObject) {
+  if (videoPlayer.srcObject) {
     console.log('Stopping the Streamimg...');
-    videoPlayer.srcObject.getVideoTracks().forEach( eachTrack => {
+    videoPlayer.srcObject.getVideoTracks().forEach(eachTrack => {
       eachTrack.stop(); //Parando cada faixa de video
     });
   }
@@ -260,7 +260,8 @@ function clearModalAddPostInputs() {
 
 //Extrai e envia os dados do Post para a API
 function sendModalPost() {
-  const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  // const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  const endpoint = API_BASE_URL+'/posts/new';
 
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
   let title = $('input[name=title]').value;
@@ -276,13 +277,13 @@ function sendModalPost() {
   postFormData.append('price', price);
   postFormData.append('whatsapp_contact', whatsapp_contact);
   //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
-  postFormData.append('image', pictureCaptured, `${idPost}.png`); 
+  postFormData.append('image', pictureCaptured, `${idPost}.png`);
 
   //*Verificando se no navegador existe os recursos de [serviceWorker] e [SyncManager](BackgroundSyncronization)
-  if('serviceWorker' in navigator && 'SyncManager' in window){
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
     //*Quando o [SW] estiver registrado, instalado e ativado ele retorna uma promise no .ready
     navigator.serviceWorker.ready
-      .then( sw => {
+      .then(sw => {
         //Montando JSON das info do post a ser gravado no indexedDB para background synchronization
         let requestData = {
           id: idPost,
@@ -295,11 +296,11 @@ function sendModalPost() {
 
         //Salvando as informações da requisição no IndexedDB para serem sincronizadas no [SW]
         writeData('sync-posts', requestData)
-          .then( () => {
+          .then(() => {
             //*Acessando o Sync Manager do [SW] e registrando uma async task com o nome passado no parâmetro
             sw.sync.register('sync-new-post');
           })
-          .then( () => {
+          .then(() => {
             alert('Anúncio inserido com sucesso!');
             // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
             clearModalAddPostInputs();
@@ -321,24 +322,24 @@ function sendModalPost() {
       },
       "body": postFormData
     })
-    .then((response) => {
-      return response.json();
-    })
-    .then((responseJSON) => {
-      if (responseJSON.errors) {
-        throw responseJSON.errors;
-      }
-      alert('Anúncio inserido com sucesso!');
-      console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
-      fillPosts();
-      clearModalAddPostInputs();
-      closeModalAddPost();
-    })
-    .catch((errors) => {
-      console.log('ERRO', errors);
-      alert(`ERRO ${errors.status_code} : ${errors.msg}`);
-      closeModalAddPost();
-    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((responseJSON) => {
+        if (responseJSON.errors) {
+          throw responseJSON.errors;
+        }
+        alert('Anúncio inserido com sucesso!');
+        console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
+        fillPosts();
+        clearModalAddPostInputs();
+        closeModalAddPost();
+      })
+      .catch((errors) => {
+        console.log('ERRO', errors);
+        alert(`ERRO ${errors.status_code} : ${errors.msg}`);
+        closeModalAddPost();
+      })
   }
 }
 
@@ -428,7 +429,8 @@ function clearAllCards() {
 function fillPosts() {
   // ! ESTRATÉGIA : CACHE THEN NETWORK
   let networkDataReceived = false;
-  const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts';
+  // const endpoint = 'http://127.0.0.1/project-barganhapp/backend-api/public/posts';
+  const endpoint = API_BASE_URL+'/posts';
 
   fetch(endpoint, {
     "method": "GET",
@@ -436,42 +438,42 @@ function fillPosts() {
       "Content-Type": "application/json"
     }
   })
-  .then((response) => {
-    return response.json();
-  })
-  .then((responseJSON) => {
-    console.log(`Data Cards from web`, responseJSON);
-
-    //Setando a flag que indica que a requisição executada pela network recebeu a resposta
-    networkDataReceived = true;
-    
-    if (responseJSON.errors) {
-      throw responseJSON.errors;
-    }
-    clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
-    responseJSON.data.map((eachPost) => {
-      createPost(eachPost);
+    .then((response) => {
+      return response.json();
     })
-  })
-  .catch((errors) => {
+    .then((responseJSON) => {
+      console.log(`Data Cards from web`, responseJSON);
+
+      //Setando a flag que indica que a requisição executada pela network recebeu a resposta
+      networkDataReceived = true;
+
+      if (responseJSON.errors) {
+        throw responseJSON.errors;
+      }
+      clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
+      responseJSON.data.map((eachPost) => {
+        createPost(eachPost);
+      })
+    })
+    .catch((errors) => {
       console.log('ERRO', errors);
       // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
-  })
+    })
 
   //Verifica se o navegador/janela tem o recurso de IndexedDB
   if ('indexedDB' in window) {
     readAllData('posts')
-      .then( responseJSON => {
+      .then(responseJSON => {
         if (responseJSON.errors) {
           throw responseJSON.errors;
         }
 
         //Checa se não recebeu a informação da requisição feita pela network primeiro
-        if(!networkDataReceived){
+        if (!networkDataReceived) {
           console.log('Data Cards from indexedDB', responseJSON);
           clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
 
-          responseJSON.map( eachPost => {
+          responseJSON.map(eachPost => {
             createPost(eachPost);
           })
         }
@@ -479,7 +481,7 @@ function fillPosts() {
       .catch((errors) => {
         console.log('ERRO', errors);
       })
-    
+
     //!CACHE
     // caches.match(endpoint)
     //   .then( (response) => {
@@ -508,18 +510,71 @@ function fillPosts() {
 }
 
 //Registra um escutador de mensagens vindas do [SW] para main thread no client encaminha para as respectivas actions de acordo com a mensagem
-function registerServiceWorkerMessagesListener(){
-  if('serviceWorker' in navigator){
+function registerServiceWorkerMessagesListener() {
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', event => {
       // console.log(event.data.msg, event.data.url);
       console.log('Mensagem recebida do [SW] para main thread', event.data.action);
 
       //Verifica se foi setada uma action
-      if(event.data.action){
+      if (event.data.action) {
         //Executando a action(funcao) dinamicamente
         window[event.data.action]();
       }
     });
+  }
+}
+
+//Pede permissão e registra o recurso de Periodic Background Synchronization para buscar por novos posts/anuncios a cada X segundos
+function registerServiceWorkerPeriodicSync() {
+
+  //Checando  se o navegador possui o recurso de SW
+  if ('serviceWorker' in navigator) {
+
+    //Retorna uma promise cujo resolve é o registro do SW
+    navigator.serviceWorker.ready
+      .then(swRegistration => {
+
+        //Checando também se a aplicação já registrou o um Periodic Sync com label periodic-sync-posts alguma vez
+        swRegistration.periodicSync.getTags()
+          //Pegando as tags de todas Periodic Syncs Tasks
+          .then(tagsList => {
+            if (!tagsList.includes('periodic-sync-posts')) {
+
+              //Checando se o navegador que a aplicação está rodando possui o recurso para API Periodic Sync
+              if ('periodicSync' in swRegistration && !tagsList.includes('periodic-sync-posts')) {
+
+                //Pedindo a permissão ao usuário para a aplicação utilizar o recurso de Periodic Sync
+                navigator.permissions.query({
+                  name: 'periodic-background-sync',
+                })
+                  .then(status => {
+                    //Checando se o usuário não deu permissão para implementar o Periodic Back. Sync. na aplicação
+                    if (status.state !== 'granted') {
+                      //Permissão Negada: Periodic Sync não pode ser implementado
+                      console.log("User didn't gave permission for Periodic Sync API");
+                      return;
+                    }
+
+                    //Permissão Aceita: Periodic Sync pode ser implementado
+                    console.log("User gave permission for Periodic Sync API");
+
+                    //Tentando registrar uma Tarefa na API
+                    // Registrando uma tarefa sincrona para rodar a cada 10 seg 
+                    swRegistration.periodicSync.register('periodic-sync-posts', {
+                      minInterval: 5 * 1000, // 5 seconds
+                    })
+                      .then(res => {
+                        console.log('[SW] Periodic background sync registered!');
+                      })
+                      .catch(error => {
+                        console.error(`[SW] Periodic background sync failed:\n${error}`);
+                      });
+                  })
+              }
+            }
+          });
+      });
   }
 }
 
@@ -528,6 +583,9 @@ fillPosts();
 
 //Chamando a funcao que implanta um escutador das mensagens vindas do [SW] para o client na main thread
 registerServiceWorkerMessagesListener();
+
+//Chamando a funcao que pede permissão ao usuário para implantar o Periodic Sync através de [SW] se o navegador possuir o recurso
+registerServiceWorkerPeriodicSync();
 
 //Quando toda a página carregar, executa esse bloco
 (function () {

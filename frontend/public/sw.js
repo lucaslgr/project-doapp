@@ -1,19 +1,21 @@
 /**
  * !OBS: Um service worker sempre é reinstalado quando o código presente nele é alterado, porém no outros arquivos que foram armazenados no cache pela primeira vez através do SW não serão armazenados novamente pelo service worker. Para resolver essa questão, basta alterar o número das versões dos SW STATIC e DYNAMIC abaixo. 
  */
-
+//* Importando o arquivo de configuração de constantes como BASE_URL e API_BASE_URL
+importScripts('./config.js');
 //* Importando a lib idb.js no [SW] para podermos usar o IndexedDB com Promises também no ServiceWorker
 importScripts('./src/js/idb.js');
 //* Importando o ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB
 importScripts('./src/js/indexedDB.js');
 
-const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
+// const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;//TODO
 const CACHE_STATIC_NAME = 'static-v1';
 const CACHE_DYNAMIC_NAME = 'dynamic-v1';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
   BASE_URL+'/offline.html',
+  BASE_URL+'/config.js',
   BASE_URL+'/src/js/app.js',
   BASE_URL+'/src/js/feed.js',
   BASE_URL+'/src/js/promise.js',
@@ -127,7 +129,9 @@ self.addEventListener('fetch', (event) => {
   //! 1.2ª - Faz a requisição na rede
   //! 1.3ª - Clona o resultado e coloca no IndexedDB no respectivo ObjectStore(Tabela) sobrescrevendo os dados antigos se houver
   //! 1.4ª - Retorna para a requisição o resultado original vindo da rede
-  const url = 'http://localhost/project-barganhapp/backend-api/public/posts';
+  // const url = 'http://localhost/project-barganhapp/backend-api/public/posts';
+  const url = API_BASE_URL+'/posts';
+  
   //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
   if(event.request.url.indexOf(url) > -1){
     
@@ -209,7 +213,8 @@ self.addEventListener('fetch', (event) => {
  * nova tarefa 
  */
 self.addEventListener('sync', (event) => {
-  const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  // const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  const endpoint = API_BASE_URL+'/posts/new';
 
   console.log('[Service Worker] Background Syncing', event);
 
@@ -352,3 +357,33 @@ self.addEventListener('push', (event) => {
       options)
   );
 }); 
+
+/**
+ * Event periodicsync fica escutando se foi regitrado uma tarefa pela API Periodic Sync
+ */
+self.addEventListener('periodicsync', (event) => {
+  console.log('[Service Worker] Periodic Background Syncing', event);
+
+  if(event.tag === 'periodic-sync-posts'){
+    console.log('[Service Worker] Periodic Syncing new Posts');
+
+    const onPeriodicSync = async () => {
+        //? Enviando uma mensagem para a main thread do navegador no lado do client para atualizar os posts/anuncios usando afuncao fillPosts()
+
+        // Pegando todos os clients controlados pelo SW, EX: index.html, help.html, offline.html
+        clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+          clients.forEach((client) => {
+
+            // Envia uma mensagem para cada client da main thread informando no JSON, action(funcao) que deverá ser executada nathread principal 
+            client.postMessage({
+              action: 'fillPosts'
+              });
+          });
+        }, (error) => {
+          console.log(error);
+        });
+    };
+
+    event.waitUntil(onPeriodicSync());
+  }
+});
