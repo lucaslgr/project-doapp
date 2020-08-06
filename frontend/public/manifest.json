@@ -1,7 +1,7 @@
 {
-    "name" : "BarganhApp PWA app!",
-    "short_name" : "BarganhApp",
-    "description" : "BarganhApp é um app de divulgação para revenda de items usados",
+    "name" : "DoApp",
+    "short_name" : "DoApp",
+    "description" : "DoApp é um aplicativo para divulgar de objetos usados a serem doados desenvolvido pela LGR DEV.",
     "start_url" : "./index.html",
     "scope" : ".",
     "display" : "standalone",

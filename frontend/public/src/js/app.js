@@ -1,5 +1,5 @@
-// const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;
-// const API_BASE_URL = `http://127.0.0.1/project-barganhapp/backend-api/public`;
+// const BASE_URL = `http://localhost/project-doapp/frontend/public`;
+// const API_BASE_URL = `http://127.0.0.1/project-doapp/backend-api/public`;
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);

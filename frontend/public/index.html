@@ -2,20 +2,30 @@
 <html lang="pt-br">
 
 <head>
-  <title>Barganhapp | LGRDEV</title>
+  <title>DoApp | LGR DEV</title>
+  <meta name="description" content="DoApp é um aplicativo para divulgar de objetos usados a serem doados desenvolvido pela LGR DEV.">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,shrink-to-fit=no,user-scalable=no,initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="viewport"
-    content="width=device-width,shrink-to-fit=no,user-scalable=no,initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0">
+
+  <!-- Setando os parâmetros para facebook social sharing -->
+  <meta property="og:url"                content="https://lgrdev.com/projects/doapp/" />
+  <meta property="og:type"               content="website" />
+  <meta property="og:title"              content="DoApp | LGR DEV" />
+  <meta property="og:site_name"          content="DoApp | LGR DEV"/>
+  <meta property="og:description"        content="Somos uma empresa que desenvolve soluções web como sites e sistemas para impulsionar e automatizar o seu negócio!" />
+  <meta property="og:image"              content="https://lgrdev.com/projects/doapp/images/logos/logo.png" itemprop="image"  />
+  <meta property="og:image:alt"          content="logo do app" />
+
+  <!-- setando o favicon -->
+  <link rel="icon" type="image/png" href="./src/images/icons/app-icon-48x48.png"/>
+
   <link rel="stylesheet" href="./src/css/normalize.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./src/css/fontello.css">
   <link rel="stylesheet" href="./src/css/style.css">
 
-  <!-- SETANDO FAV ICON -->
-  <link rel="icon" type="image/png" href="./src/images/icons/app-icon-48x48.png"/>
-  <link rel="icon" type="image/png" href="./src/images/icons/app-icon-48x48.png"/>
 
   <!-- !PWA -->
   <!-- * MANIFEST -->
@@ -24,7 +34,7 @@
   <!-- * Configuracoes para dispositivos Apple -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Barganhapp">
+  <meta name="apple-mobile-web-app-title" content="DoApp">
 
   <!-- * Icones para dispositivos Apple -->
   <link rel="apple-touch-icon" href="./src/images/icons/apple-icon-57x57.png" sizes="57x57">
@@ -48,7 +58,7 @@
     <nav>
       <div class="colum-left">
         <i class="icon-th-list icon-default only-small-screen-block" onclick="showMenuMobile();"></i>
-        <h1 class="only-big-screen-block">BarganhaApp</h1>
+        <h1 class="only-big-screen-block">DoApp</h1>
       </div>
       <div class="colum-right only-big-screen-flex">
         <ul class="menu">
@@ -58,7 +68,7 @@
         </ul>
       </div>
       <ul class="menu-mobile only-small-screen-flex">
-        <h1>BarganhaApp</h1>
+        <h1>DoApp</h1>
         <a href="./index.html"><li class="menu-item">Anúncios</li></a>
         <a href="./help.html"><li class="menu-item">Ajuda</li></a>
         <button class="enable-notifications">Ativar Notificações</button>
@@ -87,7 +97,7 @@
   <!-- <div class="bg-background-modal"></div> -->
   <div class="modal modal-add-post">
     <div class="modal-content">
-      <h1>Adicione um anúncio!</h1>
+      <h1>Anuncie a doação!</h1>
   
       <!-- Campo para capturar a foto -->
       <video id="video-player" autoplay></video>
@@ -124,7 +134,7 @@
     </div>
   </div>
   <footer>
-    <a href="https://lucaslgr.github.io/"><h4>Lucas Guimarães &copy; 2020</h4></a>
+    <a href="https://lgrdev.com/"><h4>LGR DEV &copy; 2020</h4></a>
   </footer>
   <!-- Importando o arquivo de configuração de constantes como BASE_URL e API_BASE_URL -->
   <script type="text/javascript" src="./config.js"></script> 

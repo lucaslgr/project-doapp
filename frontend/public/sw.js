@@ -8,7 +8,7 @@ importScripts('./src/js/idb.js');
 //* Importando o ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB
 importScripts('./src/js/indexedDB.js');
 
-// const BASE_URL = `http://localhost/project-barganhapp/frontend/public`;//TODO
+// const BASE_URL = `http://localhost/project-doapp/frontend/public`;//TODO
 const CACHE_STATIC_NAME = 'static-v3';
 const CACHE_DYNAMIC_NAME = 'dynamic-v3';
 const STATIC_FILES = [
@@ -129,7 +129,7 @@ self.addEventListener('fetch', (event) => {
   //! 1.2ª - Faz a requisição na rede
   //! 1.3ª - Clona o resultado e coloca no IndexedDB no respectivo ObjectStore(Tabela) sobrescrevendo os dados antigos se houver
   //! 1.4ª - Retorna para a requisição o resultado original vindo da rede
-  // const url = 'http://localhost/project-barganhapp/backend-api/public/posts';
+  // const url = 'http://localhost/project-doapp/backend-api/public/posts';
   const url = API_BASE_URL+'/posts';
   
   //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
@@ -213,7 +213,7 @@ self.addEventListener('fetch', (event) => {
  * nova tarefa 
  */
 self.addEventListener('sync', (event) => {
-  // const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  // const endpoint = 'http://localhost/project-doapp/backend-api/public/posts/new';
   const endpoint = API_BASE_URL+'/posts/new';
 
   console.log('[Service Worker] Background Syncing', event);

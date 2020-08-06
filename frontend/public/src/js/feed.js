@@ -330,7 +330,7 @@ function clearModalAddPostInputs() {
 
 //Extrai e envia os dados do Post para a API
 function sendModalPost() {
-  // const endpoint = 'http://localhost/project-barganhapp/backend-api/public/posts/new';
+  // const endpoint = 'http://localhost/project-doapp/backend-api/public/posts/new';
   const endpoint = API_BASE_URL+'/posts/new';
 
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
@@ -499,7 +499,7 @@ function clearAllCards() {
 function fillPosts() {
   // ! ESTRATÉGIA : CACHE THEN NETWORK
   let networkDataReceived = false;
-  // const endpoint = 'http://127.0.0.1/project-barganhapp/backend-api/public/posts';
+  // const endpoint = 'http://127.0.0.1/project-doapp/backend-api/public/posts';
   const endpoint = API_BASE_URL+'/posts';
 
   fetch(endpoint, {
