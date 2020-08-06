@@ -86,35 +86,37 @@
   <!-- ! MODAL ADD POST -->
   <!-- <div class="bg-background-modal"></div> -->
   <div class="modal modal-add-post">
-    <h1>Adicione um anúncio!</h1>
-    
-    <!-- Campo para capturar a foto -->
-    <video id="video-player" autoplay></video>
-    <canvas id="canvas-img-capture" width="320px" height="240px"></canvas>
-    <button id="btn-img-capture" onclick="captureImageFromStream2Canvas(this);">Capturar</button>
-
-    <!-- Para dispositivos cujo navegador não fornece recurso de acessar a câmera nós apresentamos um input para enviar a foto -->
-    <div class="image-picker-box">
-      <h4>Envie uma imagem do objeto</h4>
-      <label for="image-picker">Selecionar uma imagem</label>
-      <input onchange="captureImageFromInputFile(this);" type="file" accept="image/*" id="image-picker">
-    </div>
-
-    <input type="text" name="title" placeholder="Título">
-    <input type="text" name="price" placeholder="Preço">
-    <input type="text" name="whatsapp-contact" placeholder="Número Whatsapp">
-    <!-- <input type="text" name="location" placeholder="Localização"> -->
-    <textarea type="text" name="location" rows="2" placeholder="Localização">
-    </textarea>
-
-    <div class="geolocation-box">
-      <button onclick="captureGeoLocation();" type="text" id="btn-location">Pegar Localização</button> 
-      <div class="spinner spinner-location"></div>
-    </div>
-
-    <div class="btn-group">
-      <button id="btn-send" onclick="sendModalPost();">Enviar</button>
-      <button id="btn-close" onclick="closeModalAddPost();">Fechar</button>
+    <div class="modal-content">
+      <h1>Adicione um anúncio!</h1>
+  
+      <!-- Campo para capturar a foto -->
+      <video id="video-player" autoplay></video>
+      <canvas id="canvas-img-capture" width="320px" height="240px"></canvas>
+      <button id="btn-img-capture" onclick="captureImageFromStream2Canvas(this);">Capturar</button>
+  
+      <!-- Para dispositivos cujo navegador não fornece recurso de acessar a câmera nós apresentamos um input para enviar a foto -->
+      <div class="image-picker-box">
+        <h4>Envie uma imagem do objeto</h4>
+        <label for="image-picker">Selecionar uma imagem</label>
+        <input onchange="captureImageFromInputFile(this);" type="file" accept="image/*" id="image-picker">
+      </div>
+  
+      <input type="text" name="title" placeholder="Título">
+      <input type="text" name="price" placeholder="Preço">
+      <input type="text" name="whatsapp-contact" placeholder="Número Whatsapp">
+      <!-- <input type="text" name="location" placeholder="Localização"> -->
+      <textarea type="text" name="location" rows="2" placeholder="Localização">
+      </textarea>
+  
+      <div class="geolocation-box">
+        <button onclick="captureGeoLocation();" type="text" id="btn-location">Pegar Localização</button>
+        <div class="spinner spinner-location"></div>
+      </div>
+  
+      <div class="btn-group">
+        <button id="btn-send" onclick="sendModalPost();">Enviar</button>
+        <button id="btn-close" onclick="closeModalAddPost();">Fechar</button>
+      </div>
     </div>
   </div>
   <footer>

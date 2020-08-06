@@ -109,6 +109,11 @@ textarea {
     color: var(--gray-dark);
 }
 
+textarea {  
+    min-height: 50px!important;
+    height: auto;
+}
+
 input:focus,
 textarea:focus{
     border: 1px solid var(--blue-dark);
@@ -347,27 +352,30 @@ i.icon-plus.add-post {
 } */
 
 .modal.modal-add-post{
-    transform: translateY(-400vh);
-    /* position: fixed; */
-    position: absolute;
+    transform: translateY(-100vh);
+    position: fixed;
+    /* position: absolute; */
     z-index: 2;
     background-color: var(--white-light);
     width: 100vw;
-    /* height: calc(100vh - (70px + 40px)); */
-    min-height: calc(100vh - 70px);
-    /* height: auto; */
-    /* height: 100%; */
+    height: calc(100vh - 70px);
+    /* min-height: calc(100vh - 70px);
     height: auto;
-    min-height: 100%;
+    min-height: 100%; */
     top: 70px;
+    transition: transform 0.6s ease;
+}
 
+.modal .modal-content {
+    /* min-height: 100%; */
+    /* height: auto; */
+    height: 100%;
     overflow-y: scroll;
 
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    transition: transform 0.6s ease;
     padding: 20px;
     box-shadow: 2px 0px 10px var(--gray-dark);
 }
