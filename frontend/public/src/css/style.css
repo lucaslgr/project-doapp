@@ -466,12 +466,16 @@ i.icon-plus.add-post {
 .modal.modal-add-post video {
     width: 100vw;
     max-width: 450px;
+    max-height: 450px;
 }
 
 .modal.modal-add-post .camera-controls{
     width: 100%;
     display: none;
     margin: 30px 0px;
+    width: 90%;
+    max-width: 330px;
+    min-width: 330px;
 }
 
 .modal.modal-add-post .camera-controls select#camera-options {
