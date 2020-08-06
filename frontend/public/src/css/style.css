@@ -114,6 +114,23 @@ textarea {
     height: auto;
 }
 
+select {
+    border-radius: 10px;
+    border: 1px solid var(--blue-light);
+    padding: 10px 10px;
+    outline: 0;
+    color: var(--gray-dark);
+}
+
+select>option{
+    color: var(--gray-dark);
+}
+
+select>option:active{
+    color: var(--gray-dark);
+    font-weight: 600;
+}
+
 input:focus,
 textarea:focus{
     border: 1px solid var(--blue-dark);
@@ -146,6 +163,43 @@ input + textarea{
 
 .display-none{
     display: none;
+}
+
+.display-flex{
+    display: flex;
+}
+
+.justify-around{
+    justify-content: space-around;
+}
+
+.justify-between{
+    justify-content: space-between;
+}
+
+.justify-center{
+    justify-content: center;
+}
+
+.align-around{
+    align-items: space-around;
+}
+
+.align-between{
+    align-items: space-between;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column{
+    flex-direction: column;
 }
 
 /* ! MENU */
@@ -414,9 +468,14 @@ i.icon-plus.add-post {
     max-width: 450px;
 }
 
-.modal.modal-add-post #btn-img-capture{
+.modal.modal-add-post .camera-controls{
+    width: 100%;
     display: none;
-    margin-bottom: 20px;
+    margin: 30px 0px;
+}
+
+.modal.modal-add-post .camera-controls select#camera-options {
+    display: flex;
 }
 
 .modal.modal-add-post video,
@@ -424,10 +483,6 @@ i.icon-plus.add-post {
     border: 1px solid #CCC;
     margin-top: 20px;
     display: none;
-}
-
-.modal.modal-add-post button#btn-img-capture{
-    margin-top: 20px;
 }
 
 .modal.modal-add-post input[type=file]{

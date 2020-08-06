@@ -7,6 +7,8 @@ let locationCaptured = { latitude: 0, longitude: 0 };
 //Pegando a referência para os elementos a serem manipulados
 let videoPlayer = $('.modal.modal-add-post #video-player');
 let canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
+let boxCameraControls = $('.modal.modal-add-post .camera-controls');
+let selectOptionsCamera = $('.modal.modal-add-post #camera-options');
 let btnImgCapture = $('.modal.modal-add-post #btn-img-capture');
 let imgPickerBox = $('.modal.modal-add-post .image-picker-box');
 let imgPickerInput = $('.modal.modal-add-post #image-picker');
@@ -45,21 +47,93 @@ function initializeMedia() {
     }
   }
 
+  //Definindo o JSON das videoConstraints para configurar o acesso a API de mediaDevices para câmera traseira se houver
+  const videoConstraints = {
+    facingMode : 'environment'
+  };
+
   //Acionando o método que vai pedir ao usuário permissão para acessar o video(câmera) e se ele permitir vai fazer a conexão
   // navigator.mediaDevices.getUserMedia({video: true, audio: true});
-  navigator.mediaDevices.getUserMedia({ video: true })
+  navigator.mediaDevices
+    .getUserMedia({ video: videoConstraints , audio: false})
     //Se o usuário deu permissão para acessar a câmera
     .then(stream => {
       //Enviando o fluxo de video para o a tag <video> definida na página
       videoPlayer.srcObject = stream;
       videoPlayer.style.display = 'block'; //Monstrando a tag <video>
-      btnImgCapture.style.display = 'block'; //Monstrando o botão de Captura
+      boxCameraControls.style.display = 'flex'; //Monstrando os controles de Câmera (Inclui o botão de captura e o botão para trocar de câmera)
+    
+      //Pegando todos dispositivos de Media disponíveis(Câmera) e populando o select com eles no método gotDevices
+      return navigator.mediaDevices.enumerateDevices();
+    })
+    .then(gotDevices)
+    //Se o usuário não deu permissão OU se foi lançado a Promise com ERROR para o caso em que o navegador não possui a API mediaDevices e nem foi possível implementar manualmente nas condições acima
+    .catch(error => {
+      //Se por algum motivo não foi possível utilizar a câmera, mostramos ao usuário a possibilidade de enviar um arquivo de imagem
+      imgPickerBox.style.display = 'flex';
+      console.log('[MediaDevices] Couldn\'t possible access video devices', error);
+    });
+}
+
+//Pega todos os dispositivos de Media disponíveis no dispositivo
+function gotDevices(mediaDevices) {
+  selectOptionsCamera.innerHTML = '<option>Selecione a Câmera</option>';
+  // selectOptionsCamera.appendChild(document.createElement('option'));
+  let count = 1;
+  mediaDevices.forEach(mediaDevice => {
+    if (mediaDevice.kind === 'videoinput') {
+      const option = document.createElement('option');
+      option.value = mediaDevice.deviceId;
+      const label = mediaDevice.label || `Camera ${count++}`;
+      const textNode = document.createTextNode(label);
+      option.appendChild(textNode);
+      selectOptionsCamera.appendChild(option);
+    }
+  });
+}
+
+//Muda o dispositivo que está enviando o fluxo de video para tag <video> de acordo com o video da <option> selecionada no <select>
+function changeCurrentStream(selectElement){
+
+  //Para o streamming de video atual se houver 
+  if(typeof videoPlayer.srcObject !== 'undefined'){
+    stopVideoTracks(videoPlayer.srcObject);
+  }
+
+  //Declarando o JSON das videoConstraints para configurar o acesso a API de mediaDevices para uma câmera específica
+  const videoConstraints = {};
+
+  //Checa se no select foi escolhido uma opção de valor VAZIO
+  if(selectElement.value === ''){
+    //Se foi escolhida uma opção vazia, setamos a padrão que é a câmera traseira no caso de um Mobile
+    videoConstraints.facingMode = 'environment'; 
+  } else {
+    videoConstraints.deviceId = { exact: selectElement.value };
+  }
+
+  //Acionando o método que vai pedir ao usuário permissão para acessar o video(câmera) e se ele permitir vai fazer a conexão
+  // navigator.mediaDevices.getUserMedia({video: true, audio: true});
+  navigator.mediaDevices
+    .getUserMedia({ video: videoConstraints , audio: false})
+    //Se o usuário deu permissão para acessar a câmera
+    .then(stream => {
+      //Enviando o fluxo de video para o a tag <video> definida na página
+      videoPlayer.srcObject = stream;
     })
     //Se o usuário não deu permissão OU se foi lançado a Promise com ERROR para o caso em que o navegador não possui a API mediaDevices e nem foi possível implementar manualmente nas condições acima
     .catch(error => {
       //Se por algum motivo não foi possível utilizar a câmera, mostramos ao usuário a possibilidade de enviar um arquivo de imagem
       imgPickerBox.style.display = 'flex';
+      console.log('[MediaDevices] Couldn\'t possible access video devices', error);
     });
+}
+
+//Para o streaming de video passado no parâmetro
+function stopVideoTracks(stream) {
+  //Parando o streaming de video vindo da tag <video>
+  stream.getVideoTracks().forEach(eachTrack => {
+    eachTrack.stop(); //Parando cada faixa de video
+  });
 }
 
 //Captura uma imagem da tag video e coloca ela na tag canvas
@@ -84,9 +158,7 @@ function captureImageFromStream2Canvas(buttonCapture) {
   );
 
   //Parando o streaming de video vindo da tag <video>
-  videoPlayer.srcObject.getVideoTracks().forEach(eachTrack => {
-    eachTrack.stop(); //Parando cada faixa de video
-  });
+  stopVideoTracks(videoPlayer.srcObject);
 
   //Pegando a imagem capturada no canvas, passando a url para dataURItoBlob e pegando um arquivo de imagem no retorno
   pictureCaptured = dataURItoBlob(canvasImgCapture.toDataURL());
@@ -200,9 +272,7 @@ function closeModalAddPost() {
   //Parando o streaming de video vindo da tag <video> se ela tiver com algum streaming(fluxo de video)
   if (videoPlayer.srcObject) {
     console.log('Stopping the Streamimg...');
-    videoPlayer.srcObject.getVideoTracks().forEach(eachTrack => {
-      eachTrack.stop(); //Parando cada faixa de video
-    });
+    stopVideoTracks(videoPlayer.srcObject);
   }
 
   //Setando um tempo para que a animation ocorra
