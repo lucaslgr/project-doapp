@@ -338,7 +338,6 @@ function closeModalAddPost() {
 function clearModalAddPostInputs() {
   $('input[name=title]').value = '';
   $('textarea[name=location]').value = '';
-  $('input[name=price]').value = '';
   $('input[name=whatsapp-contact]').value = '';
   return;
 }
@@ -351,7 +350,6 @@ function sendModalPost() {
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
   let title = $('input[name=title]').value;
   let location = $('textarea[name=location]').value;
-  let price = $('input[name=price]').value;
   let whatsapp_contact = $('input[name=whatsapp-contact]').value;
 
   //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
@@ -359,7 +357,6 @@ function sendModalPost() {
   postFormData.append('id', idPost);
   postFormData.append('title', title);
   postFormData.append('location', location);
-  postFormData.append('price', price);
   postFormData.append('whatsapp_contact', whatsapp_contact);
   //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
   postFormData.append('image', pictureCaptured, `${idPost}.png`);
@@ -375,7 +372,6 @@ function sendModalPost() {
           title: title,
           location: location,
           image: pictureCaptured,
-          price: price,
           whatsapp_contact: whatsapp_contact
         };
 
@@ -436,7 +432,6 @@ function createPost(dataPost) {
   //  <h1 class="title">Título</h1>
   //  <h4>Localização: <div class="location"> Cataguases-MG</div></h4>
   //  <h4>Data: <div class="date-created"> 20/03/2020 às 12:20</div></h4>
-  //  <h4>Price: <div class="price">R$ 10,00</div></h4>
   //  <h4>Contato: <div class="whatsapp-contact">(32)9 88094352</div></h4>
   //</div>  
 
@@ -444,7 +439,6 @@ function createPost(dataPost) {
   // dataPost.image;
   // dataPost.location;
   // dataPost.date_created;
-  // dataPost.price;
   // dataPost.whatsapp_contact;
 
   //Montando os elementos HTML que constituem o DOM
@@ -477,13 +471,6 @@ function createPost(dataPost) {
   dataCreatedValue.innerText = dataPost.date_created; //!VALOR da data de criação
   postDateCreated.appendChild(dataCreatedValue);
 
-  let postPrice = document.createElement('h4');
-  postPrice.innerText = 'Preço: ';
-  let dataPriceValue = document.createElement('div');
-  dataPriceValue.className = 'price';
-  dataPriceValue.innerText = `R$ ${parseFloat(dataPost.price).toFixed(2)}`; //!VALOR do produto
-  postPrice.appendChild(dataPriceValue);
-
   let postContact = document.createElement('h4');
   postContact.innerText = 'Whatsapp: ';
   let dataContactValue = document.createElement('div');
@@ -496,7 +483,6 @@ function createPost(dataPost) {
   postWrapper.appendChild(postTitle);
   postWrapper.appendChild(postLocation);
   postWrapper.appendChild(postDateCreated);
-  postWrapper.appendChild(postPrice);
   postWrapper.appendChild(postContact);
 
   // componentHandler.upgradeElement(postWrapper);

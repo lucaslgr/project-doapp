@@ -233,7 +233,6 @@ self.addEventListener('sync', (event) => {
             postFormData.append('id', post.id);
             postFormData.append('title', post.title);
             postFormData.append('location', post.location);
-            postFormData.append('price', post.price);
             postFormData.append('whatsapp_contact', post.whatsapp_contact);
             //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
             postFormData.append('image', post.image, `${post.id}.png`); 

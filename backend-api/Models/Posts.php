@@ -42,20 +42,19 @@ class Posts extends Model {
      * 
      * @return int
      */
-    public function createNewPost($title, $location, $image, $price, $whatsapp_contact)
+    public function createNewPost($title, $location, $image, $whatsapp_contact)
     {
         $result = [];
 
         $sql = $this->pdo->prepare(
-            "INSERT INTO posts(title, location, image, price, whatsapp_contact, status, date_created)
-            VALUES(?, ?, ?, ?, ?, 0, NOW())"
+            "INSERT INTO posts(title, location, image, whatsapp_contact, status, date_created)
+            VALUES(?, ?, ?, ?, 0, NOW())"
         );
 
         $status_query = $sql->execute([
             $title,
             $location,
             $image,
-            $price,
             $whatsapp_contact
         ]);
 

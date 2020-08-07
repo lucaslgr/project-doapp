@@ -79,7 +79,6 @@ class PostsController extends Controller{
         if( count($data) < 4                ||
             empty($data['title'])           ||
             empty($data['location'])        ||
-            empty($data['price'])           ||
             empty($data['whatsapp_contact'])){
             ErrorsManager::setUnprocessableEntityError($response);
             $this->returnJson($response);
@@ -91,8 +90,7 @@ class PostsController extends Controller{
         $result = $posts->createNewPost(
             $data['title'],
             $data['location'],
-            \BASE_URL.'Images/'.$name_img, 
-            $data['price'],
+            \BASE_URL.'Images/'.$name_img,
             $data['whatsapp_contact']
         );
 
