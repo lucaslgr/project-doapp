@@ -149,12 +149,27 @@ function captureImageFromStream2Canvas(buttonCapture) {
 
   let canvasContext = canvasImgCapture.getContext('2d'); //Setando que o conteúdo do canvas terá 2 dimensões
   //Inserindo a imagem do stream de video no conteúdo do Canvas
+
+  //!Redimensionando a imagem vinda do video no Canvas
+  let widthOrigin = videoPlayer.videoWidth;
+  let heightOrigin = videoPlayer.videoHeight;
+  let heightCanvas = canvasImgCapture.height;
+  let widthCanvas = canvasImgCapture.width;
+  if(widthOrigin > heightOrigin){
+    heightCanvas = (canvasImgCapture.width/widthOrigin) * heightOrigin;
+  } else if(widthOrigin < heightOrigin){
+    widthCanvas = (canvasImgCapture.height/heightOrigin) * widthOrigin;
+  }
+
+  canvasImgCapture.setAttribute('width', widthCanvas);
+  canvasImgCapture.setAttribute('height', heightCanvas);
+
   canvasContext.drawImage(
     videoPlayer, //Fonte da imagem
     0, //Posição em X que ela ocupara no canvas
     0, //Posição em Y que ela ocupara no canvas
-    canvasImgCapture.width, //Largura do destino 
-    videoPlayer.videoHeight / (videoPlayer.videoWidth / canvasImgCapture.width) //Altura do destino
+    widthCanvas, //Largura do destino 
+    heightCanvas //Altura do destino
   );
 
   //Parando o streaming de video vindo da tag <video>

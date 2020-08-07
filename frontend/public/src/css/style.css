@@ -469,6 +469,12 @@ i.icon-plus.add-post {
     max-height: 450px;
 }
 
+.modal.modal-add-post #canvas-img-capture{
+    background-position: center;
+    background-size: cover;
+    margin: auto;
+}
+
 .modal.modal-add-post .camera-controls{
     width: 100%;
     display: none;
@@ -484,7 +490,6 @@ i.icon-plus.add-post {
 
 .modal.modal-add-post video,
 .modal.modal-add-post canvas {
-    border: 1px solid #CCC;
     margin-top: 20px;
     display: none;
 }
