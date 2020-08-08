@@ -248,7 +248,7 @@ header .enable-notifications{
     display: none;
 }
 
-header .colum-right ul .enable-notifications{
+header .colum-right ul button{
     margin-right: 20px;
 }
 
@@ -277,6 +277,10 @@ ul.menu-mobile {
     padding: 20px;
 
     transition: transform 0.5s ease;
+}
+
+ul.menu-mobile button {
+    margin-top: 15px;
 }
 
 ul.menu-mobile.show-menu-mobile{

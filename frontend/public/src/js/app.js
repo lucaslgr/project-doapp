@@ -7,6 +7,35 @@ const $$ = document.querySelectorAll.bind(document);
 //!Public Key para Autenticação VAPID para acessar os serviços de Web Push Notification dos servidores dos navegadores
 const PUBLIC_KEY_VAPID = 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4';
 
+//!Variavel que armazena o evento que mostra o banner PWA
+let deferredPrompt;
+
+/**
+ * Função atrelada ao click do botão install app
+ */
+function installPWAApp(btnInstallAPP){
+  //Verificando se o deferredPrompt já foi setado
+  if(deferredPrompt) {
+    //Acionando o evento
+    deferredPrompt.prompt();
+
+    //Checando a escolha do usuário, se aceitou ou não a instalação
+    deferredPrompt.userChoice
+      .then( choiceResult => {
+        if(choiceResult.outcome === 'dismissed'){
+          console.log('User cancelled installation');
+        } else {
+          console.log('User accept the installation');
+          btnInstallAPP.setAttribute('disabled', true);
+          btnInstallAPP.style.cursor = 'not-allowed';
+          btnInstallAPP.style.display = 'none';
+        }
+      }); 
+      
+    //Setando o evento como NULL
+    // deferredPrompt = null;
+  }
+}
 
 /**
  * Função que mostra o menu mobile ou esconde
@@ -205,6 +234,14 @@ function settingsEventButton2EnableNotifications(){
 //! Iniciando o [SW]
 if (!window.Promise)
     window.Promise = Promise;
+
+//! Pegando o evento defaut que mostra o banner para installar o app PWA
+window.addEventListener('beforeinstallprompt', event => {
+  console.log(' beforeinstallprompt fired by chrome');
+  event.preventDefault();
+  deferredPrompt = event;
+  return false;
+});
 
 registerServiceWorker();
 
