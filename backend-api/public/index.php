@@ -5,7 +5,7 @@
     session_start();
 
     //Liberando todos remetentes de requisições no CORS
-    header("Access-Control-Allow-Origin: *"); 
+    header("Access-Control-Allow-Origin: https://lgrdev.com/"); 
     //Liberando todos os verbos HTTP
     header("Access-Control-Allow-Methods: *");
     //Liberando o header Content-Type
