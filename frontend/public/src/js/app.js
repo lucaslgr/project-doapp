@@ -126,7 +126,8 @@ function displayConfirmNotification(){
  * Faz o registro da subscription entre a aplicação e o navegador do dispositivo para que a aplicação possa realizar Push Notifications 
  */
 function configureWebPushSubscription(){
-  
+  let btnEnableNotification = $('button.enable-notifications');
+
   //Se SW não for um recurso disponível no navegador, cancelamos a funcao
   if(!('serviceWorker' in navigator)){
     return;
@@ -155,10 +156,29 @@ function configureWebPushSubscription(){
           applicationServerKey: urlBase64ToUint8Array(PUBLIC_KEY_VAPID), //TODO - É necessário gerar as keys(PRIVADA e PUBLICA) para autenticação asincrona
         });
       } else {
-        //Se entrar aqui, é porquê já foi criada a subscription
+        //*Se entrar aqui, é porquê já foi criada a subscription
+        //Removendo subscription atual
+        subscription.unsubscribe()
+        .then(successful =>{
+          //Subscription removida do servidor do navegador com sucesso!
+          console.log('Subscription have removed');
+
+          //Mudando o icone e texto do botão indicando Notificações Desativadas
+          btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
+          btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
+          btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
+        })
+        .catch( error => {
+          console.log('Error, unsubscribe notifications have failed', error);
+        });
       }
     })
     .then( newSubscription => {
+      //Mudando o icone e texto do botão indicando Notificações Ativadas
+      btnEnableNotification.querySelector('i').classList.add('icon-bell-alt');
+      btnEnableNotification.querySelector('i').classList.remove('icon-bell-off');
+      btnEnableNotification.querySelector('p').innerText = 'Notificações Ativadas';
+
       //Gravando a subscribe gerada no BD para podermos enviar WebPushNotifications direto do backend para o usuário através da subscription
       return fetch(`${API_BASE_URL}/home/savesubscription`,{
         method: 'POST',
@@ -180,6 +200,42 @@ function configureWebPushSubscription(){
 }
 
 /**
+ * Este método é chamado ao carregar a página
+ * Checa se o usuário já tem uma subscription para WebPushNotifications e atualizar o botão de ativar notificações
+ */
+function checkUserSubscriptionWPN(){
+  //Se SW não for um recurso disponível no navegador, cancelamos a funcao
+  if(!('serviceWorker' in navigator))
+    return;
+
+  let btnEnableNotification = $('button.enable-notifications');
+
+  //Retorna uma promise cujo resolve é o registro do SW
+  navigator.serviceWorker.ready
+  .then(swReg => {
+    //Pegando todas subscriptions existentes dessa aplicação com o navegador/dispositivo do usuário
+    swReg.pushManager.getSubscription()
+    .then(subscription => {
+      //Checando se esse dispositvo/sw já possui uma subscription no servidor de WPN do navegador
+      if(subscription) {
+        //Se tiver, atualiza o botão com as respectivas informações
+
+        //Mudando o icone e texto do botão indicando Notificações Desativadas
+        btnEnableNotification.querySelector('i').classList.add('icon-bell-alt');
+        btnEnableNotification.querySelector('i').classList.remove('icon-bell-off');
+        btnEnableNotification.querySelector('p').innerText = 'Notificações Ativadas';
+      } else {
+        //Mudando o icone e texto do botão indicando Notificações Desativadas
+        btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
+        btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
+        btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
+      }
+    })
+  });
+}
+
+
+/**
  *  Função que configura a aplicação para disponibilizar ao usuário as Notifications e as Push Notifications
  * 1º : Verifica se tem o recurso de Notifications no navegador do usuário
  * 2º : Se 1º for true, associa o evento que dispara um pedido para o usuário que pede permissão para usar o recurso de notifications no seu navegador
@@ -189,8 +245,9 @@ function settingsEventButton2EnableNotifications() {
 
   //Checando se a API de notificações e de SW existem no navegador do usuário
   if ('Notification' in window && 'serviceWorker' in navigator) {
+
     //Pegando os dois botões que habilitam notificações, um para mobile e um para desktop/telas maiores
-    let btnEnableNotification = $('.enable-notifications');
+    let btnEnableNotification = $('button.enable-notifications');
 
     //Monstrando os botoões que permitem o usário ativar notificações
     $('header ul.menu > li.menu-item.notifications').style.display = 'flex';
@@ -208,6 +265,12 @@ function settingsEventButton2EnableNotifications() {
         //Checando a escolha do usuário
         if (result !== 'granted') { //Se o usuario não aceitou (result==='denied')
           console.log('No notification permission granted!');
+
+          //Mudando o icone e texto do botão indicando Notificações Desativadas
+          btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
+          btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
+          btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
+
         } else {//Se o usuário aceitou (result==='granted')
           console.log('The permission to notifications was accept!');
 
@@ -240,3 +303,5 @@ window.addEventListener('beforeinstallprompt', event => {
 registerServiceWorker();
 
 settingsEventButton2EnableNotifications();
+
+checkUserSubscriptionWPN();

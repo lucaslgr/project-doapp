@@ -89,6 +89,7 @@ a {
 }
 
 button {
+    display: flex;
     background-color: var(--blue-medium);
     padding: 10px 15px;
     cursor: pointer;
@@ -258,6 +259,10 @@ header .colum-right ul.menu > li.menu-item:not(:last-child){
     margin-right: 20px;
 }
 
+header .colum-right ul.menu > li.menu-item > button > i {
+    margin-left: 5px;
+}
+
 /* São mostradas pelo javascript somente se for indentificado que o navegador suporta notificações */
 /* TODO  ARRUMAR AQUI*/
 header ul.menu > li.menu-item.notifications{
@@ -409,6 +414,7 @@ i.icon-plus-circled.add-post {
 
 .modal.modal-add-post h1{
     color: var(--gray-dark);
+    margin-bottom: 20px;
 }
 
 .modal.modal-add-post h1::after{
@@ -478,7 +484,6 @@ i.icon-plus-circled.add-post {
 
 .modal.modal-add-post video,
 .modal.modal-add-post canvas {
-    margin-top: 20px;
     display: none;
 }
 
