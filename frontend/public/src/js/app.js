@@ -1,9 +1,6 @@
 // const BASE_URL = `http://localhost/project-doapp/frontend/public`;
 // const API_BASE_URL = `http://127.0.0.1/project-doapp/backend-api/public`;
 
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
-
 //!Public Key para Autenticação VAPID para acessar os serviços de Web Push Notification dos servidores dos navegadores
 const PUBLIC_KEY_VAPID = 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4';
 
@@ -41,7 +38,7 @@ function installPWAApp(btnInstallAPP){
  * Função que mostra o menu mobile ou esconde
  */
 function showMenuMobile() {
-  $('ul.menu-mobile').classList.toggle('show-menu-mobile');
+  $('header nav .menu').classList.toggle('show-menu-mobile');
 }
 
 /**
@@ -188,45 +185,42 @@ function configureWebPushSubscription(){
  * 2º : Se 1º for true, associa o evento que dispara um pedido para o usuário que pede permissão para usar o recurso de notifications no seu navegador
  * 3º : Se o pedido foi aceito pelo usuário, esconde o botão de de ativar notificações e já mostra uma notificação de sucesso
  */
-function settingsEventButton2EnableNotifications(){
-  
+function settingsEventButton2EnableNotifications() {
+
   //Checando se a API de notificações e de SW existem no navegador do usuário
-  if('Notification' in window && 'serviceWorker' in navigator){
+  if ('Notification' in window && 'serviceWorker' in navigator) {
     //Pegando os dois botões que habilitam notificações, um para mobile e um para desktop/telas maiores
-    let btnsEnableNotification = $$('.enable-notifications');
-    
-    btnsEnableNotification.forEach( eachBtn => {
+    let btnEnableNotification = $('.enable-notifications');
 
-      //Monstrando os botoões que permitem o usário ativar notificações
-      eachBtn.style.display = 'block';
+    //Monstrando os botoões que permitem o usário ativar notificações
+    $('header ul.menu > li.menu-item.notifications').style.display = 'flex';
 
-      //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
-      eachBtn.addEventListener( 'click' , event => {
-        //Desativando o botão para não permitir dois cliques seguidos
-        event.target.style.disabled = true;
+    //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
+    btnEnableNotification.addEventListener('click', event => {
+      //Desativando o botão para não permitir dois cliques seguidos
+      event.target.style.disabled = true;
 
-        // Mostra uma mensagem padrão pedindo o usuário para dar permissões de notificação para a aplicação
-        //!OBS: A permissão de notificação requisitada ao usuário também da permissão ao recurso de Push Notifications, que são as notificações que vem do servidor para o navegador e do navegador para a aplicação
-        Notification.requestPermission( result => {
-          console.log('User Choice', result);
+      // Mostra uma mensagem padrão pedindo o usuário para dar permissões de notificação para a aplicação
+      //!OBS: A permissão de notificação requisitada ao usuário também da permissão ao recurso de Push Notifications, que são as notificações que vem do servidor para o navegador e do navegador para a aplicação
+      Notification.requestPermission(result => {
+        console.log('User Choice', result);
 
-          //Checando a escolha do usuário
-          if(result !== 'granted'){ //Se o usuario não aceitou (result==='denied')
-            console.log('No notification permission granted!');
-          } else {//Se o usuário aceitou (result==='granted')
-            console.log('The permission to notifications was accept!');
+        //Checando a escolha do usuário
+        if (result !== 'granted') { //Se o usuario não aceitou (result==='denied')
+          console.log('No notification permission granted!');
+        } else {//Se o usuário aceitou (result==='granted')
+          console.log('The permission to notifications was accept!');
 
-            //Escondendo o botão após o usuário dar as permissões para notifications
-            // event.target.style.display = 'none';
+          //Escondendo o botão após o usuário dar as permissões para notifications
+          // event.target.style.display = 'none';
 
-            //Disparando a notificação de sucesso DIRETO DA APLICAÇÃO
-            // displayConfirmNotification();
+          //Disparando a notificação de sucesso DIRETO DA APLICAÇÃO
+          // displayConfirmNotification();
 
-            //Disparando o registro de uma subscription no dispositivo com o navegador para realizar Push Notifications
-            configureWebPushSubscription();
-          }
-        });
-      }); 
+          //Disparando o registro de uma subscription no dispositivo com o navegador para realizar Push Notifications
+          configureWebPushSubscription();
+        }
+      });
     });
   }
 }

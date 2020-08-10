@@ -53,34 +53,53 @@
 </head>
 
 <body>
+  <!-- ! HEADER --> 
   <header>
     <nav>
       <div class="colum-left">
-        <i class="icon-th-list icon-default only-small-screen-block" onclick="showMenuMobile();"></i>
-        <a href="./index.html">
-          <h1 class="only-big-screen-block">DoApp</h1>
-        </a>
-      </div>
-      <div class="colum-right only-big-screen-flex">
-        <ul class="menu">
-          <button class="install-app" onclick="installPWAApp(this);" >Instalar Aplicativo</button>
-          <button class="enable-notifications">Ativar Notificações</button>
-          <a href="./index.html"><li class="menu-item">Anúncios</li></a>
-          <a href="./help.html"><li class="menu-item">Ajuda</li></a>
-        </ul>
-      </div>
-      <ul class="menu-mobile only-small-screen-flex">
-        <a href="./index.html">
+        <a class="display-flex flex-center" href="./index.html">
+          <img src="./src/images/logos/logo.png" width="50" height="50" style="margin-right: 10px;" alt="">
           <h1>DoApp</h1>
         </a>
-        <a href="./index.html"><li class="menu-item">Anúncios</li></a>
-        <a href="./help.html"><li class="menu-item">Ajuda</li></a>
-        <button class="install-app" onclick="installPWAApp(this);" >Instalar Aplicativo</button>
-        <button class="enable-notifications">Ativar Notificações</button>
-      </ul>
+      </div>
+      <div class="colum-right">
+        <ul class="menu">
+          <li class="menu-item">
+            <button class="install-app" onclick="installPWAApp(this);">
+              Instalar Aplicativo
+              <i class="icon-install"></i>
+            </button>
+          </li>
+          <li class="menu-item notifications">
+            <button class="enable-notifications">
+              Ativar Notificações
+              <i class="icon-bell-alt"></i>
+            </button>
+          </li>
+          <li class="menu-item">
+            <a href="./index.html">
+              Anúncios
+              <i class="icon-home"></i>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="./help.html">
+              Ajuda
+              <i class="icon-help"></i>
+            </a>
+          </li>
+          <div class="social-midias only-small-screen-flex">
+            <a href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
+            <a href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i class="icon-linkedin-circled"></i></a>
+            <a href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i class="icon-youtube"></i></a>
+          </div>
+        </ul>
+      </div>
+      <i class="icon-menu icon-default only-small-screen-block" onclick="showMenuMobile();"></i>
     </nav>
   </header>
 
+  <!-- ! MAIN -->
   <main>
     <section id="help">
       <img src="./src/images/logos/logo.png" width="50%" alt="">
@@ -96,7 +115,7 @@
   </main>
 
   <footer>
-    <a href="https://lgrdev.com/"><h4>Desenvolvido por LGR DEV &copy; 2020</h4></a>
+    <a href="https://lgrdev.com/"><h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4></a>
   </footer>
   <!-- Para caso o navegador não tenha suporte a Promises, importamos uma Promise manualmente e incorporamos no navegador -->
   <script type="text/javascript" src="./src/js/promise.js"></script> 

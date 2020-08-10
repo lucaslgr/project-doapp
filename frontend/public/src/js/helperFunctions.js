@@ -1,3 +1,6 @@
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+
 /**
  * Converte uma string no encode base64 para Int8
  * @param {string} base64String 
