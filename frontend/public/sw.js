@@ -8,7 +8,6 @@ importScripts('./src/js/idb.js');
 //* Importando o ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB
 importScripts('./src/js/indexedDB.js');
 
-// const BASE_URL = `http://localhost/project-doapp/frontend/public`;//TODO
 const CACHE_STATIC_NAME = 'static-v3';
 const CACHE_DYNAMIC_NAME = 'dynamic-v3';
 const STATIC_FILES = [
@@ -214,7 +213,6 @@ self.addEventListener('fetch', (event) => {
  * nova tarefa 
  */
 self.addEventListener('sync', (event) => {
-  // const endpoint = 'http://localhost/project-doapp/backend-api/public/posts/new';
   const endpoint = API_BASE_URL+'/posts/new';
 
   console.log('[Service Worker] Background Syncing', event);
