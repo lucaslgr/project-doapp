@@ -21,7 +21,7 @@
         $config['dbname'] = 'u756318379_doapp';
         $config['host'] = 'localhost';
         $config['dbuser'] = 'u756318379_doapp';
-        $config['dbpass'] = '8X$ow$VoE68';
+        $config['dbpass'] = 'S$TgU6S[b~6m';
     }
 
     global $db;
@@ -32,7 +32,8 @@
                         $config['dbpass']);
 
         //Setando o timezone por conexão
-        $db->query("SET time_zone = 'America/Sao_Paulo';");
+        // $db->query("SET GLOBAL time_zone = 'America/Sao_Paulo'");
+        $db->query("SET GLOBAL time_zone = '+8:00'");
     } catch(PDOException $e) {
         die($e->getMessage());
         exit();
