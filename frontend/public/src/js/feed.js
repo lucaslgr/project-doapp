@@ -372,6 +372,8 @@ function sendModalPost() {
   let postFormData = new FormData();
   postFormData.append('id', idPost);
   postFormData.append('title', title);
+  postFormData.append('longitude', locationCaptured.longitude);
+  postFormData.append('latitude', locationCaptured.latitude);
   postFormData.append('location', location);
   postFormData.append('whatsapp_contact', whatsappContact);
   //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
@@ -387,6 +389,8 @@ function sendModalPost() {
           id: idPost,
           title: title,
           location: location,
+          longitude: locationCaptured.longitude,
+          latitude: locationCaptured.latitude,
           image: pictureCaptured,
           whatsapp_contact: whatsappContact
         };
@@ -460,29 +464,68 @@ function sendModalPost() {
 //Cria uma nova postagem de anuncio
 function createPost(dataPost) {
   // ! MODELO
-  // <div class="each-post">
-  //  <img src="./src/images/product-default.png" alt="">
-  //  <h1 class="title">Título</h1>
-  //  <h4>Localização: <div class="location"> Cataguases-MG</div></h4>
-  //  <h4>Data: <div class="date-created"> 20/03/2020 às 12:20</div></h4>
-  //  <h4>Contato: <div class="whatsapp-contact">(32)9 88094352</div></h4>
-  //</div>  
-
-  // dataPost.title;
-  // dataPost.image;
-  // dataPost.location;
-  // dataPost.date_created;
-  // dataPost.whatsapp_contact;
+  /*
+  <div class="each-post">
+    <img src="./src/images/products/product-default.png" alt="">
+      <h1 class="title">Título</h1>
+      <table>
+        <tr>
+          <td class="tdheader">Localização:</td>
+          <td>
+            <a class="links-info" href="https://www.google.com/maps/place/49.46800006494457,17.11514008755796">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. at!</p>
+              <i class="icon-location"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="tdheader">Whatsapp:</td>
+          <td>
+            <a class="links-info" href="https://api.whatsapp.com/send?phone=5532988094352&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..">
+              <p>32 9 88094352</p>
+              <i class="icon-whatsapp"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="tdheader">Data:</td>
+          <td>20/20/2020</td>
+        </tr>
+      </table>
+  </div>
+  */
 
   //Montando os elementos HTML que constituem o DOM
   let postWrapper = document.createElement('div');
   postWrapper.setAttribute('data-id', dataPost.id);
   postWrapper.className = 'each-post';
 
+  let postImg = document.createElement('img');
+
+  //Verificando se está vazia a URI de imagem que veio do BD
   if (dataPost.image === '')
     dataPost.image = './src/images/products/product-default.png';
+  else {
+    //Tentando puxar a imagem, se não conseguir, coloca a default
+    fetch(dataPost.image)
+    .then(response => {
+      return response.json();
+    })
+    .then(resJSON => {
+      if(isEmpty(resJSON)){
+        console.log('Entrou aqui')
 
-  let postImg = document.createElement('img');
+        dataPost.image = './src/images/products/product-default.png';
+
+        //Setando aqui novamente porquê pode ser que a Promise seja resolvida só depois que já tiver setado a URL original
+        postImg.setAttribute('src', dataPost.image); //!VALOR da url da imagem
+      }
+    })
+    .catch(error=> {
+      dataPost.image = './src/images/products/product-default.png';
+    })
+  }
+
   postImg.setAttribute('src', dataPost.image); //!VALOR da url da imagem
   postImg.setAttribute('alt', 'imagem do produto');
 
@@ -490,33 +533,108 @@ function createPost(dataPost) {
   postTitle.className = 'title';
   postTitle.innerText = dataPost.title; //!VALOR do título
 
-  let postLocation = document.createElement('h4');
-  postLocation.innerText = 'Localização: ';
-  let locationValue = document.createElement('div');
-  locationValue.className = 'location';
-  locationValue.innerText = dataPost.location; //!VALOR da localizacao
-  postLocation.appendChild(locationValue);
+  //!TABELA COM AS INFORMAÇÕES
+  let table = document.createElement('table');
 
-  let postDateCreated = document.createElement('h4');
-  postDateCreated.innerText = 'Data: ';
-  let dataCreatedValue = document.createElement('div');
-  dataCreatedValue.className = 'date-created';
-  dataCreatedValue.innerText = dataPost.date_created; //!VALOR da data de criação
-  postDateCreated.appendChild(dataCreatedValue);
+  //! MONTANDO A LINHA DA LOCATION NA TABELA
+  let trLocation = document.createElement('tr');
+  
+  let tdLocationHeader = document.createElement('td')
+  tdLocationHeader.classList.add('tdheader');                          
+  tdLocationHeader.innerText = 'Localização:';
+                            
+  let tdLocationValue = document.createElement('td');
 
-  let postContact = document.createElement('h4');
-  postContact.innerText = 'Whatsapp: ';
-  let dataContactValue = document.createElement('div');
-  dataContactValue.className = 'whatsapp-contact';
-  dataContactValue.innerText = dataPost.whatsapp_contact; //!VALOR do número de whatsapp
-  postContact.appendChild(dataContactValue);
+  let aLocationValue = document.createElement('a');
+  aLocationValue.classList.add('links-info');
+  aLocationValue.setAttribute('target', '_blank');
+
+  //Pegando latitude e longitude
+  const longitude = (dataPost.longitude==0|| dataPost.longitude == null)?null:dataPost.longitude;
+  const latitude = (dataPost.latitude==0 || dataPost.latitude == null)?null:dataPost.latitude;
+  if(longitude && latitude){ //Só seta o href se a latitude e longitude tiverem vierem do BD
+    aLocationValue.setAttribute('href', `https://www.google.com/maps/place/${latitude},${longitude}`);
+  }
+
+  let pLocationValue = document.createElement('p');
+  pLocationValue.innerText = dataPost.location;
+  
+  let iconLocationValue = document.createElement('i');
+  iconLocationValue.classList.add('icon-location');
+  //Montando a tag <a>
+  aLocationValue.appendChild(pLocationValue);
+  aLocationValue.appendChild(iconLocationValue);
+
+  //Montando o <td> value da Location
+  tdLocationValue.appendChild(aLocationValue);
+
+  //Montando o <tr> da location
+  trLocation.appendChild(tdLocationHeader);
+  trLocation.appendChild(tdLocationValue);
+
+  //Inserindo o <tr> da location na table
+  table.appendChild(trLocation);
+  //![FIM] MONTANDO A LINHA DA LOCATION NA TABELA
+
+  //! MONTANDO A LINHA COM INFORMAÇÕES DO WHATSAPP NA TABELA
+  let trWhatsapp = document.createElement('tr');
+  
+  let tdWhatsappHeader = document.createElement('td');
+  tdWhatsappHeader.classList.add('tdheader');
+  tdWhatsappHeader.innerText = 'Whatsapp:';
+
+  let tdWhatsappValue = document.createElement('td');
+  
+  let aWhatsappValue = document.createElement('a');
+  aWhatsappValue.classList.add('links-info');
+  aWhatsappValue.setAttribute('target', '_blank');
+
+  //Tirando tudo que não seja número
+  const whatsappNumber = dataPost.whatsapp_contact.replace(/\D/g,"");
+  aWhatsappValue.setAttribute('href', `https://api.whatsapp.com/send?phone=55${whatsappNumber}&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..`);
+  
+  let pWhatsappValue = document.createElement('p');
+  pWhatsappValue.innerText = dataPost.whatsapp_contact;
+  
+  let iconWhatsappValue = document.createElement('i');
+  iconWhatsappValue.classList.add('icon-whatsapp');
+  //Montando a tag <a>
+  aWhatsappValue.appendChild(pWhatsappValue);
+  aWhatsappValue.appendChild(iconWhatsappValue);
+
+  //Montando o <td> value da Whatsapp
+  tdWhatsappValue.appendChild(aWhatsappValue);
+
+  //Montando o <tr> da Whatsapp
+  trWhatsapp.appendChild(tdWhatsappHeader);
+  trWhatsapp.appendChild(tdWhatsappValue);
+
+  //Inserindo o <tr> da location na table
+  table.appendChild(trWhatsapp);
+  //![FIM] MONTANDO A LINHA COM INFORMAÇÕES DO WHATSAPP NA TABELA
+
+  //! MONTANDO A LINHA COM INFORMAÇÕES DA DATA DE POSTAGEM NA TABELA
+  let trDateCreated = document.createElement('tr');
+  
+  let tdDateCreatedHeader = document.createElement('td');
+  tdDateCreatedHeader.classList.add('tdheader')
+  tdDateCreatedHeader.innerText = 'Data:';
+
+  let tdDateCreatedValue = document.createElement('td');
+  tdDateCreatedValue.innerText = dataPost.date_created;
+
+  //Montando o <tr> da DateCreated
+  trDateCreated.appendChild(tdDateCreatedHeader);
+  trDateCreated.appendChild(tdDateCreatedValue);
+
+  //Inserindo o <tr> da location na table
+  table.appendChild(trDateCreated);
+  //![FIM] MONTANDO A LINHA COM INFORMAÇÕES DA DATA DE POSTAGEM NA TABELA
 
   //Adicionando todos os elementos no PostWrapper
   postWrapper.appendChild(postImg);
   postWrapper.appendChild(postTitle);
-  postWrapper.appendChild(postLocation);
-  postWrapper.appendChild(postDateCreated);
-  postWrapper.appendChild(postContact);
+  postWrapper.appendChild(table);
 
   // componentHandler.upgradeElement(postWrapper);
   let sectionPostsArea = $('section#posts .section-area');

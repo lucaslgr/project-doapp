@@ -42,21 +42,36 @@ class Posts extends Model {
      * 
      * @return int
      */
-    public function createNewPost($title, $location, $image, $whatsapp_contact)
+    public function createNewPost($title, $location, $image, $whatsapp_contact, $longitude = 0.0, $latitude = 0.0)
     {
         $result = [];
+        $status_query = false;
 
-        $sql = $this->pdo->prepare(
-            "INSERT INTO posts(title, location, image, whatsapp_contact, status, date_created)
-            VALUES(?, ?, ?, ?, 0, NOW())"
-        );
-
-        $status_query = $sql->execute([
-            $title,
-            $location,
-            $image,
-            $whatsapp_contact
-        ]);
+        if($longitude != 0.0 && $latitude != 0.0){
+            $sql = $this->pdo->prepare(
+                "INSERT INTO posts(title, longitude, latitude, location, image, whatsapp_contact, status, date_created) VALUES(?, ?, ?, ?, ?, ?, 0, NOW())"
+            );
+    
+            $status_query = $sql->execute([
+                $title,
+                $longitude,
+                $latitude,
+                $location,
+                $image,
+                $whatsapp_contact
+            ]);
+        } else {
+            $sql = $this->pdo->prepare(
+                "INSERT INTO posts(title, location, image, whatsapp_contact, status, date_created) VALUES(?, ?, ?, ?, 0, NOW())"
+            );
+    
+            $status_query = $sql->execute([
+                $title,
+                $location,
+                $image,
+                $whatsapp_contact
+            ]);
+        }
 
         //Se houve algum erro
         if(!$status_query){

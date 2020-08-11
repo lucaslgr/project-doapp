@@ -233,6 +233,8 @@ self.addEventListener('sync', (event) => {
             let postFormData = new FormData();
             postFormData.append('id', post.id);
             postFormData.append('title', post.title);
+            postFormData.append('longitude', post.longitude);
+            postFormData.append('latitude', post.latitude);
             postFormData.append('location', post.location);
             postFormData.append('whatsapp_contact', post.whatsapp_contact);
             //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
@@ -258,15 +260,22 @@ self.addEventListener('sync', (event) => {
               
               //? Enviando uma mensagem para a main thread do navegador no lado do client para atualizar os posts/anuncios usando a funcao fillPosts()
               // Pegando todos os clients controlados pelo SW, EX: index.html, help.html, offline.html
-              const allClients = await clients.matchAll({ includeUncontrolled: true});
+              const allClients = await clients.matchAll({ includeUncontrolled: true, });
               
               // Sai se não conseguirmos pegar o client da main thread... Eg, if it closed.
               if (!(allClients.length > 0) || !(allClients[0])) return;
 
-              // Envia uma mensagem para o client da main thread informando no JSON, action(funcao) que deverá ser executada na thread principal 
-              allClients[0].postMessage({
-                action: 'fillPosts'
-              });
+              //Envia uma mensagem para todos clients da main thread informando no JSON, action(funcao) que deverá ser executada na thread principal 
+              allClients.forEach( client => {
+                client.postMessage({
+                  action: 'fillPosts'
+                });
+              })
+
+              // // Envia uma mensagem para o client da main thread informando no JSON, action(funcao) que deverá ser executada na thread principal 
+              // allClients[0].postMessage({
+              //   action: 'fillPosts'
+              // });
             })
             .catch((errors) => {
               console.log('ERRO', errors);

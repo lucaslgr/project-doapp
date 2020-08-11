@@ -91,7 +91,9 @@ class PostsController extends Controller{
             $data['title'],
             $data['location'],
             \BASE_URL.'Images/'.$name_img,
-            $data['whatsapp_contact']
+            $data['whatsapp_contact'],
+            \floatval($data['longitude']),
+            \floatval($data['latitude'])
         );
 
         if(isset($result['errors'])){

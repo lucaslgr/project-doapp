@@ -298,55 +298,59 @@ section#posts .section-area .each-post {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid var(--gray-medium);
+    /* border: 1px solid var(--gray-medium); */
+    box-shadow: 0px 0px 10px var(--gray-medium);
     border-radius: 5px;
-    padding: 20px;
+    padding: 5px;
+    background-color: var(--blue-medium);
 }
 
 section#posts .section-area .each-post + .each-post {
     margin-top: 20px;
 }
 
-section#posts .section-area .each-post img,
-section#posts .section-area .each-post h1,
-section#posts .section-area .each-post h3,
-section#posts .section-area .each-post h4{
+section#posts .section-area .each-post img{
     width: 100%;
-    display: flex;
 }
 
-section#posts .section-area .each-post h1 {
+section#posts .section-area .each-post h1.title {
     justify-content: center;
     margin-top: 5px;
+    color: var(--white-light);
 }
 
-section#posts .section-area .each-post h1 + h3{
-    margin-top: 5px;
+section#posts .section-area .each-post table {
+    width: 100%;
 }
 
-section#posts .section-area .each-post h1,
-section#posts .section-area .each-post h3,
-section#posts .section-area .each-post h4,
-section#posts .section-area .each-post .location,
-section#posts .section-area .each-post .date-created,
-section#posts .section-area .each-post .price,
-section#posts .section-area .each-post .whatsapp-contact{
-    color: var(--gray-dark) !important;
+section#posts .section-area .each-post table tr{
+    height: auto;
 }
 
-section#posts .section-area .each-post .location,
-section#posts .section-area .each-post .date-created,
-section#posts .section-area .each-post .price,
-section#posts .section-area .each-post .whatsapp-contact{
-    font-weight: 700;
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
+section#posts .section-area .each-post table td {
+    height: auto;
+    /* color: var(--gray-dark); */
+    padding: 10px 0px;
+}
+
+section#posts .section-area .each-post table td + td{
     text-align: right;
 }
 
-section#posts .section-area .each-post img{
-    width: 200px;
+section#posts .section-area .each-post table td.tdheader{
+    font-size: 18px;
+}
+
+
+section#posts .section-area .each-post table td .links-info{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+section#posts .section-area .each-post table td i{
+    margin-left: 3px;
+    font-size: 25px;
 }
 
 

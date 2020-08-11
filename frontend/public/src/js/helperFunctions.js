@@ -20,7 +20,6 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
-
 /**
  * Converte uma determinada URL em base64 para um arquivo
  * @param {*} dataURI 
@@ -37,7 +36,9 @@ function dataURItoBlob(dataURI) {
     return blob;
 }
 
-//Funcao que chama a respectiva mascara passando o respectivo elemento
+/**
+ * Funcao que chama a respectiva mascara passando o respectivo elemento
+ */
 function mascara(o,f){
     let v_obj=o;
     let v_fun=f;
@@ -53,4 +54,36 @@ function telefone(v){
     v=v.replace(/^(\d\d)(\d)/g,"($1) $2") //Coloca parênteses em volta dos dois primeiros dígitos
     v=v.replace(/(\d{4})(\d)/,"$1-$2")    //Coloca hífen entre o quarto e o quinto dígitos
     return v
+}
+
+/**
+ * Checa se um JSON é vazio
+ */
+
+ // Speed up calls to hasOwnProperty
+
+function isEmpty(obj) {
+    let hasOwnProperty = Object.prototype.hasOwnProperty;
+
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    // If it isn't an object at this point
+    // it is empty, but it can't be anything *but* empty
+    // Is it empty?  Depends on your application.
+    if (typeof obj !== "object") return true;
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
 }
