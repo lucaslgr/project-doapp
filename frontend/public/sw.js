@@ -10,6 +10,7 @@ importScripts('./src/js/indexedDB.js');
 
 const CACHE_STATIC_NAME = 'static-v3';
 const CACHE_DYNAMIC_NAME = 'dynamic-v3';
+const CACHE_IMG = 'img-v3';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
@@ -186,11 +187,22 @@ self.addEventListener('fetch', (event) => {
             //Tentando fazer a requisição na rede
             return fetch(event.request)
               .then( res => {
-                return caches.open(CACHE_DYNAMIC_NAME)
+                //Se for requisição a uma imagem, salva no CACHE_IMG para que a limpeza de cache ocorra 
+                if(event.request.url.indexOf(`${API_BASE_URL}/Images/`) > -1){
+                  return caches.open(CACHE_IMG)
+                    .then( cache => {
+                      //Limpando as imagens mais antigas armazenadas no cache respeitando limite de 10 imagens
+                      trimCache(CACHE_IMG, 10);
+                      cache.put(event.request.url, res.clone());
+                      return res;
+                    })
+                } else {
+                  return caches.open(CACHE_DYNAMIC_NAME)
                   .then( cache => {
                     cache.put(event.request.url, res.clone());
                     return res;
                   });
+                }
               })
               //Se não conseguiu fazer a requisição na rede por falta de conexão cai aqui e retorna a página de [fallback 404] caso seja uma requisição a uma página .html
               .catch( error => {
