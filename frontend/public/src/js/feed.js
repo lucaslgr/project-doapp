@@ -315,6 +315,9 @@ function closeModalAddPost() {
   contextCanvas.restore();
   //========================================================================================================================//
 
+  //Limpando a imagem salva
+  pictureCaptured = null;
+
   //Reabilitando o botão de captura caso esteja desabilitado
   btnImgCapture.removeAttribute('disabled');
   btnImgCapture.style.cursor = 'pointer';
@@ -344,20 +347,33 @@ function clearModalAddPostInputs() {
 
 //Extrai e envia os dados do Post para a API
 function sendModalPost() {
-  // const endpoint = 'http://localhost/project-doapp/backend-api/public/posts/new';
   const endpoint = API_BASE_URL+'/posts/new';
 
   let idPost = new Date().toISOString(); //Setando um ID temporário para os posts a serem armazenados no IndexedDB
   let title = $('input[name=title]').value;
   let location = $('textarea[name=location]').value;
-  let whatsapp_contact = $('input[name=whatsapp-contact]').value;
+  let whatsappContact = $('input[name=whatsapp-contact]').value;
+
+  //Verifica se ficou algum campo vazio
+  if(idPost == '' || idPost == null ||
+    title == '' || title == null ||
+    location == '' || location == null ||
+    whatsappContact=='' || whatsappContact == null ||
+    pictureCaptured =='' || pictureCaptured == null) {
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'Todas informações precisam ser preenchidas para finalizar seu anúncio.'
+    });
+    return;//Cancela a operação de enviar o anuncio
+  }
 
   //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
   let postFormData = new FormData();
   postFormData.append('id', idPost);
   postFormData.append('title', title);
   postFormData.append('location', location);
-  postFormData.append('whatsapp_contact', whatsapp_contact);
+  postFormData.append('whatsapp_contact', whatsappContact);
   //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
   postFormData.append('image', pictureCaptured, `${idPost}.png`);
 
@@ -372,7 +388,7 @@ function sendModalPost() {
           title: title,
           location: location,
           image: pictureCaptured,
-          whatsapp_contact: whatsapp_contact
+          whatsapp_contact: whatsappContact
         };
 
         //Salvando as informações da requisição no IndexedDB para serem sincronizadas no [SW]
@@ -382,14 +398,31 @@ function sendModalPost() {
             sw.sync.register('sync-new-post');
           })
           .then(() => {
-            alert('Anúncio inserido com sucesso!');
+            //Alerta de sucesso
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Anúncio inserido com sucesso!',
+              showConfirmButton: false,
+              timer: 100000
+            })
+
+
             // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
             clearModalAddPostInputs();
             closeModalAddPost();
           })
           .catch((errors) => {
             console.log('ERRO', errors);
-            alert(`ERRO na sincronização de anúncios : ${errors.msg}`);
+            // alert(`ERRO na sincronização de anúncios : ${errors.msg}`);
+
+            //Alerta de erro
+            Swal.fire({
+              icon: 'error',
+              title: 'ERRO:',
+              text: 'Ocorreu um erro na sincronização dos anúncios.'
+            });
+
             closeModalAddPost();
           })
       });

@@ -18,6 +18,7 @@ const STATIC_FILES = [
   BASE_URL+'/config.js',
   BASE_URL+'/src/js/app.js',
   BASE_URL+'/src/js/feed.js',
+  BASE_URL+'/src/js/sweetalert2.js',
   BASE_URL+'/src/js/promise.js',
   BASE_URL+'/src/js/fetch.js',
   BASE_URL+'/src/js/idb.js',

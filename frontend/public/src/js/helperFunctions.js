@@ -36,3 +36,21 @@ function dataURItoBlob(dataURI) {
     var blob = new Blob([ab], { type: mimeString });
     return blob;
 }
+
+//Funcao que chama a respectiva mascara passando o respectivo elemento
+function mascara(o,f){
+    let v_obj=o;
+    let v_fun=f;
+
+    setTimeout( () => {
+        v_obj.value=v_fun(v_obj.value)
+    }, 1);
+}
+
+//Função para máscara de telefone
+function telefone(v){
+    v=v.replace(/\D/g,"")                 //Remove tudo o que não é dígito
+    v=v.replace(/^(\d\d)(\d)/g,"($1) $2") //Coloca parênteses em volta dos dois primeiros dígitos
+    v=v.replace(/(\d{4})(\d)/,"$1-$2")    //Coloca hífen entre o quarto e o quinto dígitos
+    return v
+}
