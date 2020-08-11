@@ -404,7 +404,7 @@ function sendModalPost() {
               icon: 'success',
               title: 'Anúncio inserido com sucesso!',
               showConfirmButton: false,
-              timer: 100000
+              timer: 1500
             })
 
 
