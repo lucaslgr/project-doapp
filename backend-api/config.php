@@ -30,6 +30,9 @@
         $db = new PDO('mysql:dbname='.$config['dbname'].';host='.$config['host'],
                         $config['dbuser'],
                         $config['dbpass']);
+
+        //Setando o timezone por conexão
+        $db->query("SET time_zone = 'America/Sao_Paulo';");
     } catch(PDOException $e) {
         die($e->getMessage());
         exit();
