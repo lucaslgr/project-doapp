@@ -1,11 +1,14 @@
 <?php
     use Core\Core;
 
+    //Setando o fuso horário de São Paulo
+    date_default_timezone_set('America/Sao_Paulo');
+
     //Iniciando a $_SESSION
     session_start();
 
     //Liberando todos remetentes de requisições no CORS
-    header("Access-Control-Allow-Origin: https://lgrdev.com/"); 
+    header("Access-Control-Allow-Origin: https://lgrdev.com"); 
     //Liberando todos os verbos HTTP
     header("Access-Control-Allow-Methods: *");
     //Liberando o header Content-Type
