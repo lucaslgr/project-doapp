@@ -1,4 +1,8 @@
+SetEnv TZ America/Sao_Paulo
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+#if the request does not end with .gif,.png or jpg 
+RewriteCond %{REQUEST_URI} !(\.gif|\.jpg|\.png)$ [NC]
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

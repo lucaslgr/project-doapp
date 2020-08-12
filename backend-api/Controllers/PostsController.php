@@ -28,9 +28,13 @@ class PostsController extends Controller{
             return;
         }
 
+        $data = $this->getRequestData();
+        $limit = $data['limit']??5;
+        $page = $data['page']??1;
+
         $posts = new Posts();
 
-        $result = $posts->getAllPosts();
+        $result = $posts->getAllPosts($limit, $page);
         if(isset($result['errors'])){
             $response['errors'] = $result['errors'];
             $this->returnJson($response);
@@ -39,7 +43,7 @@ class PostsController extends Controller{
 
         if(!isset($result) || empty($result) || !count($result)>0){
             //Setando 204 => No Content
-            $this->returnJson($response, 204);
+            $this->returnJson($response, 200);
             return;
         }
 

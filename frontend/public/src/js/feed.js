@@ -4,17 +4,24 @@ let pictureCaptured;
 //GeoLocation capturada
 let locationCaptured = { latitude: 0, longitude: 0 };
 
+//Armazena a pagina atual da paginacao
+let currentPage = 1;
+//Const que armazena o limite de posts exibidos por pagina
+const limitPostsPerPage = 5;
+
 //Pegando a referência para os elementos a serem manipulados
-let videoPlayer = $('.modal.modal-add-post #video-player');
-let canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
-let boxCameraControls = $('.modal.modal-add-post .camera-controls');
-let selectOptionsCamera = $('.modal.modal-add-post #camera-options');
-let btnImgCapture = $('.modal.modal-add-post #btn-img-capture');
-let imgPickerBox = $('.modal.modal-add-post .image-picker-box');
-let imgPickerInput = $('.modal.modal-add-post #image-picker');
-let imgPickerInputLabel = $('.modal.modal-add-post label[for=image-picker]');
-let btnGeoLocation = $('.modal.modal-add-post #btn-location');
-let locationLoader = $('.modal.modal-add-post .spinner.spinner-location');
+const videoPlayer = $('.modal.modal-add-post #video-player');
+const canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
+const boxCameraControls = $('.modal.modal-add-post .camera-controls');
+const selectOptionsCamera = $('.modal.modal-add-post #camera-options');
+const btnImgCapture = $('.modal.modal-add-post #btn-img-capture');
+const imgPickerBox = $('.modal.modal-add-post .image-picker-box');
+const imgPickerInput = $('.modal.modal-add-post #image-picker');
+const imgPickerInputLabel = $('.modal.modal-add-post label[for=image-picker]');
+const btnGeoLocation = $('.modal.modal-add-post #btn-location');
+const locationLoader = $('.modal.modal-add-post .spinner.spinner-location');
+const loaderConteiner = $('.loader'); //Loader apresentado no scroll inifito
+const sectionPostsArea = $('section#posts .section-area'); //Area onde ficam as postagens
 
 //Checa os recursos necessários e configura a aplicação para utilizar as funcionalidades de camera 
 function initializeMedia() {
@@ -461,40 +468,9 @@ function sendModalPost() {
   }
 }
 
-//Cria uma nova postagem de anuncio
+//Cria uma nova postagem de anuncio utilizando appendChild
 function createPost(dataPost) {
-  // ! MODELO
-  /*
-  <div class="each-post">
-    <img src="./src/images/products/product-default.png" alt="">
-      <h1 class="title">Título</h1>
-      <table>
-        <tr>
-          <td class="tdheader">Localização:</td>
-          <td>
-            <a class="links-info" href="https://www.google.com/maps/place/49.46800006494457,17.11514008755796">
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. at!</p>
-              <i class="icon-location"></i>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td class="tdheader">Whatsapp:</td>
-          <td>
-            <a class="links-info" href="https://api.whatsapp.com/send?phone=5532988094352&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..">
-              <p>32 9 88094352</p>
-              <i class="icon-whatsapp"></i>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td class="tdheader">Data:</td>
-          <td>20/20/2020</td>
-        </tr>
-      </table>
-  </div>
-  */
-
+  
   //Montando os elementos HTML que constituem o DOM
   let postWrapper = document.createElement('div');
   postWrapper.setAttribute('data-id', dataPost.id);
@@ -505,26 +481,6 @@ function createPost(dataPost) {
   //Verificando se está vazia a URI de imagem que veio do BD
   if (dataPost.image === '')
     dataPost.image = './src/images/products/product-default.png';
-  else {
-    //Tentando puxar a imagem, se não conseguir, coloca a default
-    fetch(dataPost.image)
-    .then(response => {
-      return response.json();
-    })
-    .then(resJSON => {
-      if(isEmpty(resJSON)){
-        console.log('Entrou aqui')
-
-        dataPost.image = './src/images/products/product-default.png';
-
-        //Setando aqui novamente porquê pode ser que a Promise seja resolvida só depois que já tiver setado a URL original
-        postImg.setAttribute('src', dataPost.image); //!VALOR da url da imagem
-      }
-    })
-    .catch(error=> {
-      dataPost.image = './src/images/products/product-default.png';
-    })
-  }
 
   postImg.setAttribute('src', dataPost.image); //!VALOR da url da imagem
   postImg.setAttribute('alt', 'imagem do produto');
@@ -547,11 +503,12 @@ function createPost(dataPost) {
 
   let aLocationValue = document.createElement('a');
   aLocationValue.classList.add('links-info');
+  aLocationValue.classList.add('link-location');
   aLocationValue.setAttribute('target', '_blank');
 
   //Pegando latitude e longitude
-  const longitude = (dataPost.longitude==0|| dataPost.longitude == null)?null:dataPost.longitude;
-  const latitude = (dataPost.latitude==0 || dataPost.latitude == null)?null:dataPost.latitude;
+  const longitude = filterCoordinate(dataPost.longitude);
+  const latitude = filterCoordinate(dataPost.latitude);
   if(longitude && latitude){ //Só seta o href se a latitude e longitude tiverem vierem do BD
     aLocationValue.setAttribute('href', `https://www.google.com/maps/place/${latitude},${longitude}`);
   }
@@ -587,6 +544,7 @@ function createPost(dataPost) {
   
   let aWhatsappValue = document.createElement('a');
   aWhatsappValue.classList.add('links-info');
+  aWhatsappValue.classList.add('link-whats');
   aWhatsappValue.setAttribute('target', '_blank');
 
   //Tirando tudo que não seja número
@@ -621,6 +579,7 @@ function createPost(dataPost) {
   tdDateCreatedHeader.innerText = 'Data:';
 
   let tdDateCreatedValue = document.createElement('td');
+  tdDateCreatedValue.classList.add('date-value');
   tdDateCreatedValue.innerText = dataPost.date_created;
 
   //Montando o <tr> da DateCreated
@@ -636,23 +595,85 @@ function createPost(dataPost) {
   postWrapper.appendChild(postTitle);
   postWrapper.appendChild(table);
 
-  // componentHandler.upgradeElement(postWrapper);
-  let sectionPostsArea = $('section#posts .section-area');
   //Adicionando a nova postagem na area de postagens
   sectionPostsArea.appendChild(postWrapper);
 }
 
+//Cria o HTML de uma nova postagem e retorna como string
+function createPostHTML(dataPost) {
+  //Extraindo todos os dados do JSON com as informações do post
+  let {id, title, image, longitude, latitude, location, whatsapp_contact, date_created} = dataPost;
+
+  //Verificando se sao coordenadas validas
+  longitude = filterCoordinate(longitude);
+  latitude = filterCoordinate(latitude);  
+
+  //Tirando todos os caracteres especiais do numero de whatsapp
+  let whatsappOnlyNumber = whatsapp_contact.replace(/\D/g,"");
+
+  const URL_API_GOOGLEMAPS = `https://www.google.com/maps/place/${latitude},${longitude}`;
+  const URL_API_WHATSAPP = `https://api.whatsapp.com/send?phone=55${whatsappOnlyNumber}&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..`;
+
+  return (
+  `<div class="each-post" data-id="${id}">
+    <img src="${image}" alt="imagem do objeto">
+      <h1 class="title">${title}</h1>
+      <table>
+        <tr>
+          <td class="tdheader">Localização:</td>
+          <td>
+            <a target="_blank" class="links-info link-location" ${(longitude && latitude)?`href="${URL_API_GOOGLEMAPS}"`:''}>
+              <p>${location}</p>
+              <i class="icon-location"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="tdheader">Whatsapp:</td>
+          <td>
+            <a target="_blank" class="links-info link-whats" href="${URL_API_WHATSAPP}">
+              <p>${whatsapp_contact}</p>
+              <i class="icon-whatsapp"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="tdheader">Data:</td>
+          <td class="date-value">${date_created}</td>
+        </tr>
+      </table>
+  </div>`);
+}
+
 //Limpa todos os cards de posts/anuncios
 function clearAllCards() {
-  $$('section#posts .section-area .each-post').forEach(each => each.remove());
+  // $$('section#posts .section-area .each-post').forEach(each => each.remove());
+  sectionPostsArea.innerHTML = '';
+}
+
+//Limpa todos os cards de posts/anuncios com os respectivos Id especificados no arrayIds recebido no parâmetro
+function clearAllCardsByIds(arrayIds) {
+  console.log('Cleaning all cards by id', arrayIds);
+  $$('section#posts .section-area .each-post').forEach( eachPost =>{
+    if(arrayIds.includes(parseInt(eachPost.getAttribute('data-id')))){
+      eachPost.remove();
+    }
+  });
 }
 
 //Puxando da API todos posts do banco e inserindo na tela
-function fillPosts() {
+//Parâmetro FlagclearPostsArea => se for true ele limpa todos os posts e insere os novos, se for false mantém os atuais e adiciona os novos
+function fillPosts(resetPage = true, FlagclearPostsArea = true) {
   // ! ESTRATÉGIA : CACHE THEN NETWORK
+  //flag que é levantada quando a resposta da requisição a rede é obtida
   let networkDataReceived = false;
-  // const endpoint = 'http://127.0.0.1/project-doapp/backend-api/public/posts';
-  const endpoint = API_BASE_URL+'/posts';
+
+  //Se foi requisitado para primeira pagina setamos currentPage = 1
+  if(resetPage){
+    currentPage = 1;
+  }
+
+  const endpoint = `${API_BASE_URL}/posts?limit=${limitPostsPerPage}&page=${currentPage}`;
 
   fetch(endpoint, {
     "method": "GET",
@@ -666,38 +687,70 @@ function fillPosts() {
     .then((responseJSON) => {
       console.log(`Data Cards from web`, responseJSON);
 
+      //Se estiver vazio, finaliza a funcao poupando processamento 
+      if(isEmpty(responseJSON)){
+        return;
+      }
+
       //Setando a flag que indica que a requisição executada pela network recebeu a resposta
       networkDataReceived = true;
 
       if (responseJSON.errors) {
         throw responseJSON.errors;
       }
-      clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
-      responseJSON.data.map((eachPost) => {
-        createPost(eachPost);
-      })
+      // clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
+      let postsTemplate = responseJSON.data.map((eachPost) => {
+        return createPostHTML(eachPost);
+      }).join('');
+
+      if(FlagclearPostsArea) {
+        sectionPostsArea.innerHTML = postsTemplate;
+      }
+      else {
+        //Pegando o ID de todas postagens vindas da requisição
+        postsId = responseJSON.data.map( () => {responseJSON.id}); 
+        //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir
+        clearAllCardsByIds(postsId);
+
+        //Verifica se já existe uma postagem com o respectivo ID e atualiza com os dados recebidos da rede e se não houver cria o HTML da postagem e insere na pagina
+        sectionPostsArea.innerHTML += postsTemplate;
+      }
     })
     .catch((errors) => {
       console.log('ERRO', errors);
       // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
     })
 
-  //Verifica se o navegador/janela tem o recurso de IndexedDB
-  if ('indexedDB' in window) {
+  //Verifica se o navegador/janela tem o recurso de IndexedDB e Utiliza os dados do IndexedDB apenas para a primeira página(primeiros 5 itens da paginação)
+  if ('indexedDB' in window && currentPage == 1) {
     readAllData('posts')
       .then(responseJSON => {
         if (responseJSON.errors) {
           throw responseJSON.errors;
         }
 
+       //Se estiver vazio, finaliza a funcao poupando processamento 
+        if(isEmpty(responseJSON)){
+          return;
+        }
+
         //Checa se não recebeu a informação da requisição feita pela network primeiro
         if (!networkDataReceived) {
           console.log('Data Cards from indexedDB', responseJSON);
-          clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
+          // clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
 
-          responseJSON.map(eachPost => {
-            createPost(eachPost);
-          })
+          let postsTemplate = responseJSON.map((eachPost) => {
+            return createPostHTML(eachPost);
+          }).join('');
+    
+          if(FlagclearPostsArea)
+            sectionPostsArea.innerHTML = postsTemplate;
+          else{
+            //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir 
+            postsId = responseJSON.map( () => {responseJSON.id}); 
+            clearAllCardsByIds(postsId);
+            sectionPostsArea.innerHTML += postsTemplate;
+          }
         }
       })
       .catch((errors) => {
@@ -799,6 +852,45 @@ function registerServiceWorkerPeriodicSync() {
       });
   }
 }
+
+//!Funções para o SCROLL INFINITO
+function getNextPosts(){
+  setTimeout(() => {
+    currentPage++;
+    fillPosts(false, false);
+  }, 300);
+}
+
+//Função que esconde o loader de scroll inifito 
+function removeLoader() {
+  setTimeout(() => {
+    loaderConteiner.classList.remove('show');
+    getNextPosts();
+  }, 1000);
+}
+
+//Função que mostra o loader de scroll inifito
+function showLoader() {
+  loaderConteiner.classList.add('show');
+  removeLoader();
+}
+
+//Adicionando o escutador para checar se o scroll chegou no final para carregar mais postagens e fazer o scroll infinito
+window.addEventListener('scroll', () => {
+  //Extraindo as propriedades que desejamos
+  //* scrollTop: Representa em pixels distância do topo do documento e o topo visível do documento
+  //* scrollHeight: Representa o tamanho total da altura em pixels deste documento incluindo as partes não visíveis desse documento
+  //* clientHeight: Rrepresenta em pixels a distância entre o topo visível e o final da parte visível da página
+  const {clientHeight, scrollHeight, scrollTop} = document.documentElement;
+  
+  //Flag que indica se o usuário chegou perto, à 10px do fim da página
+  const isPageBottomAlmostReached = (scrollTop + clientHeight >= scrollHeight - 10);
+
+  //Calculando quão próximo do fim da página o usuário esta para carregar os novos anúncios
+  if(isPageBottomAlmostReached){
+    showLoader();
+  }
+});
 
 //Preenchendo a area de posts com todos os posts
 fillPosts();

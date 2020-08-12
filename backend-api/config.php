@@ -33,7 +33,7 @@
 
         //Setando o timezone por conexão
         // $db->query("SET GLOBAL time_zone = 'America/Sao_Paulo'");
-        $db->query("SET GLOBAL time_zone = '+8:00'");
+        $db->query("SET GLOBAL time_zone = 'America/Sao_Paulo'");
     } catch(PDOException $e) {
         die($e->getMessage());
         exit();

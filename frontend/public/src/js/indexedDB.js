@@ -44,7 +44,7 @@ function writeData(objectStoreName, dataToStore){
     */
     let transaction = db.transaction(objectStoreName, 'readwrite');
 
-    //Abrindo o Object Store(Tableas) após a transaction ser configurada acima
+    //Abrindo o Object Store(Tabelas) após a transaction ser configurada acima
     let store = transaction.objectStore(objectStoreName);
 
     //Guardando cada POST/ANUNCIO no respectivo ObjectStore(Tableas)
@@ -102,6 +102,18 @@ function clearAllData(objectStoreName){
       //Fechando a transaction [!OBS: Necessário apenas em transactions com permissão readwrite]
       return transaction.complete;
     })
+}
+
+/**
+ * Função para apagar todas as informações no respectivo ObjectStore(Tablea) de acordo com os IDs inclusos no ArrayIds
+ * @param {string} objectStoreName 
+ * @param {array} ArrayIds 
+ */
+function clearAllDataById(objectStoreName, ArrayIds){
+  //Percorrendo todos os IDs e deletando
+  return ArrayIds.map( (id) => {
+    return deleteItemFrom(objectStoreName, id);
+  });
 }
 
 /**

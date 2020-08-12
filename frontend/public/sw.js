@@ -33,7 +33,8 @@ const STATIC_FILES = [
   BASE_URL+'/src/font/fontello.woff',
   BASE_URL+'/src/font/fontello.woff2',
   'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap',
-  BASE_URL+'/src/images/logos/logo.png'
+  BASE_URL+'/src/images/logos/logo.png',
+  BASE_URL+'/src/images/products/product-default.png'
 ];
 
 
@@ -131,36 +132,64 @@ self.addEventListener('fetch', (event) => {
   //! 1.3ª - Clona o resultado e coloca no IndexedDB no respectivo ObjectStore(Tabela) sobrescrevendo os dados antigos se houver
   //! 1.4ª - Retorna para a requisição o resultado original vindo da rede
   // const url = 'http://localhost/project-doapp/backend-api/public/posts';
-  const url = API_BASE_URL+'/posts';
+  const url = `${API_BASE_URL}/posts`;
+  const urlFirstPage = `${API_BASE_URL}/posts?limit=5&page=1`;
   
   //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
   if(event.request.url.indexOf(url) > -1){
     
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-
-          //Fazendo um clone da resposta da requisição
-          let clonedResponse = response.clone();
-
-          //Limpando todas informações no respectivo ObjectStore(Tabela) 'posts' dentro IndexedDB antes de inserir as novas informações vindas da requisição na rede
-          clearAllData('posts')
-            .then(() => {
-              //Transformando o clone da resposta em um objeto JSON
-              return clonedResponse.json();
-            })
-            .then(clonedResponseJSON => {
-              let postsData = clonedResponseJSON.data;
-
-              //Percorrendo cada JSON de CADA anúncio/post no retorno da requisição
-              for (let key in postsData) {
-                //Escrevendo as informações no ObjectStore posts do IndexedDB instanciado no arquivo indexedDB.js                
-                writeData('posts', postsData[key]);
-              }
-            });
-          return response; //Retornando a reposta original
-        })
-    );
+    //Se for uma requisição a primeira página, Limpa o indexedDB das demais paginações SE houver
+    if(event.request.url.indexOf(urlFirstPage) > -1) {
+      console.log('Request for posts on first page in home');
+      event.respondWith(
+        fetch(event.request)
+          .then(response => {
+  
+            //Fazendo um clone da resposta da requisição
+            let clonedResponse = response.clone();
+  
+            //Limpando todas informações no respectivo ObjectStore(Tabela) 'posts' dentro IndexedDB antes de inserir as novas informações vindas da requisição na rede
+            clearAllData('posts')
+              .then(() => {
+                //Transformando o clone da resposta em um objeto JSON
+                return clonedResponse.json();
+              })
+              .then(clonedResponseJSON => {
+                let postsData = clonedResponseJSON.data;
+  
+                //Percorrendo cada JSON de CADA anúncio/post no retorno da requisição
+                for (let key in postsData) {
+                  //Escrevendo as informações no ObjectStore posts do IndexedDB instanciado no arquivo indexedDB.js                
+                  writeData('posts', postsData[key]);
+                }
+              });
+            return response; //Retornando a reposta original
+          })
+      );
+    } else {
+      console.log('Request for posts on other pages')
+      event.respondWith(
+        fetch(event.request)
+          .then(async response => {
+  
+            //Fazendo um clone da resposta da requisição
+            let clonedResponse = response.clone();
+  
+            //Transformando o clone da resposta em JSON
+            clonedResponseJSON = await clonedResponse.json();
+  
+            let postsData = clonedResponseJSON.data;
+  
+            //Percorrendo cada JSON de CADA anúncio/post no retorno da requisição
+            for (let key in postsData) {
+              //Escrevendo e sobrescrevendo se já estiverem escritas as informações no ObjectStore posts do IndexedDB instanciado no arquivo indexedDB.js                
+              writeData('posts', postsData[key]);
+            }
+  
+            return response;
+          })
+      );
+    }
   }
   //! 2ª ESTRATÉGIA: [TRY CACHE ONLY]
   //! 2.1ª - Verifica se a URL requisitada é uma das que pertence ao cache de arquivos ESTÁTICOS através do método isInArray(), realizado na instalação do SW
@@ -187,7 +216,11 @@ self.addEventListener('fetch', (event) => {
             //Tentando fazer a requisição na rede
             return fetch(event.request)
               .then( res => {
-                //Se for requisição a uma imagem, salva no CACHE_IMG para que a limpeza de cache ocorra 
+                //Verificando se o status da resposta foi 404=>Not Found se foi, lança um error para cair no catch
+                if(res.status == 404)
+                  throw ErrorEvent;
+
+                //Se for requisição a uma imagem, salva no CACHE_IMG para que a limpeza de cache ocorra de acordo com o limite setado
                 if(event.request.url.indexOf(`${API_BASE_URL}/Images/`) > -1){
                   return caches.open(CACHE_IMG)
                     .then( cache => {
@@ -209,8 +242,13 @@ self.addEventListener('fetch', (event) => {
                 return caches.open(CACHE_STATIC_NAME)
                   .then( cache => {
                     //Verificando se a requisição é a uma página .html
-                    if(event.request.headers.get('accept').includes('text/html'))
-                      return cache.match('./offline.html');
+                    if(event.request.headers.get('accept').includes('text/html')){
+                      return cache.match(`${BASE_URL}./offline.html`);
+                    }
+                    //Verificando se a requisição que falhou tentou puxar uma imagem de postagem, se for, retorna a imagem default de objeto
+                    else if(event.request.url.indexOf(`${API_BASE_URL}/Images/`) > -1){
+                      return cache.match(`${BASE_URL}/src/images/products/product-default.png`);
+                    }
                   });
               })
           }

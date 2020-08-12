@@ -59,9 +59,7 @@ function telefone(v){
 /**
  * Checa se um JSON é vazio
  */
-
  // Speed up calls to hasOwnProperty
-
 function isEmpty(obj) {
     let hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -86,4 +84,11 @@ function isEmpty(obj) {
     }
 
     return true;
+}
+
+/**
+ * Valida um latitude e longitude, verificando se ele é null ou vazio
+ */
+function filterCoordinate(coordinate){
+    return (coordinate==0|| coordinate == null)?false:coordinate;
 }
