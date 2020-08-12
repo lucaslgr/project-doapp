@@ -455,7 +455,7 @@ function sendModalPost() {
           throw responseJSON.errors;
         }
         alert('Anúncio inserido com sucesso!');
-        console.log('Inserido um novo post, seu id eh: ' + responseJSON.data.id_post);
+        console.log('inserting a new post such id is: ' + responseJSON.data.id_post);
         fillPosts();
         clearModalAddPostInputs();
         closeModalAddPost();
