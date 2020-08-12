@@ -2,6 +2,7 @@
 
 namespace Models;
 use \Core\Model;
+use DateInterval;
 use \Util\ErrorsManager;
 
 class Posts extends Model {
@@ -32,7 +33,16 @@ class Posts extends Model {
         }
 
         if($sql->rowCount() > 0){
-            return $sql->fetchAll(\PDO::FETCH_ASSOC);
+            $sqldata = $sql->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach($sqldata as $key => $value){
+                //Corrigindo o fuso horario para -3 horas e formatando a data e o tempo
+                $datetime = new \DateTime($sqldata[$key]['date_created']); 
+                $datetime->sub(new DateInterval('PT3H'));//Substraindo 3 horas
+                $sqldata[$key]['date_created'] = $datetime->format('H:i:s | d/m/Y');
+            }
+
+            return $sqldata;
         }
 
         return $result;
