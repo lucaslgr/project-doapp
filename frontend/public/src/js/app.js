@@ -71,7 +71,7 @@ function displayConfirmNotification(){
         let options = {
           body: 'Você se increveu com sucesso para o nosso Serviço de Notificação!',
           icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,
-          image: `${BASE_URL}/src/images/products/product-default.png`, //Imagem a ser enviada no conteúdo
+          // image: `${BASE_URL}/src/images/products/product-default-notification.png`, //Imagem a ser enviada no conteúdo
           dir : 'ltr', //Direção da leitura, ltr=> left to right, ou, rtl => right to left
           lang: 'pt-BR', //O padrão BCP 47 especifica quais são as tags para as linguagens
           vibrate: [100, 50, 200], //Se o dispositivo suportar vibrações, os valores do array são [ (duração em milsgs. da primeira vibração), (duração de espera para a segunda vibração), (duração em milsgs. da segunda vibração) ]
@@ -92,12 +92,12 @@ function displayConfirmNotification(){
             {
               action: 'confirm',
               title: 'Ok',
-              icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`
+              icon: `${BASE_URL}/src/images/icons/check-64x64.png`
             },
             {
               action: 'confirm',
               title: 'Cancelar',
-              icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`
+              icon: `${BASE_URL}/src/images/icons/close-64x64.png`
             }
           ],
         };

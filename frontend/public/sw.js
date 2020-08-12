@@ -346,7 +346,9 @@ self.addEventListener('notificationclick', (event) => {
   if(action === 'confirm'){ //Se o click foi na button(acion)==confirm
     console.log('Confirm was chosen');
     notification.close();
-  } else { //Se o click foi em qualquer lugar da Notification menos na button(action)==confirm
+  }
+  //A action see-post também entra no else
+  else { //Se o click foi em qualquer lugar da Notification menos na button(action)==confirm
     console.log(action);
 
     //Abrindo a aplicação ou redirecionando para uma página específica caso a aplicação já esteja aberta
@@ -384,10 +386,10 @@ self.addEventListener('notificationclose', (event) => {
  * Evento push fica escutando se o servidor de WPN(Web Push Notifications) do browser enviou alguma WPN para a subscription vinculada a este SW na aplicação do usuário
  */
 self.addEventListener('push', (event) => {
-  console.log('Push Notification received', event);
+  console.log('Web Push Notification received', event);
 
   //Setando uma configuração padrão para notificações caso não seja recebido o CONTEÚDO da WPN
-  let data = {title: 'New!', content: 'Something new Happened', openUrl: '/help.html'};
+  let data = {title: 'Novo anúncio!', content: 'Temos novidade para você no aplicativo!', openUrl: '/help.html'};
 
   //Checando se foi recebido o conteúdo da WPN
   if(event.data){
@@ -399,12 +401,38 @@ self.addEventListener('push', (event) => {
   let options = {
     body: data.content,
     icon: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,
-    image: `${BASE_URL}/src/images/products/product-default.png`, //Imagem a ser enviada no conteúdo
+    image: `${BASE_URL}/src/images/products/product-default-notification.png`, //Imagem a ser enviada no conteúdo
     badge: `${BASE_URL}/src/images/icons/app-icon-96x96.png`,//Badge é o ícone que aparece na barra do topo em dispositvos android quando você recebe uma notificação
+    dir : 'ltr', //Direção da leitura, ltr=> left to right, ou, rtl => right to left
+    lang: 'pt-BR', //O padrão BCP 47 especifica quais são as tags para as linguagens
+    vibrate: [100, 50, 200], //Se o dispositivo suportar vibrações, os valores do array são [ (duração em milsgs. da primeira vibração), (duração de espera para a segunda vibração), (duração em milsgs. da segunda vibração) ]
     //A propriedade Data é uma meta data, ou seja, dentro dela podemos passar o que quisermos para a Notification
+    tag: 'confirm-notification', //tag é como um ID para a notification, se você enviar várias notifications com a mesma tag, suas informações serão empilhadas para o usuário em uma única Notification 
+    renotify: true, //Habilitando essa propriedade o usuário será notificado (som, vibração, etc) sempre que chegar uma nova notificação mesmo que tenha a mesma tag, por default, essa propriedade é true
     data: {
-      url: data.openUrl //Passando a url que deve ser chamada quando o usuario clicar na notificacao
-    }
+      url: `${BASE_URL+data.openUrl}` //Passando a url que deve ser chamada quando o usuario clicar na notificacao
+    },
+    //!ACTIONS
+    /**
+     * * As actions definidas na Notification serão botões que levam 3 propriedades
+     * 1º : action => é o ID da action
+     * 2º : title => é o texto que vai aparecer dentro do botão
+     * 3º : icon => é o ícone que vai aparecer dentro do botão
+     * 
+     * !OBS: A função que a action vai executar quando disparado o evento de click é configurada no [SW] pois Notifications são um recurso do SISTEMA, ou seja, devem funcionar mesmo com a aplicação fechada
+     */
+    actions: [
+      {
+        action: 'see-post',
+        title: 'Ver',
+        icon: `${BASE_URL}/src/images/icons/see-64x64.png`
+      },
+      {
+        action: 'confirm',
+        title: 'Cancelar',
+        icon: `${BASE_URL}/src/images/icons/close-64x64.png`
+      }
+    ],
   };
 
   event.waitUntil(

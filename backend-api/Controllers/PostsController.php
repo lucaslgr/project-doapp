@@ -134,7 +134,7 @@ class PostsController extends Controller{
         //Instanciando um WebPush
         $webPush = new WebPush($auth);
 
-        //Setando para setar os mesmos VAPID Headers, reusando o JWT para identificação da API
+        //Setando true para reutilizar os mesmos VAPID Headers, reusando o JWT para identificação da API
         $webPush->setReuseVAPIDHeaders(true);
 
         //Instanciando um Model de Subscription
@@ -157,8 +157,8 @@ class PostsController extends Controller{
                     ]
                 ]),
                 'payload' => '{
-                    "title":"Novo anúncio",
-                    "content": "Um novo anúncio foi postado!!!",
+                    "title":"Uma nova doação foi postada!",
+                    "content": "'.$data['title'].'",
                     "openUrl" : "/index.html"
                 }'
             ];
