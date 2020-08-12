@@ -690,7 +690,7 @@ section#help .card p {
 
     header .colum-right ul.menu > .social-midias{
         position: absolute;
-        bottom: 30px;
+        bottom: 90px;
         width: 100%;
 
         display: flex;
@@ -706,7 +706,7 @@ section#help .card p {
 
     header .colum-right ul.menu > a[href*="lgrdev"]{
         position: absolute;
-        bottom: 5px;
+        bottom: 65px;
     }
 
     .only-small-screen-block{
