@@ -325,7 +325,22 @@ self.addEventListener('sync', (event) => {
               //   action: 'fillPosts'
               // });
             })
-            .catch((errors) => {
+            .catch(async (errors) => {
+
+               //? Enviando uma mensagem para a main thread do navegador no lado do client para informar houve um erro
+              // Pegando todos os clients controlados pelo SW, EX: index.html, help.html, offline.html
+              const allClients = await clients.matchAll({ includeUncontrolled: true, });
+              
+              // Sai se não conseguirmos pegar o client da main thread... Eg, if it closed.
+              if (!(allClients.length > 0) || !(allClients[0])) return;
+
+              //Envia uma mensagem para todos clients da main thread informando no JSON, action(funcao) que deverá ser executada na thread principal 
+              allClients.forEach( client => {
+                client.postMessage({
+                  action: 'errorNotification'
+                });
+              })
+
               console.log('ERRO', errors);
             })
           }

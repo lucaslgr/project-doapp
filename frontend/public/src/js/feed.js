@@ -413,13 +413,13 @@ function sendModalPost() {
           })
           .then(() => {
             //Alerta de sucesso
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: 'Anúncio inserido com sucesso!',
-              showConfirmButton: false,
-              timer: 1500
-            })
+            Swal.fire(
+              '',
+              'Anúncio inserido com sucesso!',
+              'success'
+            )
+
+            
 
 
             // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
@@ -956,6 +956,16 @@ function removeLoader() {
 function showLoader() {
   loaderConteiner.classList.add('show');
   removeLoader();
+}
+
+//Função que lança um aviso de erro
+function errorNotification(){
+  //Alerta de erro
+  Swal.fire({
+    icon: 'error',
+    title: 'ERRO:',
+    text: 'Ocorreu um erro no envio do seu anúncio para o nosso servidor. Por favor, tente mais tarde.'
+  });
 }
 
 //Adicionando o escutador para checar se o scroll chegou no final para carregar mais postagens e fazer o scroll infinito
