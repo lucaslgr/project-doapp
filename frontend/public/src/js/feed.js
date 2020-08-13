@@ -843,6 +843,9 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
 
 }
 
+//Armazena o id do TimeOut para puxar os posts e atualizar o DOM
+let typingTimer;
+
 //Busca novas postagens pelo termo digitado no input puxando pelo titulo da postagem
 function searchingPostByTerm(inputSearch){
   //Setando o loader
@@ -851,12 +854,13 @@ function searchingPostByTerm(inputSearch){
   //Pegando o term digitado pelo usuario
   let searchingTerm = inputSearch.value;
 
-  setTimeout(() => {
+  //Limpa o TimeOut em espera se o usuário tiver digitado mais caracateres em menos de 1 seg
+  //Ou seja: tenta identificar quando o usuário para de digitar
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(() => {
     //Fazendo request dos posts com o termo específicado
     fillPosts(true,true,searchingTerm);
-  }, 500);
-
-  
+  }, 1000);
 
   setTimeout(() => {
     loaderConteiner.classList.remove('show');
