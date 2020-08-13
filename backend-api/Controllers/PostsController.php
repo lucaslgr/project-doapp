@@ -31,10 +31,11 @@ class PostsController extends Controller{
         $data = $this->getRequestData();
         $limit = $data['limit']??5;
         $page = $data['page']??1;
+        $term = (isset($data['term']) && $data['term']!='')?$data['term']:'';
 
         $posts = new Posts();
 
-        $result = $posts->getAllPosts($limit, $page);
+        $result = $posts->getAllPosts($limit, $page, $term);
         if(isset($result['errors'])){
             $response['errors'] = $result['errors'];
             $this->returnJson($response);

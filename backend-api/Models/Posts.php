@@ -17,13 +17,19 @@ class Posts extends Model {
      * 
      * @return array
      */
-    public function getAllPosts($limit = 5, $page = 1)
+    public function getAllPosts($limit = 5, $page = 1, $term = '')
     {
         $result = [];
 
         $offset = (intval($page) - 1) * intval($limit);
 
-        $sql = $this->pdo->prepare("SELECT * FROM posts ORDER BY id DESC LIMIT $offset, $limit");
+        $term_query = '';
+        //Montando a query de pesquisa
+        if($term != ''){
+            $term_query = "WHERE title LIKE '%".\addslashes($term)."%'";
+        }
+
+        $sql = $this->pdo->prepare("SELECT * FROM posts $term_query ORDER BY id DESC LIMIT $offset, $limit");
         $status_query = $sql->execute();
 
         //Se houve algum erro

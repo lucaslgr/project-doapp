@@ -277,6 +277,15 @@ main {
     padding-bottom: 50px;
 }
 
+/* ! INPUT FOR SEARCH */
+input[name="search-term"]{
+    width: 500px;
+    max-width: 90%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border: 2px solid var(--blue-light);
+}
+
 /* ! SECTION#POSTS */
 section#posts{
     width: 100vw;
@@ -614,7 +623,7 @@ section#help .card p {
 .loader {
     opacity: 0;
     display: flex;
-    position: fixed;
+    position: absolute;
     bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
@@ -707,6 +716,11 @@ section#help .card p {
     header .colum-right ul.menu > a[href*="lgrdev"]{
         position: absolute;
         bottom: 65px;
+    }
+
+    input[name="search-term"]{
+        width: 100%;
+        max-width: 100%;
     }
 
     .only-small-screen-block{

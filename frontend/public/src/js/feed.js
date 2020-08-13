@@ -9,6 +9,9 @@ let currentPage = 1;
 //Const que armazena o limite de posts exibidos por pagina
 const limitPostsPerPage = 5;
 
+//Armazena o termo pesquisado pelo usuário para encontrar posts pelo título, por default é ''
+let term = '';
+
 //Pegando a referência para os elementos a serem manipulados
 const videoPlayer = $('.modal.modal-add-post #video-player');
 const canvasImgCapture = $('.modal.modal-add-post #canvas-img-capture');
@@ -601,6 +604,8 @@ function createPost(dataPost) {
 
 //Cria o HTML de uma nova postagem e retorna como string
 function createPostHTML(dataPost) {
+  console.log('Inserting HTMLPosts on post area', dataPost);
+
   //Extraindo todos os dados do JSON com as informações do post
   let {id, title, image, longitude, latitude, location, whatsapp_contact, date_created} = dataPost;
 
@@ -647,6 +652,7 @@ function createPostHTML(dataPost) {
 
 //Limpa todos os cards de posts/anuncios
 function clearAllCards() {
+  console.log('Cleaning all cards on posts area');
   // $$('section#posts .section-area .each-post').forEach(each => each.remove());
   sectionPostsArea.innerHTML = '';
 }
@@ -657,13 +663,14 @@ function clearAllCardsByIds(arrayIds) {
   $$('section#posts .section-area .each-post').forEach( eachPost =>{
     if(arrayIds.includes(parseInt(eachPost.getAttribute('data-id')))){
       eachPost.remove();
+      console.log('Removin duplicate post with id = ', eachPost.getAttribute('data-id'));
     }
   });
 }
 
 //Puxando da API todos posts do banco e inserindo na tela
 //Parâmetro FlagclearPostsArea => se for true ele limpa todos os posts e insere os novos, se for false mantém os atuais e adiciona os novos
-function fillPosts(resetPage = true, FlagclearPostsArea = true) {
+function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') {
   // ! ESTRATÉGIA : CACHE THEN NETWORK
   //flag que é levantada quando a resposta da requisição a rede é obtida
   let networkDataReceived = false;
@@ -673,7 +680,20 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true) {
     currentPage = 1;
   }
 
-  const endpoint = `${API_BASE_URL}/posts?limit=${limitPostsPerPage}&page=${currentPage}`;
+  //Se a flag for levantada limpa todos os cards
+  if(FlagclearPostsArea){
+    clearAllCards();
+  }
+
+  //Se foi requisitado algum termo específico atualiza o termo global, se não foi, reseta
+  console.log('Termo procurado', queryTerm);
+  if(queryTerm != ''){
+    term = queryTerm;
+  } else {
+    term = '';
+  }
+
+  const endpoint = `${API_BASE_URL}/posts?limit=${limitPostsPerPage}&page=${currentPage}&term=${term}`;
 
   fetch(endpoint, {
     "method": "GET",
@@ -703,26 +723,26 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true) {
         return createPostHTML(eachPost);
       }).join('');
 
-      if(FlagclearPostsArea) {
-        sectionPostsArea.innerHTML = postsTemplate;
-      }
-      else {
-        //Pegando o ID de todas postagens vindas da requisição
-        postsId = responseJSON.data.map( () => {responseJSON.id}); 
-        //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir
+      
+      //Pegando o ID de todas postagens vindas da requisição
+      postsId = [];
+      responseJSON.data.map( (eachPost) => {postsId.push(parseInt(eachPost.id))});
+
+      //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir
+      if(!isEmpty(postsId))
         clearAllCardsByIds(postsId);
 
-        //Verifica se já existe uma postagem com o respectivo ID e atualiza com os dados recebidos da rede e se não houver cria o HTML da postagem e insere na pagina
-        sectionPostsArea.innerHTML += postsTemplate;
-      }
+      //Verifica se já existe uma postagem com o respectivo ID e atualiza com os dados recebidos da rede e se não houver cria o HTML da postagem e insere na pagina
+      sectionPostsArea.innerHTML += postsTemplate;
     })
     .catch((errors) => {
       console.log('ERRO', errors);
       // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
-    })
+  })
 
   //Verifica se o navegador/janela tem o recurso de IndexedDB e Utiliza os dados do IndexedDB apenas para a primeira página(primeiros 5 itens da paginação)
-  if ('indexedDB' in window && currentPage == 1) {
+  // if ('indexedDB' in window && currentPage == 1 && term == '') {
+  if ('indexedDB' in window) {
     readAllData('posts')
       .then(responseJSON => {
         if (responseJSON.errors) {
@@ -739,18 +759,57 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true) {
           console.log('Data Cards from indexedDB', responseJSON);
           // clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
 
-          let postsTemplate = responseJSON.map((eachPost) => {
+          let postsIndexedDB = [];
+
+          //!Filtragem pelo termo pesquisado
+          if(term != ''){
+            //Filtrando pelo termo procurado
+            responseJSON = responseJSON.filter((post) => {
+              if(post.title.indexOf(term) > -1){
+                return true;
+              } else {
+                return false;
+              }
+            }); 
+          }
+
+          //!Paginacao dos dados dos Posts vindos do IndexedDB
+          //Invertenndo a ordem pelo ID do posts assim como é feito no MySQl pela API
+          responseJSON.sort((p1, p2) => {
+            if(parseInt(p1.id) > parseInt(p2.id)){
+                return -1;
+            } else {
+                return 1;
+            }
+          }); 
+
+          //Definindo as variaveis de controle para a paginacao assim como é feito pela API ao consultar o MySQl
+          let limitToIndexedDB = limitPostsPerPage;
+          // let pag = 2;
+          let offset = (currentPage - 1) * limitPostsPerPage;
+          limitToIndexedDB = limitPostsPerPage + offset;
+
+          for (let i = offset; i < limitToIndexedDB; i++) {
+            //Se não existir corta a execução
+            if(!responseJSON[i])
+              return;
+            
+            postsIndexedDB.push(responseJSON[i]);
+          }
+          console.log('Posts from IndexedDB paginated', postsIndexedDB, term, limitPostsPerPage, currentPage);
+
+          let postsTemplate = postsIndexedDB.map((eachPost) => {
             return createPostHTML(eachPost);
           }).join('');
-    
-          if(FlagclearPostsArea)
-            sectionPostsArea.innerHTML = postsTemplate;
-          else{
-            //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir 
-            postsId = responseJSON.map( () => {responseJSON.id}); 
-            clearAllCardsByIds(postsId);
-            sectionPostsArea.innerHTML += postsTemplate;
-          }
+          
+          // //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir 
+          // postsId = [];
+          // responseJSON.map( (eachPost) => {postsId.push(parseInt(eachPost.id))});
+          
+          // //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir
+          // if(!isEmpty(postsId))
+          //   clearAllCardsByIds(postsId);
+          sectionPostsArea.innerHTML += postsTemplate;  
         }
       })
       .catch((errors) => {
@@ -782,6 +841,26 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true) {
     //   })
   }
 
+}
+
+//Busca novas postagens pelo termo digitado no input puxando pelo titulo da postagem
+function searchingPostByTerm(inputSearch){
+  //Setando o loader
+  loaderConteiner.classList.add('show');
+
+  //Pegando o term digitado pelo usuario
+  let searchingTerm = inputSearch.value;
+
+  setTimeout(() => {
+    //Fazendo request dos posts com o termo específicado
+    fillPosts(true,true,searchingTerm);
+  }, 500);
+
+  
+
+  setTimeout(() => {
+    loaderConteiner.classList.remove('show');
+  }, 1000);
 }
 
 //Registra um escutador de mensagens vindas do [SW] para main thread no client encaminha para as respectivas actions de acordo com a mensagem
@@ -857,7 +936,7 @@ function registerServiceWorkerPeriodicSync() {
 function getNextPosts(){
   setTimeout(() => {
     currentPage++;
-    fillPosts(false, false);
+    fillPosts(false, false, term);
   }, 300);
 }
 
@@ -886,7 +965,7 @@ window.addEventListener('scroll', () => {
   //Flag que indica se o usuário chegou perto, à 10px do fim da página
   const isPageBottomAlmostReached = (scrollTop + clientHeight >= scrollHeight - 10);
 
-  //Calculando quão próximo do fim da página o usuário esta para carregar os novos anúncios
+  //Calculando quão próximo do fim da página o usuário esta para carregar os novos anúncios e verificando a FLAG de habilitacao
   if(isPageBottomAlmostReached){
     showLoader();
   }

@@ -102,7 +102,12 @@
   </header>
 
   <!-- ! MAIN -->
-  <main>
+  <main class="display-flex flex-column align-center">
+    <!-- ! INPUT FOR SEARCH -->
+    <div class="group-search">
+      <input type="text" name="search-term" id="search-term" placeholder="Pesquisar..." onkeyup="searchingPostByTerm(this);">
+    </div>
+
     <section id="posts">
       <i class="icon-plus-circled icon-default add-post" onclick="showModalAddPost();"></i>
       <div class="section-area container">
