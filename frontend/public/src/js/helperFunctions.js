@@ -39,7 +39,7 @@ function dataURItoBlob(dataURI) {
 /**
  * Funcao que chama a respectiva mascara passando o respectivo elemento
  */
-function mascara(o,f){
+function mask(o,f){
     let v_obj=o;
     let v_fun=f;
 
@@ -49,10 +49,21 @@ function mascara(o,f){
 }
 
 //Função para máscara de telefone
-function telefone(v){
-    v=v.replace(/\D/g,"")                 //Remove tudo o que não é dígito
-    v=v.replace(/^(\d\d)(\d)/g,"($1) $2") //Coloca parênteses em volta dos dois primeiros dígitos
-    v=v.replace(/(\d{4})(\d)/,"$1-$2")    //Coloca hífen entre o quarto e o quinto dígitos
+function phoneNumber(v){
+    v=v.replace(/\D/g,"");                 //Remove tudo o que não é dígito
+    v=v.replace(/^(\d\d)(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos   
+    v=v.replace(/(\d{4})(\d)/,"$1-$2"); //Coloca hífen entre o quarto e o quinto dígitos 
+    if(v.length == 15) {
+        v = v.replace('-', '');
+        v=v.replace(/(\d{5})(\d{4})/,"$1-$2"); //Coloca hífen entre o quarto e o quinto dígitos
+    } else {
+        v = v.replace('-', '');
+        v=v.replace(/(\d{4})(\d)/,"$1-$2"); //Coloca hífen entre o quarto e o quinto dígitos
+    }
+
+    // if(v.length > 15) {
+    //     v = v.substring(0, 15);
+    // }
     return v
 }
 
