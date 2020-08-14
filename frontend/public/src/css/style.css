@@ -255,8 +255,22 @@ header .colum-right ul.menu > li.menu-item {
     align-items: center;
 }
 
+header .colum-right ul.menu > li.menu-item a{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 header .colum-right ul.menu > li.menu-item:not(:last-child){
     margin-right: 20px;
+}
+
+header .colum-right ul.menu > li.menu-item > button.install-app {
+    width: 185px;
+}
+
+header .colum-right ul.menu > li.menu-item > button.enable-notifications {
+    width: 239px;
 }
 
 header .colum-right ul.menu > li.menu-item > button > i {
@@ -661,7 +675,7 @@ section#help .card p {
     }
 }
 
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 925px){
     /* !MENU MOBILE */
     header nav .menu {
         z-index: 90;
