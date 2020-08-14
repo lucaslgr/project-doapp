@@ -164,6 +164,7 @@ function configureWebPushSubscription(){
           console.log('Subscription have removed');
 
           //Mudando o icone e texto do botão indicando Notificações Desativadas
+          btnEnableNotification.style.width = '239px';
           btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
           btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
           btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
@@ -175,6 +176,7 @@ function configureWebPushSubscription(){
     })
     .then( newSubscription => {
       //Mudando o icone e texto do botão indicando Notificações Ativadas
+      btnEnableNotification.style.width = '213px';
       btnEnableNotification.querySelector('i').classList.add('icon-bell-alt');
       btnEnableNotification.querySelector('i').classList.remove('icon-bell-off');
       btnEnableNotification.querySelector('p').innerText = 'Notificações Ativadas';
@@ -267,6 +269,7 @@ function settingsEventButton2EnableNotifications() {
           console.log('No notification permission granted!');
 
           //Mudando o icone e texto do botão indicando Notificações Desativadas
+          btnEnableNotification.style.width = '239px';
           btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
           btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
           btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
