@@ -425,13 +425,12 @@ function sendModalPost() {
           })
           .then(() => {
             //Alerta de sucesso
-            Swal.fire(
-              '',
-              'Anúncio inserido com sucesso!',
-              'success'
-            )
-
-            
+            Swal.fire({
+              icon: 'success',
+              title: 'Anúncio inserido com sucesso!',
+              showConfirmButton: false,
+              timer: 1500
+            })
 
 
             // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
@@ -595,7 +594,16 @@ function createPost(dataPost) {
 
   let tdDateCreatedValue = document.createElement('td');
   tdDateCreatedValue.classList.add('date-value');
-  tdDateCreatedValue.innerText = dataPost.date_created;
+  
+  let pDateCreatedValue = document.createElement('p');
+  pDateCreatedValue.innerText = dataPost.date_created;
+
+  let iconDateValue = document.createElement('i');
+  iconDateValue.classList.add('icon-calendar');
+
+  //Adicionando o <p> e o <i> dentro do <td>
+  tdDateCreatedValue.appendChild(pDateCreatedValue);
+  tdDateCreatedValue.appendChild(iconDateValue);
 
   //Montando o <tr> da DateCreated
   trDateCreated.appendChild(tdDateCreatedHeader);
@@ -656,7 +664,10 @@ function createPostHTML(dataPost) {
         </tr>
         <tr>
           <td class="tdheader">Data:</td>
-          <td class="date-value">${date_created}</td>
+          <td class="date-value">
+            <p>${date_created}</p>
+            <i class="icon-calendar"></i>
+          </td>
         </tr>
       </table>
   </div>`);

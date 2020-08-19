@@ -7,6 +7,11 @@ const PUBLIC_KEY_VAPID = 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4
 //!Variavel que armazena o evento que mostra o banner PWA
 let deferredPrompt;
 
+//Pegando a referência para os elementos a serem manipulados
+const menuMobile = $('header nav .menu');
+const modalLogin = $('.modal.modal-login');
+const modalRegister = $('.modal.modal-register');
+
 /**
  * Função atrelada ao click do botão install app
  */
@@ -37,8 +42,47 @@ function installPWAApp(btnInstallAPP){
 /**
  * Função que mostra o menu mobile ou esconde
  */
-function showMenuMobile() {
-  $('header nav .menu').classList.toggle('show-menu-mobile');
+function toggleMenuMobile() {
+  menuMobile.classList.toggle('show-menu-mobile');
+  $('header nav i.icon-default').classList.toggle('icon-menu');
+  $('header nav i.icon-default').classList.toggle('icon-cancel');
+}
+
+/**
+ * Função que fecha o modal respectivo a sua referencia recebida por parametro
+ */
+function closeModalByRef(modalRef) {
+  $(modalRef).classList.remove('show-modal-default');
+}
+
+/**
+ * Função que fecha o modal passado por parametro
+ */
+function closeModalByElement(modalElement) {
+  modalElement.classList.remove('show-modal-default');
+}
+
+/**
+ * Função que mostra o modal de Login
+ */
+function showModalLogin(){
+  toggleMenuMobile();
+
+  setTimeout(() => {
+    modalLogin.classList.add('show-modal-default');
+  }, 100);
+  
+}
+
+/**
+ * Função que mostra o modal de Registro
+ */
+function showModalRegister(){
+  closeModalByElement(modalLogin);
+
+  setTimeout(() => {
+    modalRegister.classList.add('show-modal-default');
+  }, 100);
 }
 
 /**
@@ -164,7 +208,7 @@ function configureWebPushSubscription(){
           console.log('Subscription have removed');
 
           //Mudando o icone e texto do botão indicando Notificações Desativadas
-          btnEnableNotification.style.width = '239px';
+          btnEnableNotification.style.width = '242px';
           btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
           btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
           btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
@@ -176,7 +220,7 @@ function configureWebPushSubscription(){
     })
     .then( newSubscription => {
       //Mudando o icone e texto do botão indicando Notificações Ativadas
-      btnEnableNotification.style.width = '213px';
+      btnEnableNotification.style.width = '216px';
       btnEnableNotification.querySelector('i').classList.add('icon-bell-alt');
       btnEnableNotification.querySelector('i').classList.remove('icon-bell-off');
       btnEnableNotification.querySelector('p').innerText = 'Notificações Ativadas';

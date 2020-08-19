@@ -40,6 +40,13 @@ body{
     cursor: pointer;
 }
 
+.icon-small-default {
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0px;
+    margin-left: 5px;
+}
+
 [class^="icon-"]:before{
     margin: 0px;
 }
@@ -47,6 +54,31 @@ body{
 h1,h2,h3,h4,h5,h6,p,li{
     margin: 0px;
     padding: 0px;
+}
+
+body h1::after,
+body h2::after,
+body h3::after,
+body h4::after,
+body h5::after,
+body h6::after{
+    content: "";
+    /* position: absolute; */
+    display: block;
+    background-color: var(--blue-light);
+    height: 3px;
+    width: 100%;
+    border-radius: 3px;
+}
+
+/* Setando para não aplicar o efeito do after no title dos alerts */
+.swal2-title::after,
+.swal2-title::after,
+.swal2-title::after,
+.swal2-title::after,
+.swal2-title::after,
+.swal2-title::after{
+    display: none;
 }
 
 ul{
@@ -96,6 +128,7 @@ button {
     border-radius: 10px;
     border: 1px solid var(--white-medium);
     transition: transform 0.5s ease;
+    align-items: center;
 }
 
 button:hover{
@@ -266,11 +299,11 @@ header .colum-right ul.menu > li.menu-item:not(:last-child){
 }
 
 header .colum-right ul.menu > li.menu-item > button.install-app {
-    width: 185px;
+    width: 188px;
 }
 
 header .colum-right ul.menu > li.menu-item > button.enable-notifications {
-    width: 239px;
+    width: 242px;
 }
 
 header .colum-right ul.menu > li.menu-item > button > i {
@@ -335,12 +368,18 @@ section#posts .section-area .each-post + .each-post {
 
 section#posts .section-area .each-post img{
     width: 100%;
+    max-width: 480px;
+    max-height: 380px;
 }
 
 section#posts .section-area .each-post h1.title {
     justify-content: center;
     margin-top: 5px;
     color: var(--white-light);
+}
+
+section#posts .section-area .each-post h1.title::after{
+    display: none;
 }
 
 section#posts .section-area .each-post table {
@@ -377,6 +416,16 @@ section#posts .section-area .each-post table td i{
     font-size: 25px;
 }
 
+section#posts .section-area .each-post table td.date-value {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+section#posts .section-area .each-post table td.date-value > i{
+    font-size: 25px;
+}
+
 
 /* ! ICON ADD POST */
 i.icon-plus-circled.add-post {
@@ -398,7 +447,7 @@ i.icon-plus-circled.add-post {
     cursor: pointer;
 }
 
-/* ! MODAL ADD POST */
+/* ! MODAL DEFAULT */
 /* .bg-background-modal{
     position: fixed;
     z-index: 1;
@@ -406,34 +455,107 @@ i.icon-plus-circled.add-post {
     width: 100vw;
     height: 100vh;
 } */
-
-.modal.modal-add-post{
+.modal {
     transform: translateY(-100vh);
     position: fixed;
     /* position: absolute; */
     z-index: 2;
-    background-color: var(--white-light);
-    width: 100vw;
-    height: calc(100vh - 70px);
-    /* min-height: calc(100vh - 70px);
-    height: auto;
-    min-height: 100%; */
-    top: 70px;
     transition: transform 0.6s ease;
+    box-shadow: 2px 0px 10px var(--gray-dark);
 }
 
 .modal .modal-content {
     /* min-height: 100%; */
     /* height: auto; */
     height: 100%;
-    overflow-y: scroll;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     padding: 20px;
-    box-shadow: 2px 0px 10px var(--gray-dark);
+}
+
+.modal.show-modal-default {
+    top: 50%!important;
+    transform: translate3d(-50%, -50%, 0)!important;
+    opacity: 1!important;
+}
+
+/* ! MODAL LOGIN */
+.modal.modal-login {
+    top: 50%!important;
+    background-color: var(--white-light);
+    width: 90%;
+    max-width: 410px;
+    height: 350px;
+    left: 50%;
+    transition: all 0.6s ease;
+    transform: translate3d(-50%, -100vh, 0);
+    opacity: 0;
+    border-radius: 10px;
+}
+
+.modal.modal-login h1{
+    color: var(--gray-dark);
+}
+
+.modal.modal-login #btn-register{
+    font-weight: 600;
+    color: var(--gray-dark);
+}
+
+.modal.modal-login #btn-register:hover{
+    text-decoration: underline;
+}
+
+.modal.modal-login>.modal-content>.form-inputs {
+    padding: 20px 0px;
+}
+
+.modal.modal-login>.modal-content>.btn-group>button {
+    margin: 0px 20px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+/* ! MODAL REGISTER */
+.modal.modal-register {
+    top: 50%!important;
+    background-color: var(--white-light);
+    width: 90%;
+    max-width: 410px;
+    height: 350px;
+    left: 50%;
+    transition: all 0.6s ease;
+    transform: translate3d(-50%, -100vh, 0);
+    opacity: 0;
+    border-radius: 10px;
+}
+
+.modal.modal-register h1{
+    color: var(--gray-dark);
+}
+
+.modal.modal-register>.modal-content>.form-inputs {
+    padding: 20px 0px;
+}
+
+.modal.modal-register>.modal-content>.btn-group>button {
+    margin: 0px 20px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+
+/* ! MODAL ADD POST */
+.modal.modal-add-post{
+    background-color: var(--white-light);
+    width: 100vw;
+    height: calc(100vh - 70px);
+    top: 70px;
+}
+
+.modal.modal-add-post .modal-content {
+    overflow-y: scroll;
 }
 
 .modal-add-post.show-modal-add-post{
@@ -590,6 +712,10 @@ footer{
 
 footer h4{
     margin: 0px;
+}
+
+footer h4::after{
+    display: none;
 }
 
 /* ! PAGE HELPER SECTION HELPER */

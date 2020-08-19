@@ -68,25 +68,31 @@
           <li class="menu-item">
             <button class="install-app" onclick="installPWAApp(this);">
               <p>Instalar Aplicativo</p>
-              <i class="icon-install"></i>
+              <i class="icon-install icon-small-default"></i>
             </button>
           </li>
           <li class="menu-item notifications">
             <button class="enable-notifications">
               <p>Ativar Notificações</p>
-              <i class="icon-bell-alt"></i>
+              <i class="icon-bell-alt icon-small-default"></i>
             </button>
           </li>
-          <li class="menu-item">
+          <!-- <li class="menu-item">
             <a href="./index.html">
               Anúncios
               <i class="icon-home"></i>
+            </a>
+          </li> -->
+          <li class="menu-item">
+            <a href="#" onclick="showModalLogin();">
+              Login
+              <i class="icon-login-2 icon-small-default"></i>
             </a>
           </li>
           <li class="menu-item">
             <a href="./help.html">
               Ajuda
-              <i class="icon-help"></i>
+              <i class="icon-help icon-small-default"></i>
             </a>
           </li>
           <div class="social-midias only-small-screen-flex">
@@ -97,7 +103,7 @@
           <a target="_blank" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
         </ul>
       </div>
-      <i class="icon-menu icon-default only-small-screen-block" onclick="showMenuMobile();"></i>
+      <i class="icon-menu icon-default only-small-screen-block" onclick="toggleMenuMobile();"></i>
     </nav>
   </header>
 
@@ -145,6 +151,52 @@
       </div>
     </section>
   </main>
+
+  <!-- ! MODAL LOGIN -->
+  <div class="modal modal-login">
+    <div class="modal-content display-flex flex-column flex-center">
+      <h1>Login</h1>
+      
+      <form class="form-inputs display-flex flex-column flex-center" method="POST">
+        <input type="email" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="******">
+      </form>
+      <a id="btn-register" href="#" onclick="showModalRegister();">Cadastre-se aqui!</a>
+      <div class="btn-group display-flex flex-center">
+        <button id="btn-close" onclick="closeModalByRef('.modal-login');">
+          Fechar
+          <i class="icon-cancel icon-small-default"></i>
+        </button>
+        <button id="btn-send" onclick="sendModalLogin();">
+          Entrar
+          <i class="icon-ok icon-small-default"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ! MODAL REGISTER -->
+  <div class="modal modal-register">
+    <div class="modal-content display-flex flex-column flex-center">
+      <h1>Cadastro</h1>
+      
+      <form class="form-inputs display-flex flex-column flex-center" method="POST">
+        <input type="text" name="name" placeholder="Nome">
+        <input type="email" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="******">
+      </form>
+      <div class="btn-group display-flex flex-center">
+        <button id="btn-close" onclick="closeModalByRef('.modal-register');">
+          Fechar
+          <i class="icon-cancel icon-small-default"></i>
+        </button>
+        <button id="btn-send" onclick="sendModalRegister();">
+          Registrar
+          <i class="icon-ok icon-small-default"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ! MODAL ADD POST -->
   <!-- <div class="bg-background-modal"></div> -->
