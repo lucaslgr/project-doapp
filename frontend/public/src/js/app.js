@@ -75,6 +75,13 @@ function showModalLogin(){
 }
 
 /**
+ * Função que envia os dados no form do modal de Login
+ */
+function sendModalLogin(){
+
+}
+
+/**
  * Função que mostra o modal de Registro
  */
 function showModalRegister(){
@@ -83,6 +90,14 @@ function showModalRegister(){
   setTimeout(() => {
     modalRegister.classList.add('show-modal-default');
   }, 100);
+}
+
+/**
+ * Função que envia os dados no form do modal de Register
+ */
+function sendModalRegister(){
+  const endpoint = API_BASE_URL+'/user/new';
+  
 }
 
 /**
