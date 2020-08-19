@@ -378,6 +378,18 @@ function sendModalPost() {
     return;//Cancela a operação de enviar o anuncio
   }
 
+  //Verifica se o whatsapp está válido
+  if(whatsappContact.length < 14 ){
+    $('input[name=whatsapp-contact]').focus();
+
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'Número de whatsapp inválido.'
+    });
+    return;//Cancela a operação de enviar o anuncio
+  }
+
   //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
   let postFormData = new FormData();
   postFormData.append('id', idPost);
