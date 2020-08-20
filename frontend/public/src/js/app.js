@@ -12,6 +12,8 @@ const menuMobile = $('header nav .menu');
 const modalLogin = $('.modal.modal-login');
 const modalRegister = $('.modal.modal-register');
 const bgModalSmoke = $('div.bg-modal');
+const formRegister = $('form#form-register');
+const formLogin = $('form#form-login');
 
 /**
  * Função atrelada ao click do botão install app
@@ -105,8 +107,45 @@ function showModalRegister(){
  * Função que envia os dados no form do modal de Register
  */
 function sendModalRegister(){
-  const endpoint = API_BASE_URL+'/user/new';
+  const endpoint = API_BASE_URL+'/user/register';
   
+  const userName = formRegister.querySelector('input[name=name]').value;
+  const userEmail = formRegister.querySelector('input[name=email]').value;
+  const userPass = formRegister.querySelector('input[name=password]').value;
+
+  //Verifica se ficou algum campo vazio
+  if(userName == '' || userName == null  ||
+    userEmail == '' || userEmail == null ||
+    userPass == ''  ||  userPass == null ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'Todas informações precisam ser preenchidas para finalizar seu anúncio.'
+    });
+    return;//Cancela a operação de enviar o anuncio
+  }
+
+  //Validando o email
+  if(!validateEmail(userEmail)){
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'E-mail inválido. Por favor, insira um email válido para prosseguir.'
+    });
+
+    //Focando o input do email
+    formRegister.querySelector('input[name=email]').focus();
+
+    //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
+    let postFormData = new FormData();
+    postFormData.append('name', userName);
+    postFormData.append('email', userEmail);
+    postFormData.append('pass', userPass);
+
+    //TODO *Verificando se no navegador existe os recursos de [serviceWorker] e [SyncManager](BackgroundSyncronization)
+
+    return;//Cancela a operação de enviar o anuncio
+  }
 }
 
 /**

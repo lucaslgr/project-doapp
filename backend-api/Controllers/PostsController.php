@@ -6,11 +6,11 @@
 
 namespace Controllers;
 use \Core\Controller;
-use Minishlink\WebPush\Subscription;
+use \Minishlink\WebPush\Subscription;
 use \Models\Posts;
 use \Util\ErrorsManager;
 use \Minishlink\WebPush\WebPush;
-use Models\SubscriptionWPN;
+use \Models\SubscriptionWPN;
 
 class PostsController extends Controller{
     

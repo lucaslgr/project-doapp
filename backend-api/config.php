@@ -14,6 +14,9 @@
         $config['host'] = '127.0.0.1'; //ou 'localhost'
         $config['dbuser'] = 'root';
         $config['dbpass'] = '';
+
+        //PRIVATE KEY para o JWT token de preferência com 256 caracteres
+        define('PRIVATE_KEY_JWT', md5('SUA_KEY'));
     }
     else { //Se não => ENVIRONMENT = 'production'
         define('BASE_URL', 'https://lgrdev.com/projects/doapp/backend-api/public/');
@@ -22,6 +25,9 @@
         $config['host'] = 'localhost';
         $config['dbuser'] = 'u756318379_doapp';
         $config['dbpass'] = 'S$TgU6S[b~6m';
+
+        //PRIVATE KEY para o JWT token de preferência com 256 caracteres
+        define('PRIVATE_KEY_JWT', md5('SUA_KEY'));
     }
 
     global $db;
