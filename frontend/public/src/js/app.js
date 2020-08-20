@@ -11,6 +11,7 @@ let deferredPrompt;
 const menuMobile = $('header nav .menu');
 const modalLogin = $('.modal.modal-login');
 const modalRegister = $('.modal.modal-register');
+const bgModalSmoke = $('div.bg-modal');
 
 /**
  * Função atrelada ao click do botão install app
@@ -52,6 +53,8 @@ function toggleMenuMobile() {
  * Função que fecha o modal respectivo a sua referencia recebida por parametro
  */
 function closeModalByRef(modalRef) {
+  bgModalSmoke.style.display = 'none';
+
   $(modalRef).classList.remove('show-modal-default');
 }
 
@@ -59,6 +62,8 @@ function closeModalByRef(modalRef) {
  * Função que fecha o modal passado por parametro
  */
 function closeModalByElement(modalElement) {
+  bgModalSmoke.style.display = 'none';
+
   modalElement.classList.remove('show-modal-default');
 }
 
@@ -67,6 +72,8 @@ function closeModalByElement(modalElement) {
  */
 function showModalLogin(){
   toggleMenuMobile();
+
+  bgModalSmoke.style.display = 'block';
 
   setTimeout(() => {
     modalLogin.classList.add('show-modal-default');
@@ -86,6 +93,8 @@ function sendModalLogin(){
  */
 function showModalRegister(){
   closeModalByElement(modalLogin);
+
+  bgModalSmoke.style.display = 'block';
 
   setTimeout(() => {
     modalRegister.classList.add('show-modal-default');
