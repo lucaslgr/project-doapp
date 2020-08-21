@@ -1,9 +1,5 @@
 <?php
 
-//!ATENTION - VAPID keys para autenticação das Web Push Notifications
-//!'publicKey' => string 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4' (length=87)
-//!'privateKey' => string 'AMUaVRayDDg9O2Iw8UqUenzVMa8d1DIe0qOvyLGshq8' (length=43)
-
 namespace Controllers;
 use \Core\Controller;
 use \Minishlink\WebPush\Subscription;
@@ -125,8 +121,8 @@ class PostsController extends Controller{
             //// 'GCM' => '', // deprecated and optional, it's here only for compatibility reasons
             'VAPID' => [
                 'subject' => 'mailto:lucaslgr1206@gmail.com', // can be a mailto: or your website address
-                'publicKey' => 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4', // (recommended) uncompressed public key P-256 encoded in Base64-URL
-                'privateKey' => 'AMUaVRayDDg9O2Iw8UqUenzVMa8d1DIe0qOvyLGshq8', // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
+                'publicKey' => PUBLIC_KEY_VAPID, // (recommended) uncompressed public key P-256 encoded in Base64-URL
+                'privateKey' => PRIVATE_KEY_VAPID, // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
                 //// 'pemFile' => '', // if you have a PEM file and can link to it on your filesystem
                 //// 'pem' => '', // if you have a PEM file and want to hardcode its content
             ],

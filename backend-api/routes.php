@@ -14,5 +14,6 @@
     $routes['/savesubscription']        = '/home/savesubscription'; //POST
     // $routes['/generatekeys']         = '/posts/generateVapidKeys'; //GET
     $routes['/user/register']           = '/user/register';
+    $routes['/user/login']              = '/user/login';
     $routes['/']                        = '/home/index';
 ?>

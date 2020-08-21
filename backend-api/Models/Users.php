@@ -4,45 +4,51 @@
  *                          Model responsável por operar a tabela Users 
  * =============================================================================================
  */
-    namespace Models;
+namespace Models;
+use \Core\Model;
+use \Util\ErrorsManager;
+use \Util\Jwt;
 
-    use \Core\Model;
-    use \Util\ErrorsManager;
+class Users extends Model {
+    //Armazena o id do usuario logado
+    private $logged_user_id;
 
-    class Users extends Model {
-        public function __construct()
-        {
-            parent::__construct();
-        }
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-        public function newRegister(string $name, string $email, string $password)
-        {
-            $result = [];
-            $status_query = false;
+    public function newRegister(string $name, string $email, string $password)
+    {
+        $result = [];
+        $status_query = false;
+        $sql = $this->pdo->prepare(
+            "INSERT INTO users(name, email, password) VALUES(?, ?, ?)"
+        );
 
-            $sql = $this->pdo->prepare(
-                "INSERT INTO users(name, email, password) VALUES(?, ?, ?)"
-            );
-    
-            $status_query = $sql->execute([
-                $name,
-                $email,
-                password_hash($password, \PASSWORD_BCRYPT),
-            ]);  
-
-            //Se houve algum erro
-            if(!$status_query){
-                ErrorsManager::setDatabaseError($result);
-                return $result;
-            }
-
-            $result = $this->pdo->lastInsertId();
-
+        $status_query = $sql->execute([
+            $name,
+            $email,
+            password_hash($password, \PASSWORD_BCRYPT),
+        ]);  
+        //Se houve algum erro
+        if(!$status_query){
+            ErrorsManager::setDatabaseError($result);
             return $result;
         }
 
-        public function checkEmailExists(string $email)
-        {
+        //Setando o id do usuario logado (acabou de logar automaticamente apos se registrar)
+        $this->logged_user_id = $this->pdo->lastInsertId();
+
+        //Setando o result
+        $result['id_user'] = $this->logged_user_id;
+        $result['jwt'] = $this->createJWT();
+
+        return $result;
+    }
+
+    public function checkEmailExists(string $email)
+    {
             $result = [];
             $status_query = false;
 
@@ -70,5 +76,71 @@
             $result = false;
 
             return $result;
+    }
+    
+    public function checkCredentials(string $email, string $password)
+    {
+        $result = [];
+        $status_query = false;
+        $sql = $this->pdo->prepare(
+            "SELECT * FROM users WHERE email = ?"
+        );
+
+        $status_query = $sql->execute([
+            $email
+        ]);  
+        //Se houve algum erro
+        if(!$status_query){
+            ErrorsManager::setDatabaseError($result);
+            return $result;
+        }
+        //Verifica se retornou algum resultado, ou seja, se já existe um usuário com o respectivo email
+        if($sql->rowCount() <= 0){
+            ErrorsManager::setUnauthorizedError($result, 'E-mail e/ou senha incorretos');
+            return $result;
+        }
+        //Pegando a senha criptografada no banco de dados
+        $user_info = $sql->fetch(\PDO::FETCH_ASSOC); 
+        $encrypted_password = $user_info['password']; 
+        //Verificando se a senha enviada NÃO corresponde a senha encriptografada armazenada no banco de dados
+        if(!\password_verify($password, $encrypted_password)){
+            ErrorsManager::setUnauthorizedError($result, 'E-mail e/ou senha incorretos');
+            return $result;
+        }
+
+        //Setando o id do usuario logado (acabou de logar automaticamente apos se registrar)
+        $this->logged_user_id = $user_info['id'];
+
+        //Setando o result
+        $result['id_user'] = $this->logged_user_id;
+        $result['jwt'] = $this->createJWT();
+
+        return $result;
+    }
+
+    private function createJWT()
+    {
+        $jwt = new Jwt();
+        //Criando e retornando um novo token baseado no id do user
+        return $jwt->create([
+            'id_user' => $this->logged_user_id
+        ]);
+    }
+
+    private function validaJWT(string $jwt_token)
+    {
+        $jwt = new Jwt();
+
+        //Pegando as informações do Payload do JWT
+        $info = $jwt->validate($jwt_token);
+
+        //Checa se o JWT foi validado com sucesso
+        if(isset($info->id_user)){
+            //Setando o id de user logado
+            $this->logged_user_id = $info->id_user;
+            return true;
+        } else {
+            return false;
         }
     }
+}

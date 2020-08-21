@@ -13,11 +13,11 @@ class ErrorsManager {
         ];
     }
 
-    static public function setUnauthorizedError(&$response)
+    static public function setUnauthorizedError(&$response, $msgUnauthorized = '')
     {
         $response['errors'] = [
             'status_code' => 401,
-            'msg' => 'Nao autorizado'
+            'msg' => $msgUnauthorized!=''?$msgUnauthorized:'Nao autorizado'
         ];
     }
 
@@ -50,10 +50,10 @@ class ErrorsManager {
         ];
     }
 
-    static public function setUnprocessableEntityError(&$response){
+    static public function setUnprocessableEntityError(&$response, $msgUnprocessable = ''){
         $response['errors'] = [
             'status_code' => 422,
-            'msg' => 'A requisicao esta bem formada mas inabilitada para ser seguida devido a erros semanticos'
+            'msg' => $msgUnprocessable!=''?$msgUnprocessable:'A requisicao esta bem formada mas inabilitada para ser seguida devido a erros semanticos'
         ];
     }
 }

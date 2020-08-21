@@ -6,6 +6,14 @@
  */
 
     require 'environment.php';
+
+
+    //!ATENTION - VAPID keys para autenticação das Web Push Notifications
+    //!'publicKey' => string 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4' (length=87)
+    //!'privateKey' => string 'AMUaVRayDDg9O2Iw8UqUenzVMa8d1DIe0qOvyLGshq8' (length=43)
+    //PUBLIC E PRIVATE KEY do VAPID para enviar WEB PUSH NOTIFICATIONS para o servidor do Google
+    define('PUBLIC_KEY_VAPID', 'BBiT7Jc-HMy4svIPv2n4-TgJ8AxdQO0kczafH0gcCt3VaH3Cr3Aee4s3mwbcguzrwz_6AJFJY40DG88ivDGqsp4');
+    define('PRIVATE_KEY_VAPID', 'AMUaVRayDDg9O2Iw8UqUenzVMa8d1DIe0qOvyLGshq8');
     
     if (ENVIRONMENT == 'development') {
         define('BASE_URL', 'http://localhost/project-doapp/backend-api/public/');
