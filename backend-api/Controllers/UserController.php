@@ -42,6 +42,14 @@ class UserController extends Controller {
 
         $users = new Users();
 
+        $result = $users->checkEmailExists($email);
+
+        if(isset($result['errors'])){
+            $response['errors'] = $result['errors'];
+            $this->returnJson($response);
+            return;
+        }
+
         //Criando o registro do usuário
         $result = $users->newRegister($name, $email, $password);
 

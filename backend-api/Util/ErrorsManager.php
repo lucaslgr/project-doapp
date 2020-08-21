@@ -21,6 +21,13 @@ class ErrorsManager {
         ];
     }
 
+    static public function setConflictError(&$response, $msgConflict = ''){
+        $response['errors'] = [
+            'status_code' => 409,
+            'msg' => $msgConflict!=''?$msgConflict:'Informação em conflito.'
+        ];
+    }
+
     static public function setForbiddenError(&$response)
     {
         $response['errors'] = [

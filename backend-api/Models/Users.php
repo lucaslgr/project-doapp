@@ -40,4 +40,35 @@
 
             return $result;
         }
+
+        public function checkEmailExists(string $email)
+        {
+            $result = [];
+            $status_query = false;
+
+            $sql = $this->pdo->prepare(
+                "SELECT * FROM users WHERE email = ?"
+            );
+    
+            $status_query = $sql->execute([
+                $email
+            ]);  
+
+            //Se houve algum erro
+            if(!$status_query){
+                ErrorsManager::setDatabaseError($result);
+                return $result;
+            }
+
+            //Verifica se retornou algum resultado, ou seja, se já existe um usuário com o respectivo email
+            if($sql->rowCount() > 0){
+                ErrorsManager::setConflictError($result, 'E-mail ja cadastrado');
+                return $result;
+            }
+
+            //Setando como false, pois não existe usuario cadastrado com o email
+            $result = false;
+
+            return $result;
+        }
     }
