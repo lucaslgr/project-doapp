@@ -18,6 +18,7 @@ class UserController extends Controller {
     {
         $response = [];
 
+        //Pegando as informações da requisição: HEADER, METHOD, DATA, AUTHORIZATION
         $method = $this->getMethod();
         // $authorization = $this->getAuthorization();
         $data = $this->getRequestData();
@@ -82,6 +83,7 @@ class UserController extends Controller {
     {
         $response = [];
 
+        //Pegando as informações da requisição: HEADER, METHOD, DATA, AUTHORIZATION
         $method = $this->getMethod();
         // $authorization = $this->getAuthorization();
         $data = $this->getRequestData();
@@ -130,6 +132,51 @@ class UserController extends Controller {
                 'jwt' => $result['jwt']
             ]
         ];
+
+        $this->returnJson($response, 200);
+    }
+
+    public function logout()
+    {
+        $response = [];
+
+        //Pegando as informações da requisição: HEADER, METHOD, DATA, AUTHORIZATION
+        $method = $this->getMethod();
+        $authorization = $this->getAuthorization();
+
+        //Verificando se o JWT NÃO foi enviado no authorization no header da request
+        if(!isset($authorization) || empty($authorization)){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        //Se o método for diferente do GET retorna erro de método inválido
+        if($method != 'POST'){
+            ErrorsManager::setMethodNotAllowedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $users = new Users();
+
+        //Checando se o usuário tem permissão para deslogar de acordo com o JWT enviado
+        //OBS: Apenas o próprio usuário tem permissão para se deslogar
+        $result = $users->checkLogout($authorization);
+
+        //Pegando os erros se houver
+        if(isset($result['errors'])){
+            $response['errors'] = $result['errors'];
+            $this->returnJson($response);
+            return;
+        }
+
+        //Retornando reposta de sucesso se não houver dados
+        if(!isset($result) || empty($result)){
+            //Setando 204 => No Content
+            $this->returnJson($response, 204);
+            return;
+        }
 
         $this->returnJson($response, 200);
     }

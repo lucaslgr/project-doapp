@@ -4,6 +4,7 @@ namespace Controllers;
 use \Core\Controller;
 use \Minishlink\WebPush\Subscription;
 use \Models\Posts;
+use \Models\Users;
 use \Util\ErrorsManager;
 use \Minishlink\WebPush\WebPush;
 use \Models\SubscriptionWPN;
@@ -48,13 +49,94 @@ class PostsController extends Controller{
         $this->returnJson($response, 200);
     }
 
+    public function getPostsByUser($id_user)
+    {
+        $response = [];
+
+        $id_user = intval($id_user);
+
+        $method = $this->getMethod();
+        $authorization = $this->getAuthorization();
+
+        //Se o método for diferente do GET retorna erro de método inválido
+        if($method != 'GET'){
+            ErrorsManager::setMethodNotAllowedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        //Verificando se o JWT NÃO foi enviado no authorization no header da request
+        if(!isset($authorization) || empty($authorization)){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $users = new Users();
+        //Checa se o JWT NÃO é válido
+        if($users->validaJWT($authorization) === false){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        //Checando se o JWT pertence ao usuário no qual deseja pegar os POSTS
+        //OBS: Apenas o próprio usuário pode ver seus próprios POSTS separadamente
+        if($users->getLoggedIdUser() !== $id_user){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $posts = new Posts();
+
+        $result = $posts->getAllPostsByUser($id_user);
+        if(isset($result['errors'])){
+            $response['errors'] = $result['errors'];
+            $this->returnJson($response);
+            return;
+        }
+
+        if(!isset($result) || empty($result) || !count($result)>0){
+            //Setando 204 => No Content
+            $this->returnJson($response, 200);
+            return;
+        }
+
+        $response['data'] = $result;
+        $this->returnJson($response, 200);
+    }
+
     public function addPost()
     {
         $response = [];
 
         $method = $this->getMethod();
         $data = $this->getRequestData();
-        // $authorization = $this->getAuthorization();
+        $authorization = $this->getAuthorization();
+
+        //Se o método for diferente do GET retorna erro de método inválido
+        if($method != 'POST'){
+            ErrorsManager::setMethodNotAllowedError($response);
+            $this->returnJson($response);
+            return;
+        }
+        
+        //Verificando se o JWT NÃO foi enviado no authorization no header da request
+        if(!isset($authorization) || empty($authorization)){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $users = new Users();
+        //Checa se o JWT NÃO é válido
+        if($users->validaJWT($authorization) === false){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
         $name_img = '';
 
         //Pegando o arquivo SE foi enviada E SE é do tipo .jpg ou .png
@@ -67,13 +149,6 @@ class PostsController extends Controller{
                 $_FILES['image']['tmp_name'],
                 $url_img
             );
-        }
-
-        //Se o método for diferente do GET retorna erro de método inválido
-        if($method != 'POST'){
-            ErrorsManager::setMethodNotAllowedError($response);
-            $this->returnJson($response);
-            return;
         }
 
         //Verificando se as informações foram enviadas para a API
@@ -89,6 +164,7 @@ class PostsController extends Controller{
         $posts = new Posts();
 
         $result = $posts->createNewPost(
+            $users->getLoggedIdUser(),
             $data['title'],
             $data['location'],
             \BASE_URL.'Images/'.$name_img,
@@ -185,5 +261,53 @@ class PostsController extends Controller{
 
         $response['data']['id_post'] = $result;
         $this->returnJson($response, 200);
+    }
+
+    public function deletePost($id_post)
+    {
+        $response = [];
+
+        $id_user = intval($id_post);
+
+        $method = $this->getMethod();
+        $authorization = $this->getAuthorization();
+
+        //Se o método for diferente do GET retorna erro de método inválido
+        if($method != 'DELETE'){
+            ErrorsManager::setMethodNotAllowedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        //Verificando se o JWT NÃO foi enviado no authorization no header da request
+        if(!isset($authorization) || empty($authorization)){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $users = new Users();
+        //Checa se o JWT NÃO é válido
+        if($users->validaJWT($authorization) === false){
+            ErrorsManager::setUnauthorizedError($response);
+            $this->returnJson($response);
+            return;
+        }
+
+        $posts = new Posts();
+
+        $result = $posts->deletePostById($users->getLoggedIdUser(), $id_post);
+        if(isset($result['errors'])){
+            $response['errors'] = $result['errors'];
+            $this->returnJson($response);
+            return;
+        }
+
+        if($result === true)
+            $result = [ 'msg' => 'Anúncio deletado com sucesso!'];
+
+        $response['data'] = $result;
+        $this->returnJson($response, 200);
+        return;
     }
 }

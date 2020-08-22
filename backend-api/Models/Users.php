@@ -118,7 +118,42 @@ class Users extends Model {
         return $result;
     }
 
-    private function createJWT()
+    public function checkLogout(string $jwt_token)
+    {
+        $result = [];
+
+        //Setando o id do usuario logado (acabou de logar automaticamente apos se registrar)
+        // $this->logged_user_id = $user_info['id'];
+
+        $jwt = new Jwt();
+
+        //Pegando o payload enviado no jwt
+        $payload_info = $jwt->validate($jwt_token);
+
+        //Checando se não é um JWT valido
+        if(!isset($payload_info->id_user)){
+            ErrorsManager::setUnauthorizedError($result);
+            return $result;
+        }
+        
+        //Setando o id do usuario logado como null só para garantir 
+        $this->logged_user_id = null;
+        $result = true;
+
+        return $result;
+    }
+
+    public function setLoggedIdUser(int $id)
+    {
+        $this->logged_user_id = $id;
+    }
+
+    public function getLoggedIdUser()
+    {
+        return $this->logged_user_id;
+    }
+
+    public function createJWT()
     {
         $jwt = new Jwt();
         //Criando e retornando um novo token baseado no id do user
@@ -127,17 +162,17 @@ class Users extends Model {
         ]);
     }
 
-    private function validaJWT(string $jwt_token)
+    public function validaJWT(string $jwt_token)
     {
         $jwt = new Jwt();
 
         //Pegando as informações do Payload do JWT
-        $info = $jwt->validate($jwt_token);
+        $payload_info = $jwt->validate($jwt_token);
 
         //Checa se o JWT foi validado com sucesso
-        if(isset($info->id_user)){
+        if(isset($payload_info->id_user)){
             //Setando o id de user logado
-            $this->logged_user_id = $info->id_user;
+            $this->logged_user_id = $payload_info->id_user;
             return true;
         } else {
             return false;
