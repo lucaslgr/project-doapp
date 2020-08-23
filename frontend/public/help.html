@@ -129,7 +129,7 @@
     <div class="modal-content display-flex flex-column flex-center">
       <h1>Login</h1>
       
-      <form class="form-inputs display-flex flex-column flex-center" method="POST">
+      <form id="form-login" class="form-inputs display-flex flex-column flex-center" method="POST">
         <input type="email" name="email" placeholder="Email">
         <input type="password" name="password" placeholder="******">
       </form>
@@ -152,7 +152,7 @@
     <div class="modal-content display-flex flex-column flex-center">
       <h1>Cadastro</h1>
       
-      <form class="form-inputs display-flex flex-column flex-center" method="POST">
+      <form id="form-register" class="form-inputs display-flex flex-column flex-center" method="POST">
         <input type="text" name="name" placeholder="Nome">
         <input type="email" name="email" placeholder="Email">
         <input type="password" name="password" placeholder="******">
@@ -184,6 +184,8 @@
   <script type="text/javascript" src="./src/js/helperFunctions.js"></script>
   <!-- Core da aplicação frontend -->
   <script type="text/javascript" src="./src/js/app.js"></script>
+  <!-- Importando a biblioteca de alerts SweetAlert2 -->
+  <script type="text/javascript" src="./src/js/sweetalert2.js"></script>
 </body>
 
 </html>

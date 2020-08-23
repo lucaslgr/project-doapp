@@ -85,7 +85,7 @@ function checkIsLoggedUser() {
     window.localStorage.setItem('jwt', null);
     window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
 
-    btnAddPost.style.display = 'none'; //Escondendo o botão de login
+    if (btnAddPost) btnAddPost.style.display = 'none'; //Escondendo o botão de login
 
     btnLogin.style.display = 'flex';
     btnLogout.style.display = 'none';
@@ -143,12 +143,12 @@ function sendModalLogin() {
       icon: 'error',
       title: 'ERRO:',
       text: 'E-mail inválido. Por favor, insira um email válido para prosseguir.'
-    });
+    }); //Focando o input do email
+
+    formRegister.querySelector('input[name=email]').focus();
     return;
-  } //Focando o input do email
+  } //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
 
-
-  formRegister.querySelector('input[name=email]').focus(); //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
 
   var loginFormData = new FormData();
   loginFormData.append('email', userEmail);
@@ -178,7 +178,7 @@ function sendModalLogin() {
     window.localStorage.setItem('jwt', responseJSON.data.jwt);
     window.localStorage.setItem('id_logged_user', responseJSON.data.id_user); //Mostrando o botão de adicionar novas postagens
 
-    btnAddPost.style.display = 'flex'; //Escondendo o botão de login
+    if (btnAddPost) btnAddPost.style.display = 'flex'; //Escondendo o botão de login
 
     btnLogin.style.display = 'none';
     btnLogout.style.display = 'flex';
@@ -392,7 +392,7 @@ function configureWebPushSubscription() {
         //Subscription removida do servidor do navegador com sucesso!
         console.log('Subscription have removed'); //Mudando o icone e texto do botão indicando Notificações Desativadas
 
-        btnEnableNotification.style.width = '242px';
+        btnEnableNotification.style.width = '239px';
         btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
         btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
         btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
@@ -440,11 +440,13 @@ function checkUserSubscriptionWPN() {
       if (subscription) {
         //Se tiver, atualiza o botão com as respectivas informações
         //Mudando o icone e texto do botão indicando Notificações Desativadas
+        btnEnableNotification.style.width = '216px';
         btnEnableNotification.querySelector('i').classList.add('icon-bell-alt');
         btnEnableNotification.querySelector('i').classList.remove('icon-bell-off');
         btnEnableNotification.querySelector('p').innerText = 'Notificações Ativadas';
       } else {
-        //Mudando o icone e texto do botão indicando Notificações Desativadas
+        btnEnableNotification.style.width = '239px'; //Mudando o icone e texto do botão indicando Notificações Desativadas
+
         btnEnableNotification.querySelector('i').classList.remove('icon-bell-alt');
         btnEnableNotification.querySelector('i').classList.add('icon-bell-off');
         btnEnableNotification.querySelector('p').innerText = 'Notificações Desativadas';
