@@ -64,28 +64,28 @@
       </div>
       <div class="colum-right">
         <ul class="menu">
-          <li class="menu-item">
+          <li class="menu-item menu-item--installapp">
             <button class="install-app" onclick="installPWAApp(this);">
               <p>Instalar Aplicativo</p>
               <i class="icon-install icon-small-default"></i>
             </button>
           </li>
-          <li class="menu-item notifications">
+          <li class="menu-item menu-item--notifications">
             <button class="enable-notifications">
               <p>Ativar Notificações</p>
               <i class="icon-bell-alt icon-small-default"></i>
             </button>
           </li>
-          <!-- <li class="menu-item">
-            <a href="./index.html">
-              Anúncios
-              <i class="icon-home"></i>
-            </a>
-          </li> -->
-          <li class="menu-item">
+          <li class="menu-item menu-item--login">
             <a href="#" onclick="showModalLogin();">
               Login
               <i class="icon-login-2 icon-small-default"></i>
+            </a>
+          </li>
+          <li class="menu-item menu-item--logout">
+            <a href="#" onclick="logoutUser();">
+              Logout
+              <i class="icon-logout icon-small-default"></i>
             </a>
           </li>
           <li class="menu-item">
@@ -174,6 +174,8 @@
   <footer>
     <a target="_blank" href="https://lgrdev.com/"><h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4></a>
   </footer>
+  <!-- Importando o arquivo de configuração de constantes como BASE_URL e API_BASE_URL -->
+  <script type="text/javascript" src="./config.js"></script> 
   <!-- Para caso o navegador não tenha suporte a Promises, importamos uma Promise manualmente e incorporamos no navegador -->
   <script type="text/javascript" src="./src/js/promise.js"></script> 
   <!-- Para caso o navegador não tenha suporte a Fetch, importamos uma Fetch manualmente e incorporamos no navegador -->

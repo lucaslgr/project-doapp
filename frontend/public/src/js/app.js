@@ -15,6 +15,8 @@ const bgModalSmoke = $('div.bg-modal');
 const formRegister = $('form#form-register');
 const formLogin = $('form#form-login');
 const btnAddPost = $('i.add-post');
+const btnLogin = $('li.menu-item.menu-item--login');
+const btnLogout = $('li.menu-item.menu-item--logout');
 
 /**
  * Função atrelada ao click do botão install app
@@ -68,6 +70,56 @@ function closeModalByElement(modalElement) {
   bgModalSmoke.style.display = 'none';
 
   modalElement.classList.remove('show-modal-default');
+}
+
+/**
+ * Função que checa se o usuário está logado sempre que carrega a página
+ */
+function checkIsLoggedUser(){
+  //Checando se o JWT e o id do usuário logado estão setados
+  if(window.localStorage.getItem('jwt')
+  && (window.localStorage.getItem('jwt') !== 'null') 
+  && window.localStorage.getItem('id_logged_user')
+  && (window.localStorage.getItem('id_logged_user') !== 'null')){
+
+    
+    //Mostrando o botão de adicionar novas postagens
+    if(btnAddPost)
+      btnAddPost.style.display = 'flex';
+
+    //Escondendo o botão de login
+    btnLogin.style.display = 'none';
+    btnLogout.style.display = 'flex';
+
+  } else {
+    //Setando jwt e id do user gravados no localStorage como null
+    window.localStorage.setItem('jwt', null);
+    window.localStorage.setItem('id_logged_user', null);
+
+    //Mostrando o botão de adicionar novas postagens
+    btnAddPost.style.display = 'none';
+
+    //Escondendo o botão de login
+    btnLogin.style.display = 'flex';
+    btnLogout.style.display = 'none';
+  }
+}
+
+/**
+ * Função que acionada ao clicar no botão de logout
+ */
+function logoutUser(){
+  //Setando jwt e id do user gravados no localStorage como null
+  window.localStorage.setItem('jwt', null);
+  window.localStorage.setItem('id_logged_user', null);
+
+  //Mostrando o botão de adicionar novas postagens
+  if(btnAddPost)
+    btnAddPost.style.display = 'none';
+
+  //Escondendo o botão de login
+  btnLogin.style.display = 'flex';
+  btnLogout.style.display = 'none';
 }
 
 /**
@@ -151,7 +203,12 @@ function sendModalLogin(){
     window.localStorage.setItem('id_logged_user', responseJSON.data.id_user);
 
     //Mostrando o botão de adicionar novas postagens
-    btnAddPost.classList.add('display-flex');
+    btnAddPost.style.display = 'flex';
+
+    //Escondendo o botão de login
+    btnLogin.style.display = 'none';
+    btnLogout.style.display = 'flex';
+
   })
   .catch( errors => {
     Swal.fire({
@@ -471,7 +528,7 @@ function settingsEventButton2EnableNotifications() {
     let btnEnableNotification = $('button.enable-notifications');
 
     //Monstrando os botoões que permitem o usário ativar notificações
-    $('header ul.menu > li.menu-item.notifications').style.display = 'flex';
+    $('header ul.menu > li.menu-item.menu-item--notifications').style.display = 'flex';
 
     //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
     btnEnableNotification.addEventListener('click', event => {
@@ -527,3 +584,5 @@ registerServiceWorker();
 settingsEventButton2EnableNotifications();
 
 checkUserSubscriptionWPN();
+
+checkIsLoggedUser();

@@ -311,8 +311,11 @@ header .colum-right ul.menu > li.menu-item > button > i {
 }
 
 /* São mostradas pelo javascript somente se for indentificado que o navegador suporta notificações */
-/* TODO  ARRUMAR AQUI*/
-header ul.menu > li.menu-item.notifications{
+header ul.menu > li.menu-item.menu-item--notifications{
+    display: none;
+}
+
+header ul.menu > li.menu-item.menu-item--logout{
     display: none;
 }
 

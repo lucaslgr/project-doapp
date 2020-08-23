@@ -14,6 +14,8 @@ var bgModalSmoke = $('div.bg-modal');
 var formRegister = $('form#form-register');
 var formLogin = $('form#form-login');
 var btnAddPost = $('i.add-post');
+var btnLogin = $('li.menu-item.menu-item--login');
+var btnLogout = $('li.menu-item.menu-item--logout');
 /**
  * Função atrelada ao click do botão install app
  */
@@ -64,6 +66,45 @@ function closeModalByRef(modalRef) {
 function closeModalByElement(modalElement) {
   bgModalSmoke.style.display = 'none';
   modalElement.classList.remove('show-modal-default');
+}
+/**
+ * Função que checa se o usuário está logado sempre que carrega a página
+ */
+
+
+function checkIsLoggedUser() {
+  //Checando se o JWT e o id do usuário logado estão setados
+  if (window.localStorage.getItem('jwt') && window.localStorage.getItem('jwt') !== 'null' && window.localStorage.getItem('id_logged_user') && window.localStorage.getItem('id_logged_user') !== 'null') {
+    //Mostrando o botão de adicionar novas postagens
+    if (btnAddPost) btnAddPost.style.display = 'flex'; //Escondendo o botão de login
+
+    btnLogin.style.display = 'none';
+    btnLogout.style.display = 'flex';
+  } else {
+    //Setando jwt e id do user gravados no localStorage como null
+    window.localStorage.setItem('jwt', null);
+    window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
+
+    btnAddPost.style.display = 'none'; //Escondendo o botão de login
+
+    btnLogin.style.display = 'flex';
+    btnLogout.style.display = 'none';
+  }
+}
+/**
+ * Função que acionada ao clicar no botão de logout
+ */
+
+
+function logoutUser() {
+  //Setando jwt e id do user gravados no localStorage como null
+  window.localStorage.setItem('jwt', null);
+  window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
+
+  if (btnAddPost) btnAddPost.style.display = 'none'; //Escondendo o botão de login
+
+  btnLogin.style.display = 'flex';
+  btnLogout.style.display = 'none';
 }
 /**
  * Função que mostra o modal de Login
@@ -137,7 +178,10 @@ function sendModalLogin() {
     window.localStorage.setItem('jwt', responseJSON.data.jwt);
     window.localStorage.setItem('id_logged_user', responseJSON.data.id_user); //Mostrando o botão de adicionar novas postagens
 
-    btnAddPost.classList.add('display-flex');
+    btnAddPost.style.display = 'flex'; //Escondendo o botão de login
+
+    btnLogin.style.display = 'none';
+    btnLogout.style.display = 'flex';
   })["catch"](function (errors) {
     Swal.fire({
       icon: 'error',
@@ -422,7 +466,7 @@ function settingsEventButton2EnableNotifications() {
     //Pegando os dois botões que habilitam notificações, um para mobile e um para desktop/telas maiores
     var btnEnableNotification = $('button.enable-notifications'); //Monstrando os botoões que permitem o usário ativar notificações
 
-    $('header ul.menu > li.menu-item.notifications').style.display = 'flex'; //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
+    $('header ul.menu > li.menu-item.menu-item--notifications').style.display = 'flex'; //Associando funcao que pede ao usuário permissão para mostrar notificações quando o evento do click dos botões for disparado
 
     btnEnableNotification.addEventListener('click', function (event) {
       //Desativando o botão para não permitir dois cliques seguidos
@@ -467,3 +511,4 @@ window.addEventListener('beforeinstallprompt', function (event) {
 registerServiceWorker();
 settingsEventButton2EnableNotifications();
 checkUserSubscriptionWPN();
+checkIsLoggedUser();
