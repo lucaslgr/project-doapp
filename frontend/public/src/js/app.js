@@ -14,6 +14,7 @@ const modalRegister = $('.modal.modal-register');
 const bgModalSmoke = $('div.bg-modal');
 const formRegister = $('form#form-register');
 const formLogin = $('form#form-login');
+const btnAddPost = $('i.add-post');
 
 /**
  * Função atrelada ao click do botão install app
@@ -87,7 +88,80 @@ function showModalLogin(){
  * Função que envia os dados no form do modal de Login
  */
 function sendModalLogin(){
+  const endpoint = API_BASE_URL+'/user/login';
+  
+  const userEmail = formLogin.querySelector('input[name=email]').value;
+  const userPass = formLogin.querySelector('input[name=password]').value;
 
+  //Verifica se ficou algum campo vazio
+  if(userEmail == '' || userEmail == null ||
+    userPass == ''  ||  userPass == null ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'Todas informações precisam ser preenchidas para finalizar seu anúncio.'
+    });
+    return;//Cancela a operação de enviar o anuncio
+  }
+
+  //Validando o email
+  if(!validateEmail(userEmail)){
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: 'E-mail inválido. Por favor, insira um email válido para prosseguir.'
+    });
+    return;
+  }
+
+  //Focando o input do email
+  formRegister.querySelector('input[name=email]').focus();
+  //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
+  let loginFormData = new FormData();
+  loginFormData.append('email', userEmail);
+  loginFormData.append('password', userPass);
+
+  console.log('Form data',loginFormData);
+
+  fetch(endpoint, {
+      "method" : "POST",
+      "body" : loginFormData
+  })
+  .then( response => {
+    return response.json();
+  })
+  .then( responseJSON => {
+    //Checa se houve algum erro, se houver, lança o error para o catch
+    if (responseJSON.errors) {
+      throw responseJSON.errors;
+    }
+    //Alerta de sucesso
+    Swal.fire({
+      icon: 'success',
+      title: 'Autenticado com sucesso!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    //Fechando o modal register
+    closeModalByElement(modalLogin);
+
+    //Salvando o jwt e o id do usuario logado
+    window.localStorage.setItem('jwt', responseJSON.data.jwt);
+    window.localStorage.setItem('id_logged_user', responseJSON.data.id_user);
+
+    //Mostrando o botão de adicionar novas postagens
+    btnAddPost.classList.add('display-flex');
+  })
+  .catch( errors => {
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: errors.msg
+    });
+  });
+
+  return;//Cancela a operação de enviar o anuncio
 }
 
 /**
@@ -132,20 +206,58 @@ function sendModalRegister(){
       title: 'ERRO:',
       text: 'E-mail inválido. Por favor, insira um email válido para prosseguir.'
     });
-
-    //Focando o input do email
-    formRegister.querySelector('input[name=email]').focus();
-
-    //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
-    let postFormData = new FormData();
-    postFormData.append('name', userName);
-    postFormData.append('email', userEmail);
-    postFormData.append('pass', userPass);
-
-    //TODO *Verificando se no navegador existe os recursos de [serviceWorker] e [SyncManager](BackgroundSyncronization)
-
-    return;//Cancela a operação de enviar o anuncio
+    return;
   }
+
+  //Focando o input do email
+  formRegister.querySelector('input[name=email]').focus();
+  //Pegando os dados do Post e transformando no formato FormData para podermos enviar a imagem
+  let registerFormData = new FormData();
+  registerFormData.append('name', userName);
+  registerFormData.append('email', userEmail);
+  registerFormData.append('password', userPass);
+
+  console.log('Form data',registerFormData);
+
+  fetch(endpoint, {
+      "method" : "POST",
+      "body" : registerFormData
+  })
+  .then( response => {
+    return response.json();
+  })
+  .then( responseJSON => {
+    //Checa se houve algum erro, se houver, lança o error para o catch
+    if (responseJSON.errors) {
+      throw responseJSON.errors;
+    }
+    //Alerta de sucesso
+    Swal.fire({
+      icon: 'success',
+      title: 'Registrado com sucesso!',
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    //Fechando o modal register
+    closeModalByElement(modalRegister);
+
+    //Salvando o jwt e o id do usuario logado
+    window.localStorage.setItem('jwt', responseJSON.data.jwt);
+    window.localStorage.setItem('id_logged_user', responseJSON.data.id_user);
+
+    //Mostrando o botão de adicionar novas postagens
+    btnAddPost.classList.add('display-flex');
+  })
+  .catch( errors => {
+    Swal.fire({
+      icon: 'error',
+      title: 'ERRO:',
+      text: errors.msg
+    });
+  });
+
+  return;//Cancela a operação de enviar o anuncio
 }
 
 /**

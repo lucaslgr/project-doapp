@@ -204,7 +204,7 @@ input + textarea{
 }
 
 .display-flex{
-    display: flex;
+    display: flex !important;
 }
 
 .justify-around{
@@ -430,7 +430,8 @@ section#posts .section-area .each-post table td.date-value > i{
 /* ! ICON ADD POST */
 i.icon-plus-circled.add-post {
     position: fixed;
-    display: flex;
+    /* display: flex; */
+    display: none;
     align-items: center;
     justify-content: center;
     

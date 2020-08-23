@@ -456,9 +456,9 @@ function sendModalPost() {
   else {
     fetch(endpoint, {
       "method": "POST",
-      "headers": {
-        'Content-Type': 'application/json'
-      },
+      // "headers": {
+      //   'Content-Type': 'application/json'
+      // },
       "body": postFormData
     })
       .then((response) => {
@@ -468,7 +468,14 @@ function sendModalPost() {
         if (responseJSON.errors) {
           throw responseJSON.errors;
         }
-        alert('Anúncio inserido com sucesso!');
+        //Alerta de sucesso
+        Swal.fire({
+          icon: 'success',
+          title: 'Anúncio inserido com sucesso!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+
         console.log('inserting a new post such id is: ' + responseJSON.data.id_post);
         fillPosts();
         clearModalAddPostInputs();
@@ -476,7 +483,14 @@ function sendModalPost() {
       })
       .catch((errors) => {
         console.log('ERRO', errors);
-        alert(`ERRO ${errors.status_code} : ${errors.msg}`);
+        // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
+        //Alerta de erro
+        Swal.fire({
+          icon: 'error',
+          title: 'ERRO:',
+          text: 'Ocorreu um erro na sincronização dos anúncios.'
+        });
+
         closeModalAddPost();
       })
   }
