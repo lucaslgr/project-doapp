@@ -744,6 +744,48 @@ footer h4::after{
     display: none;
 }
 
+/* ! LOADER DA PAGINACAO DE SCROLL INFINITO */
+.loader {
+    opacity: 0;
+    display: flex;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease-in;
+}
+
+.loader.show {
+    opacity: 1;
+}
+
+.circle {
+    background-color: var(--blue-light);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 5px;
+    animation: bounce 0.5s ease-in infinite;
+}
+
+.circle:nth-of-type(2) {
+    animation-delay: 0.1s;
+}
+
+.circle:nth-of-type(3) {
+    animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }   
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
 /* ! PAGE HELPER SECTION HELPER */
 section#help{
     display: flex;
@@ -785,46 +827,43 @@ section#help .card p {
     width: 2.4375em !important;
 }
 
-/* ! LOADER DA PAGINACAO DE SCROLL INFINITO */
-.loader {
-    opacity: 0;
-    display: flex;
+/* ! PAGE MY POSTS SECTION POSTS */
+
+section#posts .section-area.section-area--myposts{
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+section#posts .section-area.section-area--myposts .each-post {
+    position: relative;
+    max-width: 180px;
+    transition: transform 0.5s ease;
+    margin-top: 30px;
+}
+
+section#posts .section-area.section-area--myposts .each-post{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+section#posts .section-area.section-area--myposts .each-post:hover{
+    transform: scale(1.05);
+}
+
+section#posts .section-area.section-area--myposts .each-post i.icon-trash{
+    cursor: pointer;
     position: absolute;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: opacity 0.3s ease-in;
-}
-
-.loader.show {
-    opacity: 1;
-}
-
-.circle {
-    background-color: var(--blue-light);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin: 5px;
-    animation: bounce 0.5s ease-in infinite;
-}
-
-.circle:nth-of-type(2) {
-    animation-delay: 0.1s;
-}
-
-.circle:nth-of-type(3) {
-    animation-delay: 0.2s;
-}
-
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }   
-    50% {
-        transform: translateY(-10px);
-    }
+    font-size: 27px;
+    padding: 5px;
+    border-radius: 100%;
+    background-color: rgb(160, 0, 0);
+    bottom: -22px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
 }
 
 @media only screen and (max-width: 925px){

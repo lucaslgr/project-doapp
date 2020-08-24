@@ -3,7 +3,11 @@
 
 if (   (window.localStorage.getItem('jwt') == '')
     || (window.localStorage.getItem('jwt') == 'null')
+    || (window.localStorage.getItem('jwt') == 'undefined')
+    || (window.localStorage.getItem('jwt') == undefined)
     || (window.localStorage.getItem('id_logged_user') == '')
+    || (window.localStorage.getItem('id_logged_user') == 'undefined')
+    || (window.localStorage.getItem('id_logged_user') == undefined)
     || (window.localStorage.getItem('id_logged_user') == 'null')) {
     window.location.href = BASE_URL;
 }
