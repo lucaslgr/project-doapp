@@ -298,6 +298,11 @@ header .colum-right ul.menu > li.menu-item:not(:last-child){
     margin-right: 20px;
 }
 
+header ul.menu > li.menu-item.menu-item--help i.icon-small-default{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 header .colum-right ul.menu > li.menu-item > button.install-app {
     width: 188px;
 }
@@ -312,6 +317,11 @@ header .colum-right ul.menu > li.menu-item > button > i {
 
 /* São mostradas pelo javascript somente se for indentificado que o navegador suporta notificações */
 header ul.menu > li.menu-item.menu-item--notifications{
+    display: none;
+}
+
+header ul.menu > li.menu-item.menu-item--myposts{
+    width: 146.8px;
     display: none;
 }
 

@@ -3,28 +3,32 @@
 
 <head>
   <title>DoApp | LGR DEV</title>
-  <meta name="description" content="DoApp é um aplicativo para divulgar de objetos usados a serem doados desenvolvido pela LGR DEV.">
+  <meta name="description"
+    content="DoApp é um aplicativo para divulgar de objetos usados a serem doados desenvolvido pela LGR DEV.">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,shrink-to-fit=no,user-scalable=no,initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width,shrink-to-fit=no,user-scalable=no,initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <!-- Setando os parâmetros para facebook social sharing -->
-  <meta property="og:url"                content="https://lgrdev.com/projects/doapp/" />
-  <meta property="og:type"               content="website" />
-  <meta property="og:title"              content="DoApp | LGR DEV" />
-  <meta property="og:site_name"          content="DoApp | LGR DEV"/>
-  <meta property="og:description"        content="Somos uma empresa que desenvolve soluções web como sites e sistemas para impulsionar e automatizar o seu negócio!" />
-  <meta property="og:image"              content="https://lgrdev.com/projects/doapp/src/images/logos/logo.png" itemprop="image"  />
-  <meta property="og:image:alt"          content="DoApp logo" />
+  <meta property="og:url" content="https://lgrdev.com/projects/doapp/index.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DoApp | LGR DEV" />
+  <meta property="og:site_name" content="DoApp | LGR DEV" />
+  <meta property="og:description"
+    content="DoApp é um aplicativo para divulgar de objetos usados a serem doados. | Desenvolvido pela LGR DEV." />
+  <meta property="og:image" content="https://lgrdev.com/projects/doapp/src/images/logos/logo.png" itemprop="image" />
+  <meta property="og:image:alt" content="DoApp logo" />
 
   <!-- setando o favicon -->
-  <link rel="icon" type="image/png" href="./src/images/icons/app-icon-48x48.png"/>
-  
+  <link rel="icon" type="image/png" href="./src/images/icons/app-icon-48x48.png" />
+
   <link rel="stylesheet" href="./src/css/normalize.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./src/css/fontello.css">
   <link rel="stylesheet" href="./src/css/style.css">
+
 
   <!-- !PWA -->
   <!-- * MANIFEST -->
@@ -51,9 +55,8 @@
   <meta name="msapplication-TileColor" content="#0060b8">
   <meta name="theme-color" content="#3f51b5">
 </head>
-
 <body>
-  <!-- ! HEADER --> 
+  <!-- ! HEADER -->
   <header>
     <nav>
       <div class="colum-left">
@@ -76,34 +79,30 @@
               <i class="icon-bell-alt icon-small-default"></i>
             </button>
           </li>
-          <li class="menu-item menu-item--login">
-            <a href="#" onclick="showModalLogin();">
-              Login
-              <i class="icon-login-2 icon-small-default"></i>
-            </a>
-          </li>
           <li class="menu-item menu-item--logout">
             <a href="#" onclick="logoutUser();">
               Logout
               <i class="icon-logout icon-small-default"></i>
             </a>
           </li>
-          <li class="menu-item menu-item--myposts">
-            <a href="./my-posts.html">
-              Meus Anúncios
-              <i class="icon-box icon-small-default"></i>
-            </a>
-          </li>
           <li class="menu-item menu-item--home">
             <a href="./index.html">
               Anúncios
-              <i class="icon-home"></i>
+              <i class="icon-home icon-small-default"></i>
+            </a>
+          </li>
+          <li class="menu-item menu-item--help">
+            <a href="./help.html">
+              Ajuda
+              <i class="icon-help icon-small-default"></i>
             </a>
           </li>
           <div class="social-midias only-small-screen-flex">
             <a target="_blank" href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
-            <a target="_blank" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i class="icon-linkedin-circled"></i></a>
-            <a target="_blank" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i class="icon-youtube"></i></a>
+            <a target="_blank" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i
+                class="icon-linkedin-circled"></i></a>
+            <a target="_blank" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i
+                class="icon-youtube"></i></a>
           </div>
           <a target="_blank" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
         </ul>
@@ -113,83 +112,70 @@
   </header>
 
   <!-- ! MAIN -->
-  <main>
-    <section id="help">
-      <img src="./src/images/logos/logo.png" width="50%" alt="">
-      <div class="card">
-        <h1>Precisa de Ajuda?</h1>
-        <p>Precisa de ajuda para saber como publicar as suas doações ?</p>
-      </div>
-      <div class="card">
-        <h1>Fale Conosco!</h1>
-        <p>Email: lucaslgr1206@gmail.com</p>
+  <main class="display-flex flex-column align-center">
+
+    <section id="posts">
+      <div class="section-area container">
+
+        <!-- !MODELO DE POSTAGEM -->
+        <!-- <div class="each-post">
+          <img src="./src/images/products/product-default.png" alt="">
+          <h1 class="title">Título</h1>
+          <table>
+            <tr>
+              <td class="tdheader">Localização:</td>
+              <td>
+                <a class="links-info" href="https://www.google.com/maps/place/49.46800006494457,17.11514008755796">
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. at!</p>
+                  <i class="icon-location"></i>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td class="tdheader">Whatsapp:</td>
+              <td>
+                <a class="links-info" href="https://api.whatsapp.com/send?phone=5532988094352&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..">
+                  <p>32 9 88094352</p>
+                  <i class="icon-whatsapp"></i>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td class="tdheader">Data:</td>
+              <td>20/20/2020</td>
+            </tr>
+          </table>
+        </div>      -->
+
       </div>
     </section>
   </main>
 
-  <!-- ! BACKGROUND SMOKE FOR MODAL -->
-  <div class="bg-modal"></div>
-
-  <!-- ! MODAL LOGIN -->
-  <div class="modal modal-login">
-    <div class="modal-content display-flex flex-column flex-center">
-      <h1>Login</h1>
-      
-      <form id="form-login" class="form-inputs display-flex flex-column flex-center" method="POST">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="******">
-      </form>
-      <a id="btn-register" href="#" onclick="showModalRegister();">Cadastre-se aqui!</a>
-      <div class="btn-group display-flex flex-center">
-        <button id="btn-close" onclick="closeModalByRef('.modal-login');">
-          Fechar
-          <i class="icon-cancel icon-small-default"></i>
-        </button>
-        <button id="btn-send" onclick="sendModalLogin();">
-          Entrar
-          <i class="icon-ok icon-small-default"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ! MODAL REGISTER -->
-  <div class="modal modal-register">
-    <div class="modal-content display-flex flex-column flex-center">
-      <h1>Cadastro</h1>
-      
-      <form id="form-register" class="form-inputs display-flex flex-column flex-center" method="POST">
-        <input type="text" name="name" placeholder="Nome">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="******">
-      </form>
-      <div class="btn-group display-flex flex-center">
-        <button id="btn-close" onclick="closeModalByRef('.modal-register');">
-          Fechar
-          <i class="icon-cancel icon-small-default"></i>
-        </button>
-        <button id="btn-send" onclick="sendModalRegister();">
-          Registrar
-          <i class="icon-ok icon-small-default"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- !FOOTER -->
   <footer>
-    <a target="_blank" href="https://lgrdev.com/"><h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4></a>
+    <a target="_blank" href="https://lgrdev.com/">
+      <h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4>
+    </a>
   </footer>
+
   <!-- Importando o arquivo de configuração de constantes como BASE_URL e API_BASE_URL -->
-  <script type="text/javascript" src="./config.js"></script> 
+  <script type="text/javascript" src="./config.js"></script>
+  <!-- Importando o arquivo com script que checa se o usuario está logado e redireciona para o index.html -->
+  <script type="text/javascript" src="./src/js/checkIsLoggedUser.js"></script>
   <!-- Para caso o navegador não tenha suporte a Promises, importamos uma Promise manualmente e incorporamos no navegador -->
-  <script type="text/javascript" src="./src/js/promise.js"></script> 
+  <script type="text/javascript" src="./src/js/promise.js"></script>
   <!-- Para caso o navegador não tenha suporte a Fetch, importamos uma Fetch manualmente e incorporamos no navegador -->
   <script type="text/javascript" src="./src/js/fetch.js"></script>
+  <!-- Lib para trabalhar com IndexedDB do navegador utilizando Promises -->
+  <script type="text/javascript" src="./src/js/idb.js"></script>
+  <!-- Ajudador que foi criado para inicializar o IndexedDB e também escrever e ler informações nos ObjectStores(tabelas) contidos no DB -->
+  <script type="text/javascript" src="./src/js/indexedDB.js"></script>
   <!-- Script com todas funcoes ajudadoras -->
   <script type="text/javascript" src="./src/js/helperFunctions.js"></script>
   <!-- Core da aplicação frontend -->
   <script type="text/javascript" src="./src/js/app.js"></script>
+  <!-- Responsável por tudo com relação ao feed de anúncios -->
+  <script type="text/javascript" src="./src/js/feed.js"></script>
   <!-- Importando a biblioteca de alerts SweetAlert2 -->
   <script type="text/javascript" src="./src/js/sweetalert2.js"></script>
 </body>

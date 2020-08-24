@@ -14,9 +14,11 @@ const CACHE_IMG = 'img-v3';
 const STATIC_FILES = [
   BASE_URL+'/',
   BASE_URL+'/index.html',
+  BASE_URL+'/my-posts.html',
   BASE_URL+'/offline.html',
   BASE_URL+'/config.js',
   BASE_URL+'/src/js/app.js',
+  BASE_URL+'/src/js/checkIsLoggedUser.js',
   BASE_URL+'/src/js/feed.js',
   BASE_URL+'/src/js/sweetalert2.js',
   BASE_URL+'/src/js/promise.js',

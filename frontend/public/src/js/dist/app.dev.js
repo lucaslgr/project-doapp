@@ -16,6 +16,7 @@ var formLogin = $('form#form-login');
 var btnAddPost = $('i.add-post');
 var btnLogin = $('li.menu-item.menu-item--login');
 var btnLogout = $('li.menu-item.menu-item--logout');
+var btnUserPosts = $('li.menu-item.menu-item--myposts');
 /**
  * Função atrelada ao click do botão install app
  */
@@ -75,20 +76,9 @@ function closeModalByElement(modalElement) {
 function checkIsLoggedUser() {
   //Checando se o JWT e o id do usuário logado estão setados
   if (window.localStorage.getItem('jwt') && window.localStorage.getItem('jwt') !== 'null' && window.localStorage.getItem('id_logged_user') && window.localStorage.getItem('id_logged_user') !== 'null') {
-    //Mostrando o botão de adicionar novas postagens
-    if (btnAddPost) btnAddPost.style.display = 'flex'; //Escondendo o botão de login
-
-    btnLogin.style.display = 'none';
-    btnLogout.style.display = 'flex';
+    setOutLoginUser();
   } else {
-    //Setando jwt e id do user gravados no localStorage como null
-    window.localStorage.setItem('jwt', null);
-    window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
-
-    if (btnAddPost) btnAddPost.style.display = 'none'; //Escondendo o botão de login
-
-    btnLogin.style.display = 'flex';
-    btnLogout.style.display = 'none';
+    setOutUnloggedUser();
   }
 }
 /**
@@ -97,14 +87,7 @@ function checkIsLoggedUser() {
 
 
 function logoutUser() {
-  //Setando jwt e id do user gravados no localStorage como null
-  window.localStorage.setItem('jwt', null);
-  window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
-
-  if (btnAddPost) btnAddPost.style.display = 'none'; //Escondendo o botão de login
-
-  btnLogin.style.display = 'flex';
-  btnLogout.style.display = 'none';
+  setOutUnloggedUser();
 }
 /**
  * Função que mostra o modal de Login
@@ -114,6 +97,7 @@ function logoutUser() {
 function showModalLogin() {
   toggleMenuMobile();
   bgModalSmoke.style.display = 'block';
+  formLogin.querySelector('input[type=email]').focus();
   setTimeout(function () {
     modalLogin.classList.add('show-modal-default');
   }, 100);
@@ -153,7 +137,6 @@ function sendModalLogin() {
   var loginFormData = new FormData();
   loginFormData.append('email', userEmail);
   loginFormData.append('password', userPass);
-  console.log('Form data', loginFormData);
   fetch(endpoint, {
     "method": "POST",
     "body": loginFormData
@@ -173,15 +156,8 @@ function sendModalLogin() {
       timer: 1500
     }); //Fechando o modal register
 
-    closeModalByElement(modalLogin); //Salvando o jwt e o id do usuario logado
-
-    window.localStorage.setItem('jwt', responseJSON.data.jwt);
-    window.localStorage.setItem('id_logged_user', responseJSON.data.id_user); //Mostrando o botão de adicionar novas postagens
-
-    if (btnAddPost) btnAddPost.style.display = 'flex'; //Escondendo o botão de login
-
-    btnLogin.style.display = 'none';
-    btnLogout.style.display = 'flex';
+    closeModalByElement(modalLogin);
+    setOutLoginUser(responseJSON.data.jwt, responseJSON.data.id_user);
   })["catch"](function (errors) {
     Swal.fire({
       icon: 'error',
@@ -260,12 +236,8 @@ function sendModalRegister() {
       timer: 1500
     }); //Fechando o modal register
 
-    closeModalByElement(modalRegister); //Salvando o jwt e o id do usuario logado
-
-    window.localStorage.setItem('jwt', responseJSON.data.jwt);
-    window.localStorage.setItem('id_logged_user', responseJSON.data.id_user); //Mostrando o botão de adicionar novas postagens
-
-    btnAddPost.classList.add('display-flex');
+    closeModalByElement(modalRegister);
+    setOutLoginUser(responseJSON.data.jwt, responseJSON.data.id_user);
   })["catch"](function (errors) {
     Swal.fire({
       icon: 'error',
@@ -274,6 +246,51 @@ function sendModalRegister() {
     });
   });
   return; //Cancela a operação de enviar o anuncio
+}
+/**
+ * Configura todos elementos na tela respectivos a um usuário logado e salva o jwt e o id do usuario logado
+ * 
+ * @param {string} jwt 
+ * @param {int} id_user 
+ */
+
+
+function setOutLoginUser() {
+  var jwt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var id_user = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  //Salvando o jwt e o id do usuario logado
+  if (jwt != null && id_user != null) {
+    window.localStorage.setItem('jwt', jwt);
+    window.localStorage.setItem('id_logged_user', id_user);
+  } //Mostrando o botão de adicionar novas postagens
+
+
+  if (btnAddPost) btnAddPost.style.display = 'flex'; //Escondendo o botão de login
+
+  if (btnLogin) btnLogin.style.display = 'none'; //Mostrando o botão de logout
+
+  if (btnLogout) btnLogout.style.display = 'flex'; //Monstrando o botão dos posts do usuário
+
+  if (btnUserPosts) btnUserPosts.style.display = 'flex';
+}
+/**
+ * Configura todos elementos na tela respectios a um usuário deslogado e seta jwt e id do usuario como null
+ */
+
+
+function setOutUnloggedUser() {
+  //Setando jwt e id do user gravados no localStorage como null
+  window.localStorage.setItem('jwt', null);
+  window.localStorage.setItem('id_logged_user', null); //Mostrando o botão de adicionar novas postagens
+
+  if (btnAddPost) btnAddPost.style.display = 'none'; //Mostrando o botão de login
+
+  if (btnLogin) btnLogin.style.display = 'flex'; //Escondendo o botão de logout
+
+  if (btnLogout) btnLogout.style.display = 'none'; //Escondendo o botão de adicionar novas postagens
+
+  if (btnUserPosts) btnUserPosts.style.display = 'none';
 }
 /**
  * Função que registra o SW no navegador
