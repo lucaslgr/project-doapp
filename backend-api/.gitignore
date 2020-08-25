@@ -1,3 +1,4 @@
 .vscode
 vendor
 /public/Images/*
+config.php
