@@ -13,7 +13,7 @@ let dbPromise = idb.open('app-store', 1, (db) => {
      * 1º Parâmetro: Nome do Object Store
      * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
      */
-    db.createObjectStore('posts', { keyPath: 'id' })
+    db.createObjectStore('posts', { keyPath: 'id' });
   }
 
   //? Todos os posts inseridos pelo usuário quando o app está sem conexão são armazenados temporariamente para serem sincronizados assim que a conexão voltar
@@ -24,7 +24,7 @@ let dbPromise = idb.open('app-store', 1, (db) => {
      * 1º Parâmetro: Nome do Object Store
      * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
      */
-    db.createObjectStore('sync-posts', { keyPath: 'id' })
+    db.createObjectStore('sync-posts', { keyPath: 'id' });
   }
 
   //? Todos os parâmetros da aplicação que são necessários para utilização no SW
@@ -35,7 +35,18 @@ let dbPromise = idb.open('app-store', 1, (db) => {
      * 1º Parâmetro: Nome do Object Store
      * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
      */
-    db.createObjectStore('app-params')
+    db.createObjectStore('app-params');
+  }
+
+  //? Todos os posts do respectivo usuário LOGADO
+  //* Checando se NÃO existe um objectStore com o nome que desejamos criar para não termos uma duplicidade
+  if (!db.objectStoreNames.contains('posts-logged-user')) {
+    /**
+     * *Instanciando um ObjectStore no DB app-store, um Object-Store é similar a uma Tabela no BD convencional
+     * 1º Parâmetro: Nome do Object Store
+     * 2º Parâmetro: JSON definindo o nome da Primmary Key(chamada como keyPath) do Object Store
+     */
+    db.createObjectStore('posts-logged-user', { keyPath: 'id' });
   }
 });
 

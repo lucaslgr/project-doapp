@@ -174,9 +174,28 @@ self.addEventListener('fetch', (event) => {
       console.log('Request for posts on posts by user');
       event.respondWith(
         fetch(event.request)
-        .then(response => {
-          return response;
-        })
+          .then(response => {
+            
+            //Fazendo um clone da resposta da requisição
+            let clonedResponse = response.clone();
+
+            //Limpando todas informações no respectivo ObjectStore(Tabela) 'posts' dentro IndexedDB antes de inserir as novas informações vindas da requisição na rede
+            clearAllData('posts-logged-user')
+              .then( () => {
+                //Transformando o clone da resposta em um objeto JSON
+                return clonedResponse.json();
+              })
+              .then(clonedResponseJSON => {
+                let postByUserData = clonedResponseJSON.data;
+  
+                //Percorrendo cada JSON de CADA anúncio/post no retorno da requisição
+                for (let key in postByUserData) {
+                  //Escrevendo as informações no ObjectStore posts do IndexedDB instanciado no arquivo indexedDB.js                
+                  writeData('posts-logged-user', postByUserData[key]);
+                }
+              });
+            return response; //Retornando a reposta original
+          })
       )
 
     } else {

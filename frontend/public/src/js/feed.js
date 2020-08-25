@@ -726,7 +726,7 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
   }
 
   //Se foi requisitado algum termo específico atualiza o termo global, se não foi, reseta
-  console.log('Termo procurado', queryTerm);
+  console.log('Term search', queryTerm);
   if(queryTerm != ''){
     term = queryTerm;
   } else {
@@ -735,6 +735,7 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
 
   const endpoint = `${API_BASE_URL}/posts?limit=${limitPostsPerPage}&page=${currentPage}&term=${term}`;
 
+  //*Buscando os posts pela rede
   fetch(endpoint, {
     "method": "GET",
     "headers": {
@@ -780,11 +781,12 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
       console.log('ERRO', errors);
   })
 
-  //Verifica se o navegador/janela tem o recurso de IndexedDB e Utiliza os dados do IndexedDB apenas para a primeira página(primeiros 5 itens da paginação)
+  //*Verifica se o navegador/janela tem o recurso de IndexedDB e Utiliza os dados do IndexedDB apenas para a primeira página(primeiros 5 itens da paginação)
   // if ('indexedDB' in window && currentPage == 1 && term == '') {
   if ('indexedDB' in window) {
     readAllData('posts')
       .then(responseJSON => {
+        //Verificando se houver algum error para ser lançado ao catch
         if (responseJSON.errors) {
           throw responseJSON.errors;
         }
