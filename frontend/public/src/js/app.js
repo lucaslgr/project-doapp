@@ -294,6 +294,13 @@ function setOutLoginUser(jwt = null, id_user = null){
   if(jwt != null && id_user != null){
     window.localStorage.setItem('jwt', jwt);
     window.localStorage.setItem('id_logged_user', id_user);
+
+    //Setando no IndexedDB para ser recuperado pelo SW quando necessário
+    //Checando se no navegador tem a api IndexedDB
+    if ('indexedDB' in window){
+      writeDataWithKey('app-params', jwt, 'jwt');
+      writeDataWithKey('app-params', id_user, 'id_logged_user');
+    }
   }
 
   //Mostrando o botão de adicionar novas postagens
@@ -320,6 +327,12 @@ function setOutUnloggedUser(){
   //Setando jwt e id do user gravados no localStorage como null
   window.localStorage.setItem('jwt', null);
   window.localStorage.setItem('id_logged_user', null);
+
+  //Limpando no IndexedDB 
+  //Checando se no navegador tem a api IndexedDB
+  if ('indexedDB' in window){
+    clearAllData('app-params');
+  }
 
   //Mostrando o botão de adicionar novas postagens
   if(btnAddPost)

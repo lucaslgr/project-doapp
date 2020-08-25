@@ -432,7 +432,6 @@ function sendModalPost() {
               timer: 1500
             })
 
-
             // fillPosts(); //! fillPosts() é engatilhado pelo SW quando ele executa a sync task('sync-new-post') registrada e retorna uma mensagem para main thred no client
             clearModalAddPostInputs();
             closeModalAddPost();
@@ -456,9 +455,10 @@ function sendModalPost() {
   else {
     fetch(endpoint, {
       "method": "POST",
-      // "headers": {
-      //   'Content-Type': 'application/json'
-      // },
+      "headers": {
+        // 'Content-Type': 'application/json'
+        "Authorization": `${window.localStorage.getItem('jwt')}`
+      },
       "body": postFormData
     })
       .then((response) => {
@@ -467,16 +467,19 @@ function sendModalPost() {
       .then((responseJSON) => {
         if (responseJSON.errors) {
           throw responseJSON.errors;
-        }
-        //Alerta de sucesso
-        Swal.fire({
-          icon: 'success',
-          title: 'Anúncio inserido com sucesso!',
-          showConfirmButton: false,
-          timer: 1500
-        });
+          return;
+        } else {
+          //Alerta de sucesso
+          Swal.fire({
+            icon: 'success',
+            title: 'Anúncio inserido com sucesso!',
+            showConfirmButton: false,
+            timer: 1500
+          });
 
-        console.log('inserting a new post such id is: ' + responseJSON.data.id_post);
+          console.log('inserting a new post such id is: ' + responseJSON.data.id_post);
+        }
+        
         fillPosts();
         clearModalAddPostInputs();
         closeModalAddPost();
@@ -742,8 +745,6 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
       return response.json();
     })
     .then((responseJSON) => {
-      console.log(`Data Cards from web`, responseJSON);
-
       //Se estiver vazio, finaliza a funcao poupando processamento 
       if(isEmpty(responseJSON)){
         return;
@@ -755,6 +756,9 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
       if (responseJSON.errors) {
         throw responseJSON.errors;
       }
+
+      console.log(`Data Cards from web`, responseJSON);
+
       // clearAllCards(); //Limpando todos cards existentes de anuncios antes de atualizar
       let postsTemplate = responseJSON.data.map((eachPost) => {
         return createPostHTML(eachPost);
@@ -774,7 +778,6 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
     })
     .catch((errors) => {
       console.log('ERRO', errors);
-      // alert(`ERRO ${errors.status_code} : ${errors.msg}`);
   })
 
   //Verifica se o navegador/janela tem o recurso de IndexedDB e Utiliza os dados do IndexedDB apenas para a primeira página(primeiros 5 itens da paginação)

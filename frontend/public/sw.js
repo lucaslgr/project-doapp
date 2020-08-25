@@ -19,6 +19,7 @@ const STATIC_FILES = [
   BASE_URL+'/config.js',
   BASE_URL+'/src/js/app.js',
   BASE_URL+'/src/js/checkIsLoggedUser.js',
+  BASE_URL+'/src/js/myPosts.js',
   BASE_URL+'/src/js/feed.js',
   BASE_URL+'/src/js/sweetalert2.js',
   BASE_URL+'/src/js/promise.js',
@@ -136,6 +137,7 @@ self.addEventListener('fetch', (event) => {
   // const url = 'http://localhost/project-doapp/backend-api/public/posts';
   const url = `${API_BASE_URL}/posts`;
   const urlFirstPage = `${API_BASE_URL}/posts?limit=5&page=1`;
+  const urlPostsByUser = `${API_BASE_URL}/posts/`;
   
   //* Verificando se a URL requisitada é uma das que contém conteúdos que mudam constantemente
   if(event.request.url.indexOf(url) > -1){
@@ -168,8 +170,17 @@ self.addEventListener('fetch', (event) => {
             return response; //Retornando a reposta original
           })
       );
+    } else if(event.request.url.indexOf(urlPostsByUser) > -1){
+      console.log('Request for posts on posts by user');
+      event.respondWith(
+        fetch(event.request)
+        .then(response => {
+          return response;
+        })
+      )
+
     } else {
-      console.log('Request for posts on other pages')
+      console.log('Request for posts on other pages');
       event.respondWith(
         fetch(event.request)
           .then(async response => {
@@ -276,7 +287,7 @@ self.addEventListener('sync', (event) => {
     event.waitUntil(
       //Lendo todas informações gravadas no ObjectStore(Tabela) sync-posts no IndexedDB
       readAllData('sync-posts')
-        .then( postsToSync  => {
+        .then( async postsToSync  => {
           //Percorrendo todos os posts retornados do ObjectStore a serem sincronizados com a API
           for (let post of postsToSync) {
             //Pegando os dados dos Posts pegos do Indexed para serem sincronizados e transformando no formato FormData para podermos enviar a imagem
@@ -290,9 +301,19 @@ self.addEventListener('sync', (event) => {
             //Enviando a imagem e renomeando-a pois no servidor não podemos ter imagens com nmomes iguais
             postFormData.append('image', post.image, `${post.id}.png`); 
 
+            //Recuperando do IndexedDB o jwt e o id_logged_user
+            const jwt = await readDataByKey('app-params', 'jwt');
+            const id_logged_user = await readDataByKey('app-params', 'id_logged_user');
+
+            // console.log('Parameters from IndexedDB', jwt, id_logged_user);
+
             //Faz a requisição ao endpoint para sincronizar os posts do ObjectStore sync-posts com a API
             fetch(endpoint, {
               "method": "POST",
+              "headers": {
+                // 'Content-Type': 'application/json'
+                "Authorization": `${jwt}`
+              },
               "body": postFormData
             })
             .then((response) => {

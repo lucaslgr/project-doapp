@@ -115,6 +115,12 @@ class PostsController extends Controller{
         $data = $this->getRequestData();
         $authorization = $this->getAuthorization();
 
+        //Checando se foi enviado latitude e longitude
+        if(!isset($data['longitude']) || !isset($data['latitude'])){
+            $data['longitude'] = null;
+            $data['latitude'] = null;
+        }
+
         //Se o método for diferente do GET retorna erro de método inválido
         if($method != 'POST'){
             ErrorsManager::setMethodNotAllowedError($response);

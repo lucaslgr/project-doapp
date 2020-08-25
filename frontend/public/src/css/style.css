@@ -15,7 +15,6 @@
 *{
     font-family: 'Roboto', sans-serif !important;
     box-sizing: border-box !important;
-    color: var(--white-light);
 }
 
 html {
@@ -27,7 +26,7 @@ body{
     padding: 0px;
     overflow-x: hidden;
     position: relative;
-    min-height: 100%;
+    min-height: 100%;    
 }
 
 .container {
@@ -51,9 +50,10 @@ body{
     margin: 0px;
 }
 
-h1,h2,h3,h4,h5,h6,p,li{
+h1,h2,h3,h4,h5,h6,p,li,a,i{
     margin: 0px;
     padding: 0px;
+    color: var(--white-light);
 }
 
 body h1::after,
@@ -129,6 +129,7 @@ button {
     border: 1px solid var(--white-medium);
     transition: transform 0.5s ease;
     align-items: center;
+    color: var(--white-light);
 }
 
 button:hover{
@@ -238,6 +239,12 @@ input + textarea{
 
 .flex-column{
     flex-direction: column;
+}
+
+/* ! ICONS OF ALERTS */
+* .swal2-icon.swal2-warning{
+    border-color: var(--blue-dark) !important;
+    color: var(--blue-dark)!important;
 }
 
 /* ! MENU */
@@ -407,6 +414,7 @@ section#posts .section-area .each-post table td {
     height: auto;
     /* color: var(--gray-dark); */
     padding: 10px 0px;
+    color: var(--white-light);
 }
 
 section#posts .section-area .each-post table td + td{

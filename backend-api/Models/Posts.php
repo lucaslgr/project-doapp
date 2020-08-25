@@ -74,7 +74,7 @@ class Posts extends Model {
         $result = [];
 
         $sql = $this->pdo->prepare("SELECT * FROM posts WHERE id_user = ? ORDER BY id DESC");
-        $status_query = $sql->execute();
+        $status_query = $sql->execute([$id_user]);
 
         //Se houve algum erro
         if(!$status_query){
@@ -178,10 +178,20 @@ class Posts extends Model {
         }
 
         if(!($sql->rowCount() > 0)){
-            $sqldata = $sql->fetch(\PDO::FETCH_ASSOC);
-
             ErrorsManager::setUnauthorizedError($result);
             return $result;
+        }
+
+        //Deletando a imagem se houver
+        $post_data = $sql->fetch(\PDO::FETCH_ASSOC);
+        //Armazena o caminho para a imagem no servidor
+        $pathImage = '';
+        if(isset($post_data['image'])
+            && !empty($post_data['image'])
+            && $this->checkImageExists($post_data['image'],  $pathImage)){
+            
+            //Removendo a imagem
+            unlink($pathImage);
         }
 
         $sql = $this->pdo->prepare("DELETE FROM posts WHERE id = ? AND id_user = ?");
@@ -199,5 +209,17 @@ class Posts extends Model {
         $result = true;
 
         return $result;
+    }
+
+    /**
+     * Retorna true se existir a imagem e retorna false se não existir
+     *
+     * @param string $urlImage
+     * @return bool
+     */
+    private function checkImageExists(string $urlImage, string &$pathImage){
+        $pathImage = \str_replace(\BASE_URL, '../public/', $urlImage);
+
+        return (\file_exists($pathImage))? true: false;
     }
 }

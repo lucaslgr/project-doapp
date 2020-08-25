@@ -11,7 +11,7 @@ use \Util\Jwt;
 
 class Users extends Model {
     //Armazena o id do usuario logado
-    private $logged_user_id;
+    private int $logged_user_id;
 
     public function __construct()
     {
@@ -150,7 +150,7 @@ class Users extends Model {
 
     public function getLoggedIdUser()
     {
-        return $this->logged_user_id;
+        return \intval($this->logged_user_id);
     }
 
     public function createJWT()
