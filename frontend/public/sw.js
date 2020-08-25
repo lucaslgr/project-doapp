@@ -419,10 +419,10 @@ self.addEventListener('notificationclick', (event) => {
           });
 
           if(clientOpened !== undefined){ //Verificando se encontrou algum client aberto
-            clientOpened.navigate(`${BASE_URL}${notification.data.url}`); //Redirecionando o client aberto para uma url da aplicação que foi setada pela API
+            clientOpened.navigate(`${notification.data.url}`); //Redirecionando o client aberto para uma url da aplicação que foi setada pela API
             clientOpened.focus();
           } else { //Se não encontrou nenhum client aberto
-            clients.openWindow(`${BASE_URL}${notification.data.url}`); //Abrindo um client para uma url da aplicação que foi setada pela API
+            clients.openWindow(`${notification.data.url}`); //Abrindo um client para uma url da aplicação que foi setada pela API
           }
 
           notification.close();
