@@ -113,9 +113,14 @@ function deleteThisPost(postId){
 function fillPostsLoggedUser() {
   const endpoint = `${API_BASE_URL}/posts/${window.localStorage.getItem('id_logged_user')}`;
 
+  // ! ESTRATÉGIA : CACHE THEN NETWORK
+  //flag que é levantada quando a resposta da requisição a rede é obtida
+  let networkDataReceived = false;
+
   //Limpando todos posts na section que contém o HTML dos posts
   sectionPostsArea.innerHTML = '';
 
+  //*Buscando os posts do user logado pela rede
   fetch(endpoint, {
     "method": "GET",
     "headers": {
@@ -131,7 +136,10 @@ function fillPostsLoggedUser() {
       throw responseJSON.errors;
     }
 
-    console.log(`Data Cards from web`, responseJSON);
+    console.log(`Data Cards of logged user from network`, responseJSON);
+
+    //Setando a flag que indica que a requisição executada pela network recebeu a resposta
+    networkDataReceived = true;
 
     //Se estiver vazio, finaliza a funcao poupando processamento 
     if(isEmpty(responseJSON)){
@@ -149,11 +157,44 @@ function fillPostsLoggedUser() {
       return createUserPostHTML(eachPost);
     }).join('');
 
-    sectionPostsArea.innerHTML += postsUserTemplate;
+    sectionPostsArea.innerHTML = postsUserTemplate;
   })
   .catch( errors => {
-    console.log('ERRO', errors);
+    console.log('ERRO on getting posts of logged user from network', errors);
   })
+
+  //*Buscando os posts do user logado pelo IndexedDB
+  if ('indexedDB' in window) {
+    readAllData('posts-logged-user')
+    .then(responseJSON => {
+      //Verificando se houver algum error para ser lançado ao catch
+      if (responseJSON.errors) {
+        throw responseJSON.errors;
+      }
+
+      //Se estiver vazio, finaliza a funcao poupando processamento 
+      if(isEmpty(responseJSON)){
+        return;
+      }
+
+      //Checa se não recebeu a informação da requisição feita pela network primeiro
+      if (!networkDataReceived) {
+        console.log('Data Cards of logged user from indexedDB', responseJSON);
+
+        //Gerando o HTML de cada post
+        let postsUserTemplate = responseJSON.map((eachPost) => {
+            return createUserPostHTML(eachPost);
+        }).join('');
+
+        //Inserindo o post na área dos posts
+        sectionPostsArea.innerHTML = postsUserTemplate;      
+      }
+    })
+    .catch( errors => {
+      console.log('ERRO on getting posts of logged user from IndexedDB', errors);
+    });
+  }
+
 }
 
 //Preenchendo a area de posts com todos os posts DO USUÁRIO LOGADO
