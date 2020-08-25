@@ -388,8 +388,8 @@ section#posts .section-area .each-post + .each-post {
 
 section#posts .section-area .each-post img{
     width: 100%;
-    max-width: 480px;
-    max-height: 380px;
+    max-width: 300px;
+    /* max-height: 380px; */
 }
 
 section#posts .section-area .each-post h1.title {
@@ -846,12 +846,9 @@ section#posts .section-area.section-area--myposts{
 
 section#posts .section-area.section-area--myposts .each-post {
     position: relative;
-    max-width: 180px;
+    max-width: 250px;
     transition: transform 0.5s ease;
     margin-top: 30px;
-}
-
-section#posts .section-area.section-area--myposts .each-post{
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -951,5 +948,10 @@ section#posts .section-area.section-area--myposts .each-post i.icon-trash{
 
     .only-big-screen-flex{
         display: none!important;
+    }
+
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 90%;
+        max-width: none;
     }
 }
