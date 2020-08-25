@@ -720,11 +720,6 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
     currentPage = 1;
   }
 
-  //Se a flag for levantada limpa todos os cards
-  if(FlagclearPostsArea){
-    clearAllCards();
-  }
-
   //Se foi requisitado algum termo específico atualiza o termo global, se não foi, reseta
   console.log('Term search', queryTerm);
   if(queryTerm != ''){
@@ -774,8 +769,16 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
       if(!isEmpty(postsId))
         clearAllCardsByIds(postsId);
 
-      //Verifica se já existe uma postagem com o respectivo ID e atualiza com os dados recebidos da rede e se não houver cria o HTML da postagem e insere na pagina
-      sectionPostsArea.innerHTML += postsTemplate;
+
+      //Se a flag for levantada limpa todos os cards
+      if(FlagclearPostsArea){
+        sectionPostsArea.innerHTML = postsTemplate;
+      }
+      else {
+        //Verifica se já existe uma postagem com o respectivo ID e atualiza com os dados recebidos da rede e se não houver cria o HTML da postagem e insere na pagina
+        sectionPostsArea.innerHTML += postsTemplate;
+      }
+      
     })
     .catch((errors) => {
       console.log('ERRO', errors);
@@ -851,7 +854,13 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
           // //Verifica se já existe uma postagem com o respectivo ID e deleta ela antes de inserir
           // if(!isEmpty(postsId))
           //   clearAllCardsByIds(postsId);
-          sectionPostsArea.innerHTML += postsTemplate;  
+          // sectionPostsArea.innerHTML += postsTemplate;  
+          //Se a flag for levantada limpa todos os cards
+          if(FlagclearPostsArea){
+            sectionPostsArea.innerHTML = postsTemplate;  
+          } else {
+            sectionPostsArea.innerHTML += postsTemplate;  
+          }
         }
       })
       .catch((errors) => {
