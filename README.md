@@ -2,7 +2,9 @@
 
 <h1 align="center"> PROJETO DoApp </h1>
 
-<img align="center" src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
+<p align="center">
+<img src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
+</p>
 
 ## :loudspeaker: Apresentação
 
@@ -23,7 +25,9 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 
 <h2 align="center">Relatório gerado pelo LightHouse da Google</h2>
 
-<img align="center" src="./project-doapp/screenshot/lighthouse-repot.png" alt="" width="521" data-align="center">
+<p align="center">
+<img align="center" src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/lighthouse-repot.png" alt="" width="521" data-align="center">
+</p>
 
 ## :memo: Linguagens e Tecnologias utilizadas
 
