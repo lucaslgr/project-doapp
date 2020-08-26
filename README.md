@@ -45,7 +45,7 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 
 ## :books: Bibliotecas utilizadas
 
-<li><a href=https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
+<li><a href="https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
 <li><a href="https://github.com/jakearchibald/idb">IndexedDB with Promises</a></li>
 <li><a href="https://sweetalert2.github.io/">SweetAlert2</a></li>
 
@@ -81,68 +81,117 @@ Mobile Menu        |  Mobile Login | Mobile Register       |  Mobile Add Post | 
 <li><a href="https://bitnami.com/stack/lamp/installer">LAMP</a></li>
 <li><a href="https://www.wampserver.com/en/">WAMP</a></li>
 
-### Instalando e rodando o <b>BACK-END</b>:
-
-<b> <i>- OBS: Após instalar inicie o PHP/Apache e o MySQl.</b> </i>
+### Instalando o <b>PROJETO COMPLETO</b>:
 
 ```bash
 # Clone este repositório
 $ git clone git@github.com:lucaslgr/project-doapp.git
 
-# Vá até a pasta database e importe o database-doapp.sql no MySQL
-
 # Acesse a pasta do projeto no terminal/cmd
 $ cd project-doapp
+```
 
+### Configurando e rodando o <b>BACK-END(API)</b>:
+
+#### <b>1# Configurando:</b>
+
+```bash
 # Acesse a pasta Backend
 $ cd backend-api
 
 # Instale as dependências com o Composer
 $ composer install
-
-# Inicie o servidor Apache de acordo com a ferramenta que você está utilizando (LAMP, XAMPP, WAMP) ou via terminal
-
-# Acessa os endpoints da API em http://localhost/project-doapp/backend-api/public/
 ```
 
-### Instalando e rodando o front-end web:
+<li>Os arquivos <b>environment.php</b> e <b>config.php</b> precisam ser configurados corretamente para rodar o projeto.</li>
+<br>
+<b>[environment.php]</b>
 
-```bash
-# Clone este repositório
-$ git clone https://github.com/lucaslgr/be-the-hero
+```php
+    /**
+    *Descomente a definição da constante ENVIRONMENT respectivo ao  modo que a aplicação irá rodar e comente o outro, sendo produção ou desenvolvimento
+    */
 
-# Acesse a pasta do projeto no seu terminal/cmd
-$ cd be-the-hero
+    define('ENVIRONMENT', 'development');
+    // define('ENVIRONMENT', 'production');
+```
+<br>
+<b>[config.php]</b>
 
-# Vá para a pasta da aplicação Frontend
-$ cd frontend
+ - Utilize <a href="https://tools.reactpwa.com/vapid"> este site</a> para gerar as VAPID PUBLIC e PRIVATE KEYS necessárias para utilizar o serviço de Web Push Notifications.
+ - <b>OBS:</b> toda PRIVATE_KEY deve ser mantida apenas no backend, não deve ser exposta de forma alguma pois deixará vulnerável a segurana da aplicação.
 
-# Instale as dependências
-$ npm install ou yarn add
+```php
+    //Sete os valores das keys pública e privada respectivamente na definição das suas respectivas constantes abaixo
+    define('PUBLIC_KEY_VAPID', 'YOUR_PUBLIC_KEY_VAPID'); //(length=87)
+    define('PRIVATE_KEY_VAPID', 'YOUR_PRIVATE_KEY_VAPID'); //(length=43)
 
-# Execute a aplicação
-$ npm start ou yarn start
-
-# A aplicação será aberta na porta:3000 - acesse http://localhost:3000
+    //Altere as informações abaixo respectivas ao seu ambiente de desenvolvimento se houver necessidade
+    if (ENVIRONMENT == 'development') {
+        define('BASE_URL', 'http://localhost/project-doapp/backend-api/public/');
+        define('URL_IMG', $_SERVER['DOCUMENT_ROOT']."/project-doapp/backend-api/public/Images/");
+        $config['dbname'] = 'project-doapp';
+        $config['host'] = '127.0.0.1'; //ou 'localhost'
+        $config['dbuser'] = 'root';
+        $config['dbpass'] = '';
+        //defina uma PRIVATE KEY para o JWT token de preferência com 256 caracteres
+        define('PRIVATE_KEY_JWT', md5('YOUR_KEY'));
+    }
+    //É NECESSÁRIO definir os valores das informações abaixo respectivas ao seu ambiente de produção
+    else { //Se não => ENVIRONMENT = 'production'
+        define('BASE_URL', 'BASE_URL_API_PRODUCTION'); //? CONFIGURAR
+        define('URL_IMG', $_SERVER['DOCUMENT_ROOT']."/projects/doapp/backend-api/public/Images/"); //? CONFIGURAR
+        $config['dbname'] = 'db_name'; //? CONFIGURAR
+        $config['host'] = 'localhost'; //? CONFIGURAR
+        $config['dbuser'] = 'db_user'; //? CONFIGURAR
+        $config['dbpass'] = 'db_pass'; //? CONFIGURAR
+        //PRIVATE KEY para o JWT token de preferência com 256 caracteres
+        define('PRIVATE_KEY_JWT', md5('YOUR_KEY')); //? CONFIGURAR
+    }
 ```
 
-### Instalando e rodando o front-end mobile:
+<li>Após os passos acima, inicie o MySql e importe o banco de dados que é encontrado no caminho especificado em:
+ <code>./database/database-doapp.sql</code>
+ </li>
 
-```bash
-# Clone este repositório
-$ git clone https://github.com/lucaslgr/be-the-hero
 
-# Acesse a pasta do projeto no seu terminal/cmd
-$ cd be-the-hero
+#### <b>2# Rodando a API:</b>
 
-# Vá para a pasta da aplicação Mobile
-$ cd mobile
+<li>Inicie o servidor Apache de acordo com a ferramenta que você está utilizando (LAMP, XAMPP, WAMP) ou via terminal</li>
+<li>Acesse os endpoints da API em:
+<code>http://localhost/project-doapp/backend-api/public/</code></li>
+<br>
+<b>ENDPOINTs disponíveis:</b>
 
-# Instale as dependências
-$ npm install ou yarn add
+### Configurando e rodando o <b>FRONT-END</b>:
 
-# Execute a aplicação
-$ expo start
+#### <b>1# Configurando:</b>
+
+<li>O arquivo <b>config.js</b> precisa ser configurado corretamente para rodar o projeto e está localizado em:
+<code>./frontend/public/config.js</code></li>
+<br>
+<b>[config.js]</b>
+
+```javascript
+    /**
+    *Descomente a definição da constante ENVIRONMENT respectivo ao  modo que a aplicação irá rodar e comente o outro, sendo produção ou desenvolvimento
+    */
+    const ENVIRONMENT = 'development';
+    // const ENVIRONMENT = 'production';
+
+    let BASE_URL;
+    let API_BASE_URL;
+
+    //Altere as informações abaixo respectivas ao seu ambiente de desenvolvimento se houver necessidade
+    if(ENVIRONMENT === 'development'){ //!development
+        BASE_URL = 'http://localhost/project-doapp/frontend/public';
+        API_BASE_URL = 'http://localhost/project-doapp/backend-api/public';
+    }
+    //É NECESSÁRIO definir os valores das informações abaixo respectivas ao seu ambiente de produção
+    else { //!production
+        BASE_URL = 'BASE_URL_PRODUCTION'; //? CONFIGURAR
+        API_BASE_URL = 'BASE_URL_API_PRODUCTION'; //? CONFIGURAR
+    }
 ```
 
 ## :recycle: Como contribuir

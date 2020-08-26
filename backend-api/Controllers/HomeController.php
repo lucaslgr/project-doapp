@@ -10,6 +10,7 @@ namespace Controllers;
 use \Core\Controller;
 use \Models\SubscriptionWPN;
 use \Util\ErrorsManager;
+use \Minishlink\WebPush\VAPID;
 
 class HomeController extends Controller{
     public function index() {
@@ -73,4 +74,13 @@ class HomeController extends Controller{
         $response['data']['id_subscription'] = $result;
         $this->returnJson($response, 200);
     }
+
+    /**
+     * Gera as keys para serem usadas na aplicação
+     *
+     * @return void
+     */
+    // public function generateVapidKeys(){
+    //     var_dump(VAPID::createVapidKeys());
+    // }
 }
