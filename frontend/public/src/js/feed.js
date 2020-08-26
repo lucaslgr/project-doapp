@@ -581,6 +581,7 @@ function createPost(dataPost) {
   //Tirando tudo que não seja número
   const whatsappNumber = dataPost.whatsapp_contact.replace(/\D/g,"");
   aWhatsappValue.setAttribute('href', `https://api.whatsapp.com/send?phone=55${whatsappNumber}&text=Ol%C3%A1%2C%20vim%20pelo%20DoApp%20e%20fiquei%20interessado%20na%20sua%20doa%C3%A7%C3%A3o..`);
+  aWhatsappValue.setAttribute('rel', 'noreferrer');
   
   let pWhatsappValue = document.createElement('p');
   pWhatsappValue.innerText = dataPost.whatsapp_contact;
@@ -664,7 +665,7 @@ function createPostHTML(dataPost) {
         <tr>
           <td class="tdheader">Localização:</td>
           <td>
-            <a target="_blank" class="links-info link-location" ${(longitude && latitude)?`href="${URL_API_GOOGLEMAPS}"`:''}>
+            <a target="_blank" class="links-info link-location" rel="noreferrer" ${(longitude && latitude)?`href="${URL_API_GOOGLEMAPS}"`:''}>
               <p>${location}</p>
               <i class="icon-location"></i>
             </a>
@@ -673,7 +674,7 @@ function createPostHTML(dataPost) {
         <tr>
           <td class="tdheader">Whatsapp:</td>
           <td>
-            <a target="_blank" class="links-info link-whats" href="${URL_API_WHATSAPP}">
+            <a target="_blank" class="links-info link-whats" rel="noreferrer" href="${URL_API_WHATSAPP}">
               <p>${whatsapp_contact}</p>
               <i class="icon-whatsapp"></i>
             </a>

@@ -65,13 +65,13 @@
       <div class="colum-right">
         <ul class="menu">
           <li class="menu-item menu-item--installapp">
-            <button class="install-app" onclick="installPWAApp(this);">
+            <button aria-label="Instalar Aplicativo" class="install-app" onclick="installPWAApp(this);">
               <p>Instalar Aplicativo</p>
               <i class="icon-install icon-small-default"></i>
             </button>
           </li>
           <li class="menu-item menu-item--notifications">
-            <button class="enable-notifications">
+            <button aria-label="Ativar Notificações" class="enable-notifications">
               <p>Ativar Notificações</p>
               <i class="icon-bell-alt icon-small-default"></i>
             </button>
@@ -101,11 +101,11 @@
             </a>
           </li>
           <div class="social-midias only-small-screen-flex">
-            <a target="_blank" href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
-            <a target="_blank" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i class="icon-linkedin-circled"></i></a>
-            <a target="_blank" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i class="icon-youtube"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i class="icon-linkedin-circled"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i class="icon-youtube"></i></a>
           </div>
-          <a target="_blank" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
+          <a target="_blank" rel="noreferrer" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
         </ul>
       </div>
       <i class="icon-menu icon-default only-small-screen-block" onclick="toggleMenuMobile();"></i>
@@ -136,16 +136,17 @@
       <h1>Login</h1>
       
       <form id="form-login" class="form-inputs display-flex flex-column flex-center" method="POST">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="******">
+        <input type="email" name="email" id="email-login" placeholder="Email">
+        
+        <input type="password" name="password" id="password-login" placeholder="******">
       </form>
       <a id="btn-register" href="#" onclick="showModalRegister();">Cadastre-se aqui!</a>
       <div class="btn-group display-flex flex-center">
-        <button id="btn-close" onclick="closeModalByRef('.modal-login');">
+        <button aria-label="Fechar" onclick="closeModalByRef('.modal-login');">
           Fechar
           <i class="icon-cancel icon-small-default"></i>
         </button>
-        <button id="btn-send" onclick="sendModalLogin();">
+        <button aria-label="Entrar" onclick="sendModalLogin();">
           Entrar
           <i class="icon-ok icon-small-default"></i>
         </button>
@@ -159,16 +160,18 @@
       <h1>Cadastro</h1>
       
       <form id="form-register" class="form-inputs display-flex flex-column flex-center" method="POST">
-        <input type="text" name="name" placeholder="Nome">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="******">
+        <input type="text" name="name" id="name-register" placeholder="Nome">
+        
+        <input type="email" name="email" id="email-register" placeholder="Email">
+        
+        <input type="password" name="password" id="password-register" placeholder="******">
       </form>
       <div class="btn-group display-flex flex-center">
-        <button id="btn-close" onclick="closeModalByRef('.modal-register');">
+        <button aria-label="Fechar" onclick="closeModalByRef('.modal-register');">
           Fechar
           <i class="icon-cancel icon-small-default"></i>
         </button>
-        <button id="btn-send" onclick="sendModalRegister();">
+        <button aria-label="Registrar" onclick="sendModalRegister();">
           Registrar
           <i class="icon-ok icon-small-default"></i>
         </button>
@@ -178,7 +181,7 @@
 
   <!-- !FOOTER -->
   <footer>
-    <a target="_blank" href="https://lgrdev.com/"><h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4></a>
+    <a class="lgrdev" rel="noreferrer" target="_blank" rel="noreferrer" href="https://lgrdev.com/">LGR DEV &copy; 2020</a>
   </footer>
   <!-- Importando o arquivo de configuração de constantes como BASE_URL e API_BASE_URL -->
   <script type="text/javascript" src="./config.js"></script> 

@@ -266,6 +266,10 @@ self.addEventListener('fetch', (event) => {
                   .then( cache => {
                     cache.put(event.request.url, res.clone());
                     return res;
+                  })
+                  .catch(errors => {
+                    //Filtrando os erros no catch para não serem printados no console.log
+                    return;
                   });
                 }
               })

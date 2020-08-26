@@ -744,12 +744,10 @@ footer{
     align-items: center;
 }
 
-footer h4{
+footer a.lgrdev{
     margin: 0px;
-}
-
-footer h4::after{
-    display: none;
+    color: var(--white-light);
+    font-size: 18px;
 }
 
 /* ! LOADER DA PAGINACAO DE SCROLL INFINITO */

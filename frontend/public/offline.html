@@ -63,36 +63,38 @@
       </div>
       <div class="colum-right">
         <ul class="menu">
-          <li class="menu-item">
-            <button class="install-app" onclick="installPWAApp(this);">
+          <li class="menu-item menu-item--installapp">
+            <button aria-label="Instalar Aplicativo" class="install-app" onclick="installPWAApp(this);">
               <p>Instalar Aplicativo</p>
               <i class="icon-install icon-small-default"></i>
             </button>
           </li>
-          <li class="menu-item notifications">
-            <button class="enable-notifications">
+          <li class="menu-item menu-item--notifications">
+            <button aria-label="Ativar Notificações" class="enable-notifications">
               <p>Ativar Notificações</p>
               <i class="icon-bell-alt icon-small-default"></i>
             </button>
           </li>
-          <li class="menu-item">
+          <li class="menu-item menu-item--home">
             <a href="./index.html">
               Anúncios
-              <i class="icon-home"></i>
+              <i class="icon-home icon-small-default"></i>
             </a>
           </li>
-          <li class="menu-item">
+          <li class="menu-item menu-item--help">
             <a href="./help.html">
               Ajuda
               <i class="icon-help icon-small-default"></i>
             </a>
           </li>
           <div class="social-midias only-small-screen-flex">
-            <a target="_blank" href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
-            <a target="_blank" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i class="icon-linkedin-circled"></i></a>
-            <a target="_blank" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i class="icon-youtube"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://github.com/lucaslgr"><i class="icon-github-circled"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/"><i
+                class="icon-linkedin-circled"></i></a>
+            <a target="_blank" rel="noreferrer" href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw"><i
+                class="icon-youtube"></i></a>
           </div>
-          <a target="_blank" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
+          <a target="_blank" rel="noreferrer" class="only-small-screen-block" href="https://lgrdev.com">LGR DEV</a>
         </ul>
       </div>
       <i class="icon-menu icon-default only-small-screen-block" onclick="toggleMenuMobile();"></i>
@@ -112,7 +114,7 @@
 
   <!-- ! FOOTER -->
   <footer>
-    <a target="_blank" href="https://lgrdev.com/"><h4><small>Desenvolvido por</small> LGR DEV &copy; 2020</h4></a>
+    <a class="lgrdev" target="_blank" rel="noreferrer" href="https://lgrdev.com/">LGR DEV &copy; 2020</a>
   </footer>
   
   <!-- Para caso o navegador não tenha suporte a Promises, importamos uma Promise manualmente e incorporamos no navegador -->
