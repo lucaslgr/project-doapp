@@ -5,8 +5,8 @@
 </div>
 
 <div align="center">
-<a href="./LICENSE">![GitHub](https://img.shields.io/badge/license-MIT-green)</a>
-<a href="https://www.pwa-shields.com/1.0.0/series/classic/white/gray.svg">![PWA Shields](https://www.pwa-shields.com/1.0.0/series/classic/white/gray.svg)</a>
+![GitHub](https://img.shields.io/badge/license-MIT-green)
+![PWA Shields](https://www.pwa-shields.com/1.0.0/series/classic/white/gray.svg)
 </div>
 
 ## :loudspeaker: Apresentação
