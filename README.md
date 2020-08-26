@@ -16,6 +16,8 @@
 
 A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor dispositivos como computadores desktop, notebooks, tablets e dispositivos mobile. 
 
+<b>- Acesse o DoApp aqui: <a href="https://lgrdev.com/projects/doapp/">DoApp | LGR DEV</a></b>
+
 ## :rocket: PWA / funcionalidades implementadas
 
 <li>Static Caching</li>
@@ -63,37 +65,44 @@ Mobile Menu        |  Mobile Login | Mobile Register       |  Mobile Add Post | 
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 <img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-menu.png" title="Mobile App Menu " width="100%"> |<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-login.png" title="Mobile Login" width="100%">|<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-register.png" title="Mobile Register" width="100%"> |<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-addpost.png" title="Mobile Add Post" width="100%">|<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-home.png" title="Mobile Home" width="100%">|<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-user-posts.png" title="Mobile User Posts" width="100%">|<img src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/mobile-help.png" title="Mobile Help" width="100%">
 
-
 ## :clipboard: Instruções para rodar o projeto
 
 ### Pré-requisitos
 
 - Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
 
-<li>[Git](https://git-scm.com)</li>
-<li>[Node.js](https://nodejs.org/en/)</li>
-<li>[Expo](https://expo.io)</li>
-<li>Caso não tenha, instle um editor, eu indico o <b>[VSCode](https://code.visualstudio.com/)</li>
+<li><a href="https://git-scm.com">Git</a></li>
+<li><a href="https://www.php.net/downloads.php">PHP <b>7.4.*</b></a></li>
+<li><a href="https://www.mysql.com/downloads/">MySql</a></li>
+<li><a href="https://getcomposer.org/">Composer</a></li>
+<li><a href="https://code.visualstudio.com/">Um editor, caso não tenha, eu indico o <b>VSCode</b></a></li>
+<h4>Opcionais:</h4>
+<li><a href="https://www.apachefriends.org/pt_br/index.html">XAMPP</a></li>
+<li><a href="https://bitnami.com/stack/lamp/installer">LAMP</a></li>
+<li><a href="https://www.wampserver.com/en/">WAMP</a></li>
 
-### Instalando e rodando o back-end:
+### Instalando e rodando o <b>BACK-END</b>:
+
+<b> <i>- OBS: Após instalar inicie o PHP/Apache e o MySQl.</b> </i>
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/lucaslgr/be-the-hero
+$ git clone git@github.com:lucaslgr/project-doapp.git
+
+# Vá até a pasta database e importe o database-doapp.sql no MySQL
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd be-the-hero
+$ cd project-doapp
 
-# Vá para a pasta Backend
-$ cd backend
+# Acesse a pasta Backend
+$ cd backend-api
 
-# Instale as dependências
-$ npm install ou yarn add
+# Instale as dependências com o Composer
+$ composer install
 
-# Execute a aplicação em modo de desenvolvimento
-$ npm run dev ou yarn dev
+# Inicie o servidor Apache de acordo com a ferramenta que você está utilizando (LAMP, XAMPP, WAMP) ou via terminal
 
-# O servidor inciará na porta:3333 - acesse http://localhost:3333 
+# Acessa os endpoints da API em http://localhost/project-doapp/backend-api/public/
 ```
 
 ### Instalando e rodando o front-end web:
