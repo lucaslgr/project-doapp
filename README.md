@@ -39,7 +39,7 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 
 ## :books: Bibliotecas utilizadas
 
-<li><a href=https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
+<li><a href="https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
 <li><a href="https://github.com/jakearchibald/idb">IndexedDB with Promises</a></li>
 <li><a href="https://sweetalert2.github.io/">SweetAlert2</a></li>
 
