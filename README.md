@@ -143,7 +143,7 @@ $ expo start
 - Commit suas mudanças: `git commit -m 'feat: My new feature'`
 - Push a sua branch: `git push origin my-feature`
 
-## Autoria
+## :man_technologist: Autoria
 
 <a href="https://lgrdev.com">
     <div align="center">
