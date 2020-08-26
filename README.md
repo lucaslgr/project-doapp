@@ -3,7 +3,7 @@
 <h1 align="center"> PROJETO DoApp </h1>
 
 <p align="center">
-<img src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
+<img title="" src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
 </p>
 
 ## :loudspeaker: Apresentação
@@ -26,7 +26,7 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 <h2 align="center">Relatório gerado pelo LightHouse da Google</h2>
 
 <p align="center">
-<img align="center" src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/lighthouse-repot.png" alt="" width="521" data-align="center">
+<img title="" src="https://raw.githubusercontent.com/lucaslgr/project-doapp/master/screenshot/lighthouse-repot.png" alt="" width="521" data-align="center">
 </p>
 
 ## :memo: Linguagens e Tecnologias utilizadas
@@ -39,7 +39,7 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 
 ## :books: Bibliotecas utilizadas
 
-<li><a href="https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
+<li><a href=https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
 <li><a href="https://github.com/jakearchibald/idb">IndexedDB with Promises</a></li>
 <li><a href="https://sweetalert2.github.io/">SweetAlert2</a></li>
 
@@ -52,6 +52,10 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 - [x] FRONT-END mobile e desktop
 
 - [x] BACK-END API RESTful
+
+## :flower_playing_cards: Imagens do Projeto
+
+![Imagem do projeto](https://github.com/lucaslgr/be-the-hero/blob/master/screenshot/be-the-hero-1.png)
 
 ## :clipboard: Instruções para rodar o projeto
 
@@ -124,10 +128,6 @@ $ npm install ou yarn add
 # Execute a aplicação
 $ expo start
 ```
-
-## :flower_playing_cards: Imagens do Projeto
-
-![Imagem do projeto](https://github.com/lucaslgr/be-the-hero/blob/master/screenshot/be-the-hero-1.png)
 
 ## :recycle: Como contribuir
 
