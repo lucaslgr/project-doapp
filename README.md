@@ -5,6 +5,7 @@
 </div>
 
 <div align="center">
+
 ![GitHub](https://img.shields.io/badge/license-MIT-green)
 ![PWA Shields](https://www.pwa-shields.com/1.0.0/series/classic/white/gray.svg)
 </div>
