@@ -194,12 +194,17 @@ $ composer install
     }
 ```
 
+#### <b>2# Rodando o FRONTEND:</b>
+<li>Com o servidor Apache já inicializado e com o BD importado no MySql acesse pelo navegador a url base da aplicação:
+<code>http://localhost/project-doapp/backend-api/public/</code>
+</li>
+
 ## :recycle: Como contribuir
 
 - Fork esse repositório;
-- Crie uma branch com a sua feature: `git checkout -b my-feature`
+- Crie uma branch com a sua feature: `git checkout -b frontend/my-feature` ou `git checkout -b backend/my-feature`
 - Commit suas mudanças: `git commit -m 'feat: My new feature'`
-- Push a sua branch: `git push origin my-feature`
+- Push a sua branch: `git push origin frontend/my-feature` ou `git push origin backend/my-feature`
 
 ## :man_technologist: Autoria
 
