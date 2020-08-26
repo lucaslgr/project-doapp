@@ -161,7 +161,274 @@ $ composer install
 <li>Acesse os endpoints da API em:
 <code>http://localhost/project-doapp/backend-api/public/</code></li>
 <br>
-<b>ENDPOINTs disponíveis:</b>
+
+<h3><b>ENDPOINTs DISPONÍVEIS:</b></h3>
+<br>
+- 1# <kbd>/user/login</kbd>
+<p>Endpoint para logar o usuário na aplicação</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/user/login", {
+    "method": "POST",
+    "headers": {
+        "content-type": "application/json"
+    },
+    "body": {
+        "email": "lucaslgr1206@gmail.com",
+        "password": "1234"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": {
+            "id_user": 7,
+            "jwt": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjo3fQ.7BOjVBEFqY-0gmueMYWTsd_WMcFsC_Jg-_-dPc3JXZ4"
+        }
+    }
+```
+<br>
+- 2# <kbd>/user/logout</kbd>
+<p>Endpoint para deslogar o usuário da aplicação</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/user/logout", {
+    "method": "POST",
+    "headers": {
+        "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjoiMyJ9.Dwqq_dyeB3hdbvasDygqZIafena8HsF3wJ7Swu5iQLA"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo(VAZIA):</b>
+```javascript
+    []
+```
+<br>
+- 3# <kbd>/user/register</kbd>
+<p>Endpoint para efetuar o registro de um usuário no BD</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/user/register", {
+    "method": "POST",
+    "headers": {
+        "content-type": "application/json"
+    },
+    "body": {
+        "name": "Lucas",
+        "email": "lucas@gmail.com",
+        "password": "1234"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": {
+            "id_user": "5",
+            "jwt": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjoiNSJ9.5PKfsNYa02a0iZeZWNPEbY4qU_GLdZa98fHFSAImFZE"
+        }
+    }
+```
+<br>
+- 4# <kbd>/posts</kbd>
+<p>Retorna todos anúncios de acordo com a paginação e com o termo pesquisado se houver</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("https://lgrdev.com/projects/doapp/backend-api/public/posts?limit=5&page=1&term=teste", {
+    "method": "GET",
+    "headers": {
+        "content-type": "application/json"
+    },
+    "body": false
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": [
+            {
+            "id": "123",
+            "image": "https:\/\/lgrdev.com\/projects\/doapp\/backend-api\/public\/Images\/6753d08779.png",
+            "location": "Rua Joao Garcia 81, Cataguases - Minas Gerais, 33774, Brazil",
+            "title": "Teste Iron Man ",
+            "date_created": "19:52:45 | 12\/08\/2020",
+            "status": "0",
+            "whatsapp_contact": "32988094352",
+            "longitude": "-42.6978",
+            "latitude": "-21.3825"
+            }
+        ]
+    }
+```
+<br>
+- 5# <kbd>/posts/{iduser}</kbd>
+<p>Retorna todos anúncios do usuário respectivo ao id passado como parâmetro</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/posts/7", {
+    "method": "GET",
+    "headers": {
+        "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjoiNyJ9.BdLqVmPDB8W8yQ09cQzrk2zulDEHuD1obfcFGVpS1Gs"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": [
+            {
+            "id": "123",
+            "image": "https:\/\/lgrdev.com\/projects\/doapp\/backend-api\/public\/Images\/6753d08779.png",
+            "location": "Rua Joao Garcia 81, Cataguases - Minas Gerais, 33774, Brazil",
+            "title": "Teste Iron Man ",
+            "date_created": "19:52:45 | 12\/08\/2020",
+            "status": "0",
+            "whatsapp_contact": "32988094352",
+            "longitude": "-42.6978",
+            "latitude": "-21.3825"
+            }
+        ]
+    }
+```
+<br>
+- 6# <kbd>/posts/del/{idpost}</kbd>
+<p>Deleta a postagem respectiva ao id passado como parâmetro</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/posts/del/143", {
+    "method": "DELETE",
+    "headers": {
+        "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjoiMyJ9.Dwqq_dyeB3hdbvasDygqZIafena8HsF3wJ7Swu5iQLA"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": {
+            "msg": "AnÃºncio deletado com sucesso!"
+        }
+    }
+```
+<br>
+- 7# <kbd>/posts/new</kbd>
+<p>Insere um novo post de acordo com as informações passadas na requisição</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/posts/new", {
+    "method": "POST",
+    "headers": {
+        "authorization": "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpZF91c2VyIjoiNyJ9.BdLqVmPDB8W8yQ09cQzrk2zulDEHuD1obfcFGVpS1Gs"
+    },
+    "body": {
+        "title": "Teste 2",
+        "location": "Leopoldina-MG",
+        "image": "",
+        "whatsapp_contact": "32988094352"
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": {
+            "id_post": "163"
+        }
+    }
+```
+<br>
+- 8# <kbd>/home/savesubscription</kbd>
+<p>Salva a subscription que refere-se ao usuário e ao seu dispositivo, retornada pelo servidor que fornece serviços de Web Push Notifications do navegador do respectivo usuário que ativou as notificações na aplicação</p>
+<br>
+<b>Requisição exemplo:</b>
+
+```javascript
+    fetch("http://localhost/project-doapp/backend-api/public/home/savesubscription", {
+    "method": "POST",
+    "headers": {
+        "content-type": "application/json"
+    },
+    "body": {
+        "endpoint": "https://fcm.googleapis.com/fcm/send/fiqb_C_GCCs:APA91bFLkuJcM4t9uirLWCrhLbDn3l-cQU4BdJT-_zuda841ByYyZ49J0ws0Q1EjcXds1yP_wwa52ey3uuf4bL3SezfrSw6eH8NiAiMqlI335vanrEhL9ZizS6LNd3veM8qf72WyoPz5",
+        "expirationTime": null,
+        "keys": {
+        "p256dh": "BFKJkfnEfOTXOKgYq0osogHQziWxITAEWrw1qYgM_KLpqQS6L6hr4M55fPBik5ZpnNbMJT8i2NJ52QFd5BqVIyU",
+        "auth": "nCwiIJWsdbBthJsbyBdG7Q"
+        }
+    }
+    })
+    .then(response => {
+    console.log(response);
+    })
+    .catch(err => {
+    console.error(err);
+    });
+```
+<b>Resposta exemplo:</b>
+```javascript
+    {
+        "data": {
+            "id_subscription": "61"
+        }
+    }
+```
 
 ### Configurando e rodando o <b>FRONT-END</b>:
 
