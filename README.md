@@ -147,7 +147,7 @@ $ expo start
 
 <a href="https://lgrdev.com">
     <div align="center">
-    <img src="https://lgrdev.com/assets/img/logos/logo-size-default.png" width ="30%"> 
+    <img src="https://lgrdev.com/assets/img/logos/logo-size-default.png" width ="10%"> 
     <p>LGR DEV | Lucas Guimarães da Rocha</p>
     </div>
 </a>
