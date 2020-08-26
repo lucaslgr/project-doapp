@@ -1,37 +1,53 @@
 <a href="./LICENSE">![GitHub](https://img.shields.io/badge/license-MIT-green)</a>
 
-# PROJETO DoApp
+<h1 align="center"> PROJETO DoApp </h1>
 
-## :rocket: Tecnologias utilizadas
-
-<li>NodeJS</li>
-<li>ReactJS</li>
-<li>ReactNative</li>
-<li>Expo</li>
-
-## :books: Bibliotecas utilizadas
-
-<li>Express</li>
-<li>KnexJS</li>
-<li>Toast Notification</li>
-<li>ESLint</li>
-<li>Prettier</li>
+<img title="" src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
 
 ## :loudspeaker: Apresentação
 
-**Be the Hero** é um projeto que visa ajudar, de maneira **financeira** uma instituição de caridade, ajudando a deixar acessível e público as necessidades dessa intituição para aumentar o seu alcance.
+**DoApp** é um projeto que visa expor doações de seus usuários ajudando a tornar mais visível e público para quem precisa e também facilitando o interação pelo meio de contato do doador e da localização da doação.
 
-<b>- Link para vídeo de demonstração:</b> 
+A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor dispositivos como computadores desktop, notebooks, tablets e dispositivos mobile. 
 
-[[Publicação no Linkedin]](https://www.linkedin.com/posts/lucas-guimar%C3%A3es-rocha-a30282132_semanaomnistack11-rocketseat-semanaomnistack-activity-6649410671568044032--S4M)
+## :rocket: PWA / funcionalidades implementadas
+
+<li>Static Caching</li>
+<li>Dynamic Caching</li>
+<li>IndexedDB</li>
+<li>GeoLocation</li>
+<li>MediaDevices</li>
+<li>Push Notifications</li>
+<li>Background Sync</li>
+<li>Periodic Sync</li>
+
+<h2 align="center">Relatório gerado pelo LightHouse da Google</h2>
+
+<img title="" src="C:\xampp\htdocs\project-doapp\screenshot\lighthouse-repot.png" alt="" width="521" data-align="center">
+
+## :memo: Linguagens e Tecnologias utilizadas
+
+<li>PHP</li>
+<li>Composer</li>
+<li>Javascript</li>
+<li>HTML5</li>
+<li>CSS3</li>
+
+## :books: Bibliotecas utilizadas
+
+<li><a href=https://github.com/web-push-libs/web-push-php">Web Push for PHP</a></li>
+<li><a href="https://github.com/jakearchibald/idb">IndexedDB with Promises</a></li>
+<li><a href="https://sweetalert2.github.io/">SweetAlert2</a></li>
 
 ## ⚙ Features
 
 - [x] Projeto 100% responsivo.
 
+- [x] Funciona offline como um App Nativo
+
 - [x] FRONT-END mobile e desktop
 
-- [x] BACK-END em padrão API RESTful
+- [x] BACK-END API RESTful
 
 ## :clipboard: Instruções para rodar o projeto
 
@@ -104,6 +120,7 @@ $ npm install ou yarn add
 # Execute a aplicação
 $ expo start
 ```
+
 ## :flower_playing_cards: Imagens do Projeto
 
 ![Imagem do projeto](https://github.com/lucaslgr/be-the-hero/blob/master/screenshot/be-the-hero-1.png)
