@@ -195,7 +195,7 @@ $ composer install
 ```
 
 #### <b>2# Rodando o FRONTEND:</b>
-<li>Com o servidor Apache já inicializado e com o BD importado no MySql acesse pelo navegador a url base da aplicação:
+<li>Com o servidor Apache já inicializado, API rodando e com o BD importado no MySql acesse agora pelo navegador a url base da aplicação:
 <code>http://localhost/project-doapp/backend-api/public/</code>
 </li>
 
