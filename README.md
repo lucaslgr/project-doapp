@@ -148,14 +148,16 @@ $ expo start
 <a href="https://lgrdev.com">
     <div align="center">
     <img src="https://lgrdev.com/assets/img/logos/logo-size-default.png" width ="30%"> 
-    <h2>LGR DEV</h2>
+    <p>LGR DEV | Lucas Guimarães da Rocha</p>
     </div>
 </a>
+<div align="center">
 
 [![Web Site](https://img.shields.io/badge/Web%20Site-lgrdev-132249)](https://lgrdev.com/)
 [![LinkedIn Badge](https://img.shields.io/badge/-lucaslgr-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/)](https://www.linkedin.com/in/lucas-guimar%C3%A3es-rocha-a30282132/)
 [![Gmail Badge](https://img.shields.io/badge/-lucaslgr1206@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:lucaslgr1206@gmail.com)](mailto:lucaslgr1206@gmail.com)<a href="https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw" rel="nofollow"> <img src="https://camo.githubusercontent.com/d7a86f96e82d948cf67f40dcfb983de0fd0aae71/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d596f75747562652d4646303030303f7374796c653d666c61742d737175617265266c6162656c436f6c6f723d464630303030266c6f676f3d796f7574756265266c6f676f436f6c6f723d7768697465266c696e6b3d68747470733a2f2f7777772e796f75747562652e636f6d2f6368616e6e656c2f5543365a4e7a617653335f4f5447684f3552574b33355a67" alt="Youtube Badge" data-canonical-src="https://img.shields.io/badge/-Youtube-FF0000?style=flat-square&amp;labelColor=FF0000&amp;logo=youtube&amp;logoColor=white&amp;link=https://www.youtube.com/channel/UCyvw5MVEOueAyE2PqNXVkYw" style="max-width:100%;"></a>
 
+</div>
 ## Referências
 
 [Google Developers](https://developers.google.com/web/ilt/pwa)
