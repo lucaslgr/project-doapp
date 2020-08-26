@@ -1,10 +1,13 @@
+<div align="center">
+    <img src="./frontend/public/src/images/logos/logo.png" alt="Projeto DoApp" />
+    <h3>[Uma aplicação PWA]</h3>
+    <h1> DoApp </h1>
+</div>
+
+<div align="center">
 <a href="./LICENSE">![GitHub](https://img.shields.io/badge/license-MIT-green)</a>
-
-<h1 align="center"> PROJETO DoApp </h1>
-
-<p align="center">
-<img title="" src="./frontend/public/src/images/logos/logo.png" alt="" width="191" data-align="center">
-</p>
+<a>![PWA Shields](https://www.pwa-shields.com/1.0.0/series/classic/white/gray.svg)</a>
+</div>
 
 ## :loudspeaker: Apresentação
 
@@ -55,7 +58,9 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 
 ## :flower_playing_cards: Imagens do Projeto
 
-![Imagem do projeto](https://github.com/lucaslgr/be-the-hero/blob/master/screenshot/be-the-hero-1.png)
+Desktop App  Login         |  Desktop App Open | Web App  computer  hard drives       |  Web App computer hard drives Open
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://raw.githubusercontent.com/supunlakmal/thismypc/master/thisMyPCWeb/src/assets/images/screen/app-login.PNG" title="Desktop App  Login " width="100%"> |<img src="https://raw.githubusercontent.com/supunlakmal/thismypc/master/thisMyPCWeb/src/assets/images/screen/app-home.PNG" title="Desktop App Open" width="100%">|<img src="https://raw.githubusercontent.com/supunlakmal/thismypc/master/thisMyPCWeb/src/assets/images/screen/web-system.PNG" title="Web App  PC  Drivers" width="100%"> |<img src="https://raw.githubusercontent.com/supunlakmal/thismypc/master/thisMyPCWeb/src/assets/images/screen/web-system.PNG" title="Web App  PC  Drivers" width="100%">
 
 ## :clipboard: Instruções para rodar o projeto
 
