@@ -949,7 +949,49 @@ section#posts .section-area.section-area--myposts .each-post i.icon-trash{
     }
 
     section#posts .section-area.section-area--myposts .each-post{
-        width: 90%;
+        width: 35%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 970px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 45%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 775px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 55%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 65%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 75%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 480px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 85%;
+        max-width: none;
+    }
+}
+
+@media only screen and (max-width: 400px){
+    section#posts .section-area.section-area--myposts .each-post{
+        width: 95%;
         max-width: none;
     }
 }
