@@ -42,6 +42,9 @@ A aplicação desse projeto é um PWA, portanto pode ser instalável em diversor
 <li>Javascript</li>
 <li>HTML5</li>
 <li>CSS3</li>
+<li>Arquitetura MVC</li>
+<li>JWT token para autenticação</li>
+<li>API Mapbox para busca de endereço pelas coordenadas</li>
 
 ## :books: Bibliotecas utilizadas
 
