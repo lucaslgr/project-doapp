@@ -819,7 +819,7 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
             }); 
           }
 
-          //!Paginacao dos dados dos Posts vindos do IndexedDB
+          //!Ordenacao dos dados dos Posts vindos do IndexedDB
           //Invertenndo a ordem pelo ID do posts assim como é feito no MySQl pela API
           responseJSON.sort((p1, p2) => {
             if(parseInt(p1.id) > parseInt(p2.id)){
@@ -837,10 +837,8 @@ function fillPosts(resetPage = true, FlagclearPostsArea = true, queryTerm = '') 
 
           for (let i = offset; i < limitToIndexedDB; i++) {
             //Se não existir corta a execução
-            if(!responseJSON[i])
-              return;
-            
-            postsIndexedDB.push(responseJSON[i]);
+            if(responseJSON[i])
+              postsIndexedDB.push(responseJSON[i]);
           }
           console.log('Posts from IndexedDB paginated', postsIndexedDB, term, limitPostsPerPage, currentPage);
 
