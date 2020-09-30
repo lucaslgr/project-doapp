@@ -251,12 +251,12 @@ function captureGeoLocation() {
         })
         .then(responseJSON => {
           console.log('Fetched adress from MAPBOX API reverse geolocation', responseJSON);
-          $('textarea[name=location]').value = responseJSON.features[0].place_name;
+          $('textarea[name=location]').value = utf8_encode(responseJSON.features[0].place_name);
           $('textarea[name=location]').focus();
           console.log('Response from MAPBOX API', responseJSON);
         })
         .catch(error => {
-          console.log('Request to MAPBOX API failed', error);
+          console.log('Request to MAPBOX API failed', utf8_encode(error));
         });
     },
     //2º Parâmetro: Callback com o erro
@@ -501,7 +501,6 @@ function sendModalPost() {
 
 //Cria uma nova postagem de anuncio utilizando appendChild
 function createPost(dataPost) {
-  
   //Montando os elementos HTML que constituem o DOM
   let postWrapper = document.createElement('div');
   postWrapper.setAttribute('data-id', dataPost.id);
@@ -518,7 +517,7 @@ function createPost(dataPost) {
 
   let postTitle = document.createElement('h1');
   postTitle.className = 'title';
-  postTitle.innerText = dataPost.title; //!VALOR do título
+  postTitle.innerText = (decodeURIComponent(escape(dataPost.title))); //!VALOR do título
 
   //!TABELA COM AS INFORMAÇÕES
   let table = document.createElement('table');
@@ -545,7 +544,7 @@ function createPost(dataPost) {
   }
 
   let pLocationValue = document.createElement('p');
-  pLocationValue.innerText = dataPost.location;
+  pLocationValue.innerText = (decodeURIComponent(escape(dataPost.location)));
   
   let iconLocationValue = document.createElement('i');
   iconLocationValue.classList.add('icon-location');
@@ -646,6 +645,9 @@ function createPostHTML(dataPost) {
 
   //Extraindo todos os dados do JSON com as informações do post
   let {id, title, image, longitude, latitude, location, whatsapp_contact, date_created} = dataPost;
+
+  title = (decodeURIComponent(escape(title)));
+  location = (decodeURIComponent(escape(location)));
 
   //Verificando se sao coordenadas validas
   longitude = filterCoordinate(longitude);
